@@ -8,3 +8,5 @@
 #else
 #error CHERRY ONLY SUPPORTS WINDOWS
 #endif // CH_PLATFORM_WINDOWS
+
+#define BIT(X) (1<<X)

@@ -4,6 +4,9 @@
     <Filter Include="Cherry">
       <UniqueIdentifier>{B2F1BBAB-9E93-E681-874E-FAD5738F6DD2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cherry\Events">
+      <UniqueIdentifier>{5681FED5-C241-7A0C-8B7C-C389F7FBBEE8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Cherry.h" />
@@ -15,6 +18,18 @@
     </ClInclude>
     <ClInclude Include="src\Cherry\EntryPoint.h">
       <Filter>Cherry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\Events\ApplicationEvent.h">
+      <Filter>Cherry\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\Events\Event.h">
+      <Filter>Cherry\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\Events\KeyEvent.h">
+      <Filter>Cherry\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\Events\MouseEvent.h">
+      <Filter>Cherry\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Cherry\Log.h">
       <Filter>Cherry</Filter>

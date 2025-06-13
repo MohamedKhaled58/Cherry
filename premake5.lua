@@ -25,7 +25,7 @@ project "Cherry"
 	}
 
 	includedirs {
-	
+		"Cherry/src",
 		"Cherry/Vendor/spdlog/include"
 	}
 
