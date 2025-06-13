@@ -2,25 +2,23 @@
 #include "Application.h"
 #include "Cherry/Log.h"
 #include "Cherry/Events/ApplicationEvent.h"
+#include "GLFW//glfw3.h"
 
 namespace Cherry {
 	Application::Application()
 	{
+		m_Window = std::unique_ptr<Window>(Window::Create());
 	}
 	Application::~Application()
 	{
 	}
 	void Application::Run()
 	{
-		WindowResizeEvent e(1280, 720);
-		if (e.IsInCategory(EventCategoryApplication))
-		{
-			CH_CLIENT_INFO(e.ToString());
+		
+		while (m_Running) {
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
+			m_Window->OnUpdate();
 		}
-		if (e.IsInCategory(EventCategoryInput))
-		{
-			CH_CLIENT_TRACE(e.ToString());
-		}
-		while (true);
 	}
 }

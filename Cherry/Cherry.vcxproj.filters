@@ -7,6 +7,12 @@
     <Filter Include="Cherry\Events">
       <UniqueIdentifier>{5681FED5-C241-7A0C-8B7C-C389F7FBBEE8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cherry\Platform">
+      <UniqueIdentifier>{4636C26B-B2C1-2F30-BBD2-B22427DD8B30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cherry\Platform\Windows">
+      <UniqueIdentifier>{80C6ACAD-ECFD-F444-F507-596861BE1B3E}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CHpch.h" />
@@ -35,6 +41,12 @@
     <ClInclude Include="src\Cherry\Log.h">
       <Filter>Cherry</Filter>
     </ClInclude>
+    <ClInclude Include="src\Cherry\Platform\Windows\WindowsWindow.h">
+      <Filter>Cherry\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\Window.h">
+      <Filter>Cherry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CHpch.cpp" />
@@ -43,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="src\Cherry\Log.cpp">
       <Filter>Cherry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cherry\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Cherry\Platform\Windows</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

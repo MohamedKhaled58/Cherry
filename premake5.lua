@@ -7,7 +7,13 @@ workspace "Cherry"
 		"Dist"
 	}
 
-OutputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+--Include directories relative to root folder (solution directory)Add commentMore actions
+IncludeDir = {}
+IncludeDir["GLFW"] = "Cherry/Vendor/GLFW/include"
+
+include "Cherry/Vendor/GLFW"
 
 project "Cherry"
 	location "Cherry"
@@ -15,8 +21,8 @@ project "Cherry"
 	language "C++"
 	architecture "x64"
 
-	targetdir ("bin/" .. OutputDir .. "/%{prj.name}")
-	objdir ("bin-int/" .. OutputDir .. "/%{prj.name}")
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "CHpch.h"
 	pchsource "Cherry/src/CHpch.cpp"
@@ -29,7 +35,13 @@ project "Cherry"
 
 	includedirs {
 		"Cherry/src",
-		"Cherry/Vendor/spdlog/include"
+		"Cherry/Vendor/spdlog/include",
+		"%{IncludeDir.GLFW}"
+	}
+
+	links { 
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"
@@ -44,10 +56,8 @@ project "Cherry"
 		}
 
 		postbuildcommands {
-			"{COPY} %{cfg.buildtarget.relpath} ../bin/" .. OutputDir .. "/Sandbox"
+			"{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox"
 		}
-
-
 
 	filter "configurations:Debug"
 		defines "CH_DEBUG"
@@ -64,13 +74,15 @@ project "Cherry"
 	filter {"system:windows","configurations:Debug"}
 		buildoptions "/utf-8"
 
+
+
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
 
-	targetdir ("bin/" .. OutputDir .. "/%{prj.name}")
-	objdir ("bin-int/" .. OutputDir .. "/%{prj.name}")
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files {
 	

@@ -15,6 +15,9 @@
 #include <unordered_set>
 
 
+#include "Cherry/Log.h"
+
+
 #ifdef CH_PLATFORM_WINDOWS
 #include <Windows.h>
 #endif // CH_PLATFORM_WINDOWS

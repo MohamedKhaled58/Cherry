@@ -26,7 +26,7 @@ namespace Cherry {
 #define CH_CORE_DEBUG(...)	::Cherry::Log::GetCoreLogger()->debug(__VA_ARGS__)
 #define CH_CORE_WARN(...)	::Cherry::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define CH_CORE_ERROR(...)	::Cherry::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define CH_CORE_FATAL(...)	::Cherry::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define CH_CORE_CRIT(...)	::Cherry::Log::GetCoreLogger()->critical(__VA_ARGS__)
 #define CH_CORE_OFF(...)	::Cherry::Log::GetCoreLogger()->off(__VA_ARGS__)
 
 //CLIENT LOG MACROSA
