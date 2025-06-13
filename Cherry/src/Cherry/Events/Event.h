@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Cherry/Core.h"
-#include <string>
-#include <functional>
-#include <iostream>
+
 
 
 namespace Cherry {

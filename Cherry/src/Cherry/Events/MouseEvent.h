@@ -1,6 +1,6 @@
 #pragma once
 #include "Event.h"
-#include <sstream>
+
 
 namespace Cherry {
 	class CHERRY_API MouseMovedEvent : public Event

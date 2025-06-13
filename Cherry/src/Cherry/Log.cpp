@@ -1,3 +1,5 @@
+#include "CHpch.h"
+
 #include "Log.h"
 
 namespace Cherry {

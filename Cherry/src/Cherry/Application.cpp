@@ -1,5 +1,5 @@
+#include "CHpch.h"
 #include "Application.h"
-
 #include "Cherry/Log.h"
 #include "Cherry/Events/ApplicationEvent.h"
 

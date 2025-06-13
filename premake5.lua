@@ -18,6 +18,9 @@ project "Cherry"
 	targetdir ("bin/" .. OutputDir .. "/%{prj.name}")
 	objdir ("bin-int/" .. OutputDir .. "/%{prj.name}")
 
+	pchheader "CHpch.h"
+	pchsource "Cherry/src/CHpch.cpp"
+
 	files {
 	
 		"%{prj.name}/src/**.h",

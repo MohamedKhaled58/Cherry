@@ -1,3 +1,5 @@
+#include "CHpch.h"
+
 #include "Cherry.h"
 
 class Sandbox : public Cherry::Application
