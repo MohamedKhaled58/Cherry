@@ -73,6 +73,8 @@
     </ClInclude>
     <ClInclude Include="src\Cherry\Input.h" />
     <ClInclude Include="src\Cherry\Platform\Windows\WindowsInput.h" />
+    <ClInclude Include="src\Cherry\KeyCodes.h" />
+    <ClInclude Include="src\Cherry\MouseButtonCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CHpch.cpp" />
