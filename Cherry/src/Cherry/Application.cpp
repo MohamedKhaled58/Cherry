@@ -1,6 +1,7 @@
 #include "CHpch.h"
 #include "Application.h"
 #include <glad/glad.h>
+#include "Cherry/Input.h"
 
 namespace Cherry {
 
@@ -55,6 +56,9 @@ namespace Cherry {
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 
+			CH_CORE_ASSERT(m_Window, "Window is null!");
+			auto [X, Y] = Input::GetMousePosition();
+			CH_CORE_TRACE("({0},{1})",X,Y);
 			m_Window->OnUpdate();
 
 		}

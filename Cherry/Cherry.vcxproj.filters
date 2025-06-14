@@ -59,7 +59,7 @@
     <ClInclude Include="src\Cherry\Log.h">
       <Filter>Cherry</Filter>
     </ClInclude>
-    <ClInclude Include="src\Cherry\Platform\GLFW\GLFWR.h">
+    <ClInclude Include="src\Cherry\Platform\GLFW\GLFW.h">
       <Filter>Cherry\Platform\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="src\Cherry\Platform\OpenGL\ImGuiOpenGlRenderer.h">
@@ -71,6 +71,8 @@
     <ClInclude Include="src\Cherry\Window.h">
       <Filter>Cherry</Filter>
     </ClInclude>
+    <ClInclude Include="src\Cherry\Input.h" />
+    <ClInclude Include="src\Cherry\Platform\Windows\WindowsInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CHpch.cpp" />
@@ -89,7 +91,7 @@
     <ClCompile Include="src\Cherry\Log.cpp">
       <Filter>Cherry</Filter>
     </ClCompile>
-    <ClCompile Include="src\Cherry\Platform\GLFW\GLFWR.cpp">
+    <ClCompile Include="src\Cherry\Platform\GLFW\GLFW.cpp">
       <Filter>Cherry\Platform\GLFW</Filter>
     </ClCompile>
     <ClCompile Include="src\Cherry\Platform\OpenGL\ImGuiOpenGlRenderer.cpp">
@@ -98,5 +100,6 @@
     <ClCompile Include="src\Cherry\Platform\Windows\WindowsWindow.cpp">
       <Filter>Cherry\Platform\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="src\Cherry\Platform\Windows\WindowsInput.cpp" />
   </ItemGroup>
 </Project>

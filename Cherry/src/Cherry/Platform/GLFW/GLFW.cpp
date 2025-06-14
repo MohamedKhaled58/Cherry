@@ -66,7 +66,7 @@
 
 #include "CHpch.h"
 #include "imgui.h"
-#include "GLFWR.h"
+#include "GLFW.h"
 
 // Clang warnings with -Weverything
 #if defined(__clang__)

@@ -153,6 +153,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Cherry\Input.h" />
+    <ClInclude Include="src\Cherry\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\CHpch.h" />
     <ClInclude Include="src\Cherry.h" />
     <ClInclude Include="src\Cherry\Application.h" />
@@ -166,12 +168,13 @@
     <ClInclude Include="src\Cherry\Layer.h" />
     <ClInclude Include="src\Cherry\LayerStack.h" />
     <ClInclude Include="src\Cherry\Log.h" />
-    <ClInclude Include="src\Cherry\Platform\GLFW\GLFWR.h" />
+    <ClInclude Include="src\Cherry\Platform\GLFW\GLFW.h" />
     <ClInclude Include="src\Cherry\Platform\OpenGL\ImGuiOpenGlRenderer.h" />
     <ClInclude Include="src\Cherry\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Cherry\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Cherry\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\CHpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -180,7 +183,7 @@
     <ClCompile Include="src\Cherry\Layer.cpp" />
     <ClCompile Include="src\Cherry\LayerStack.cpp" />
     <ClCompile Include="src\Cherry\Log.cpp" />
-    <ClCompile Include="src\Cherry\Platform\GLFW\GLFWR.cpp" />
+    <ClCompile Include="src\Cherry\Platform\GLFW\GLFW.cpp" />
     <ClCompile Include="src\Cherry\Platform\OpenGL\ImGuiOpenGlRenderer.cpp" />
     <ClCompile Include="src\Cherry\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>

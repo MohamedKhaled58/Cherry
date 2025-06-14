@@ -4,7 +4,7 @@
 
 #include "imgui.h"
 #include "Cherry/Platform/OpenGL/ImGuiOpenGlRenderer.h"
-#include <Cherry/Platform/GLFW/GLFWR.h>
+#include <Cherry/Platform/GLFW/GLFW.h>
 
 //Temporary include for GLFW and glad
 #include <GLFW/glfw3.h>
