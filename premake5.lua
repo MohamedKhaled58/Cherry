@@ -16,15 +16,22 @@ workspace "Cherry"
 	IncludeDir["ImGui"] = "Cherry/Vendor/imgui"
 
 	-- Include GLFW project first
-	include "Cherry/Vendor/GLFW"
-	include "Cherry/Vendor/Glad"
-	include "Cherry/Vendor/imgui"
+
+	group "Dependencies"
+		include "Hazel/vendor/GLFW"
+		include "Hazel/vendor/Glad"
+		include "Hazel/vendor/imgui"
+	group ""
+
 
 	-- Cherry project
+	
+	startproject "Sandbox"
 	project "Cherry"
 		location "Cherry"
 		kind "SharedLib"
 		language "C++"
+		staticruntime "off" -- Use static runtime library to avoid linking with the dynamic CRT"
 		architecture "x64"
 
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -55,7 +62,6 @@ workspace "Cherry"
 
 		filter "system:windows"
 			cppdialect "c++17"
-			staticruntime "On"
 			systemversion "latest"
 
 			defines {
@@ -65,22 +71,22 @@ workspace "Cherry"
 			}
 
 			postbuildcommands {
-				"{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox"
+				("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
 			}
 
 		filter "configurations:Debug"
 			defines "CH_DEBUG"
-			buildoptions "/MDd"		--MultiThreaded Debug Dll
+			runtime "Debug"		--MultiThreaded Debug Dll
 			symbols "On"
 
 		filter "configurations:Release"
 			defines "CH_RELEASE"
-			buildoptions "/MD"	--MultiThreaded Dll
+			runtime "Release"	--MultiThreaded Dll
 			optimize "On"
 
 		filter "configurations:Dist"
 			defines "CH_DIST"
-			buildoptions "/MD"
+			runtime "Release"
 			optimize "On"
 
 		filter {"system:windows","configurations:Debug"}
@@ -91,6 +97,8 @@ workspace "Cherry"
 		location "Sandbox"
 		kind "ConsoleApp"
 		language "C++"
+		staticruntime "off" -- Use static runtime library to avoid linking with the dynamic CRT"
+
 
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -112,7 +120,6 @@ workspace "Cherry"
 
 		filter "system:windows"
 			cppdialect "c++17"
-			staticruntime "On"
 			systemversion "latest"
 
 			defines {
@@ -121,17 +128,17 @@ workspace "Cherry"
 
 		filter "configurations:Debug"
 			defines "CH_DEBUG"
-			buildoptions "/MDd"	--MultiThreaded Debug Dll
+			runtime "Debug"	--MultiThreaded Debug Dll
 			symbols "On"
 
 		filter "configurations:Release"
 			defines "CH_RELEASE"
-			buildoptions "/MD"
+			runtime "Release"
 			optimize "On"
 
 		filter "configurations:Dist"
 			defines "CH_DIST"
-			buildoptions "/MD"
+			runtime "Release"
 			optimize "On"
 
 		filter {"system:windows","configurations:Debug"}
