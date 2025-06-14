@@ -3,15 +3,18 @@
 #include <glad/glad.h>
 
 namespace Cherry {
-#define BIND_EVENT_FN(X) (std::bind(&Application::X,this,std::placeholders::_1))
+
 	 Application* Application::s_Instance = nullptr;
 
 	Application::Application()
 	{
 		CH_CORE_ASSERT(!s_Instance, "Application Already exist!");
-		s_Instance = this;
 		m_Window = std::unique_ptr<Window>(Window::Create());
-		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+		if (!m_Window) {
+			throw std::runtime_error("Failed to create Window");
+		}
+		s_Instance = this;
+		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 
 	}
 	Application::~Application()
@@ -33,15 +36,14 @@ namespace Cherry {
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-		//CH_CORE_TRACE("{0}", e.ToString());
-
-		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
-		{
+		// Dispatch event to layers
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); ) {
 			(*--it)->OnEvent(e);
-			if (e.Handled)
-				break;
+			if (e.Handled) break;
 		}
+		// Handle window events
+		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
+	
 	}
 	void Application::Run()
 	{
