@@ -1,4 +1,5 @@
 workspace "Cherry"
+	startproject "Sandbox"
 	architecture "x64"
 
 	configurations {
@@ -17,16 +18,13 @@ workspace "Cherry"
 
 	-- Include GLFW project first
 
-	group "Dependencies"
-		include "Hazel/vendor/GLFW"
-		include "Hazel/vendor/Glad"
-		include "Hazel/vendor/imgui"
-	group ""
-
-
+group "Dependencies"
+	include "Cherry/vendor/GLFW"
+	include "Cherry/vendor/Glad"
+	include "Cherry/vendor/imgui"
+group ""
 	-- Cherry project
 	
-	startproject "Sandbox"
 	project "Cherry"
 		location "Cherry"
 		kind "SharedLib"

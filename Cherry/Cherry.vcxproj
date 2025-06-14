@@ -95,7 +95,7 @@
       <ImportLibrary>..\bin\Debug-windows-x86_64\Cherry\Cherry.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Cherry\Cherry.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Cherry\Cherry.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Cherry\Cherry.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Cherry\Cherry.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Cherry\Cherry.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Cherry\Cherry.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -122,7 +122,7 @@
       <ImportLibrary>..\bin\Release-windows-x86_64\Cherry\Cherry.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release-windows-x86_64\Cherry\Cherry.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Cherry\Cherry.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Cherry\Cherry.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Release-windows-x86_64\Cherry\Cherry.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Cherry\Cherry.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Cherry\Cherry.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -149,7 +149,7 @@
       <ImportLibrary>..\bin\Dist-windows-x86_64\Cherry\Cherry.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Dist-windows-x86_64\Cherry\Cherry.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86_64\Cherry\Cherry.dll ..\bin\Dist-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86_64\Cherry\Cherry.dll ..\bin\Dist-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Dist-windows-x86_64\Cherry\Cherry.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86_64\Cherry\Cherry.dll "..\bin\Dist-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86_64\Cherry\Cherry.dll "..\bin\Dist-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -185,13 +185,13 @@
     <ClCompile Include="src\Cherry\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Vendor\GLFW\GLFW.vcxproj">
+    <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
     </ProjectReference>
-    <ProjectReference Include="Vendor\Glad\Glad.vcxproj">
+    <ProjectReference Include="vendor\Glad\Glad.vcxproj">
       <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
     </ProjectReference>
-    <ProjectReference Include="Vendor\imgui\ImGui.vcxproj">
+    <ProjectReference Include="vendor\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
   </ItemGroup>
