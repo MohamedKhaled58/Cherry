@@ -1,6 +1,5 @@
 #include "CHpch.h"
 
-#include "Log.h"
 
 namespace Cherry {
 	std::shared_ptr<spdlog::logger> Log::s_CoreLogger;

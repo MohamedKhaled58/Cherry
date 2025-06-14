@@ -1,5 +1,5 @@
 #pragma once
-
+#include "CHpch.h"
 #include "Cherry/Core.h"
 
 
@@ -40,11 +40,13 @@ namespace Cherry {
 	{
 		friend class EventDispatcher;
 	public:
+		
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
 		virtual int GetCategoryFlags() const = 0;
 		virtual std::string ToString() const { return GetName(); }
 
+		
 		inline bool IsInCategory(EventCategory category)
 		{
 			return GetCategoryFlags() & category;
@@ -52,6 +54,7 @@ namespace Cherry {
 
 	protected:
 		bool m_handled = false;
+		std::string m_event;
 	};
 
 	class  EventDispatcher
@@ -67,8 +70,8 @@ namespace Cherry {
 		{
 			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				//m_Event.m_handled = func(*(*T) & m_Event);
-				m_Event.m_handled = func(static_cast<T&>(m_Event));
+				m_Event.m_handled = func(*(T*) & m_Event);
+				//m_Event.m_handled = func(static_cast<T&>(m_Event));
 
 				return true;
 			}
