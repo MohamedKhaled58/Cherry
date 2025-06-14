@@ -27,6 +27,7 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer);
+		PushOverlay(new Cherry::ImGuiLayer());
 	}
 	~Sandbox()
 	{

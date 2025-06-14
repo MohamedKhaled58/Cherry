@@ -7,8 +7,17 @@
     <Filter Include="Cherry\Events">
       <UniqueIdentifier>{5681FED5-C241-7A0C-8B7C-C389F7FBBEE8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cherry\ImGui">
+      <UniqueIdentifier>{5C6433D8-48C7-C27C-F14C-FB32DD8E8EFF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Cherry\Platform">
       <UniqueIdentifier>{4636C26B-B2C1-2F30-BBD2-B22427DD8B30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cherry\Platform\GLFW">
+      <UniqueIdentifier>{45CD57B2-315C-E17B-DA7A-F576C6E8F121}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cherry\Platform\OpenGL">
+      <UniqueIdentifier>{BA54C6BC-A64E-EF0E-8FBB-851F7B54557B}</UniqueIdentifier>
     </Filter>
     <Filter Include="Cherry\Platform\Windows">
       <UniqueIdentifier>{80C6ACAD-ECFD-F444-F507-596861BE1B3E}</UniqueIdentifier>
@@ -38,6 +47,9 @@
     <ClInclude Include="src\Cherry\Events\MouseEvent.h">
       <Filter>Cherry\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Cherry\ImGui\ImGuiLayer.h">
+      <Filter>Cherry\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\Cherry\Layer.h">
       <Filter>Cherry</Filter>
     </ClInclude>
@@ -46,6 +58,12 @@
     </ClInclude>
     <ClInclude Include="src\Cherry\Log.h">
       <Filter>Cherry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\Platform\GLFW\GLFWR.h">
+      <Filter>Cherry\Platform\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\Platform\OpenGL\ImGuiOpenGlRenderer.h">
+      <Filter>Cherry\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Cherry\Platform\Windows\WindowsWindow.h">
       <Filter>Cherry\Platform\Windows</Filter>
@@ -59,6 +77,9 @@
     <ClCompile Include="src\Cherry\Application.cpp">
       <Filter>Cherry</Filter>
     </ClCompile>
+    <ClCompile Include="src\Cherry\ImGui\ImGuiLayer.cpp">
+      <Filter>Cherry\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="src\Cherry\Layer.cpp">
       <Filter>Cherry</Filter>
     </ClCompile>
@@ -67,6 +88,12 @@
     </ClCompile>
     <ClCompile Include="src\Cherry\Log.cpp">
       <Filter>Cherry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cherry\Platform\GLFW\GLFWR.cpp">
+      <Filter>Cherry\Platform\GLFW</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cherry\Platform\OpenGL\ImGuiOpenGlRenderer.cpp">
+      <Filter>Cherry\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Cherry\Platform\Windows\WindowsWindow.cpp">
       <Filter>Cherry\Platform\Windows</Filter>
