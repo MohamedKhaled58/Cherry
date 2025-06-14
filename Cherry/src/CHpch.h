@@ -21,3 +21,7 @@
 #ifdef CH_PLATFORM_WINDOWS
 #include <Windows.h>
 #endif // CH_PLATFORM_WINDOWS
+
+#ifdef CHERRY_EVENT_FORMATTER_H
+#pragma message("EventFormatter.h included")
+#endif

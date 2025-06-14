@@ -1,8 +1,10 @@
 #pragma once
 #include "Core.h"
+#include "Window.h"
+
+#include "Cherry/LayerStack.h"
 #include "Cherry/Events/Event.h"
 #include "Cherry/Events/ApplicationEvent.h"
-#include "Window.h"
 
 
 namespace Cherry {
@@ -15,11 +17,15 @@ namespace Cherry {
 		virtual ~Application();
 		void Run();
 		void OnEvent(Event& e);
-		bool OnWindowClose(WindowCloseEvent& e);
+
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* layer);
 	private:
+		bool OnWindowClose(WindowCloseEvent& e);
 	private:
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;
+		LayerStack m_LayerStack;
 	};
 
 	// TO BE DEFINED IN CLIENT

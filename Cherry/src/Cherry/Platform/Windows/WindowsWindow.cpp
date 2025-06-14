@@ -5,6 +5,8 @@
 #include "Cherry/Events/MouseEvent.h"
 #include "Cherry/Events/ApplicationEvent.h"
 
+#include <glad/glad.h>
+
 namespace Cherry {
 	static bool s_GLFWInitialized = false;
 	static void GLFWErrorCallback(int error_code, const char* description)
@@ -46,6 +48,8 @@ namespace Cherry {
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		CH_CORE_ASSERT(status,"Failed To Initialize GLAD")
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 

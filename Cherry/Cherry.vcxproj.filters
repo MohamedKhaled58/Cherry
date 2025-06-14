@@ -38,6 +38,12 @@
     <ClInclude Include="src\Cherry\Events\MouseEvent.h">
       <Filter>Cherry\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Cherry\Layer.h">
+      <Filter>Cherry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\LayerStack.h">
+      <Filter>Cherry</Filter>
+    </ClInclude>
     <ClInclude Include="src\Cherry\Log.h">
       <Filter>Cherry</Filter>
     </ClInclude>
@@ -51,6 +57,12 @@
   <ItemGroup>
     <ClCompile Include="src\CHpch.cpp" />
     <ClCompile Include="src\Cherry\Application.cpp">
+      <Filter>Cherry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cherry\Layer.cpp">
+      <Filter>Cherry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cherry\LayerStack.cpp">
       <Filter>Cherry</Filter>
     </ClCompile>
     <ClCompile Include="src\Cherry\Log.cpp">
