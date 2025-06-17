@@ -7,3 +7,6 @@
 [submodule "Cherry/Vendor/Imgui"]
 	path = Cherry/Vendor/Imgui
 	url = https://github.com/TheCherno/imgui
+[submodule "Cherry/Vendor/glm"]
+	path = Cherry/Vendor/glm
+	url = https://github.com/g-truc/glm.git

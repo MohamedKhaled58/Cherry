@@ -1,11 +1,18 @@
 #include "Cherry.h"
 
+
 class ExampleLayer : public Cherry::Layer
 {
 public:
 
 	ExampleLayer()
-		:Layer("Example") { }
+		:Layer("Example") {
+	
+
+	
+	}
+	
+
 	
 	void OnUpdate() override
 	{

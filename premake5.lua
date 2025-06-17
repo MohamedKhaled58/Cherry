@@ -15,6 +15,7 @@ workspace "Cherry"
 	IncludeDir["GLFW"] = "Cherry/Vendor/GLFW/include"
 	IncludeDir["Glad"] = "Cherry/Vendor/Glad/include"
 	IncludeDir["ImGui"] = "Cherry/Vendor/imgui"
+	IncludeDir["glm"] = "Cherry/Vendor/glm"
 
 	-- Include GLFW project first
 
@@ -40,7 +41,10 @@ group ""
 
 		files {
 			"%{prj.name}/src/**.h",
-			"%{prj.name}/src/**.cpp"
+			"%{prj.name}/src/**.cpp",
+			"%{prj.name}/vendor/glm/glm/**.hpp",
+			"%{prj.name}/vendor/glm/glm/**.cppm",
+			"%{prj.name}/vendor/glm/glm/**.inl"
 		}
 
 		includedirs {
@@ -48,7 +52,8 @@ group ""
 			"Cherry/Vendor/spdlog/include",
 			"%{IncludeDir.GLFW}",
 			"%{IncludeDir.Glad}",
-			"%{IncludeDir.ImGui}"
+			"%{IncludeDir.ImGui}",
+			"%{IncludeDir.glm}"
 		}
 
 		links { 
@@ -108,7 +113,8 @@ group ""
 
 		includedirs {
 			"Cherry/Vendor/spdlog/include",
-			"Cherry/src"
+			"Cherry/src",
+			"%{IncludeDir.glm}"
 		}
 
 		links {
