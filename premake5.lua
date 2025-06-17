@@ -7,6 +7,9 @@ workspace "Cherry"
 		"Release",
 		"Dist"
 	}
+	defines {
+		"_CRT_SECURE_NO_WARNINGS"
+	}
 
 	outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -28,10 +31,10 @@ group ""
 	
 	project "Cherry"
 		location "Cherry"
-		kind "SharedLib"
+		kind "StaticLib"
 		language "C++"
-		staticruntime "off" -- Use static runtime library to avoid linking with the dynamic CRT"
-		architecture "x64"
+		cppdialect "C++17"
+		staticruntime "off"
 
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -66,40 +69,38 @@ group ""
 			cppdialect "c++17"
 			systemversion "latest"
 
-			defines {
-				"CH_PLATFORM_WINDOWS",
-				"CH_BUILD_DLL",
-				"GLFW_INCLUDE_NONE"
-			}
+		defines {
+			"CH_PLATFORM_WINDOWS",
+			"CH_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
+		}
 
-			postbuildcommands {
-				("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
-			}
-
+		filter "system:windows"
+			systemversion "latest"
+			buildoptions "/utf-8"
+			
 		filter "configurations:Debug"
 			defines "CH_DEBUG"
-			runtime "Debug"		--MultiThreaded Debug Dll
-			symbols "On"
+			runtime "Debug"
+			symbols "on"
 
 		filter "configurations:Release"
 			defines "CH_RELEASE"
-			runtime "Release"	--MultiThreaded Dll
-			optimize "On"
+			runtime "Release"
+			optimize "on"
 
 		filter "configurations:Dist"
 			defines "CH_DIST"
 			runtime "Release"
-			optimize "On"
-
-		filter {"system:windows","configurations:Debug"}
-			buildoptions "/utf-8"
+			optimize "on"
 
 	-- Sandbox project
 	project "Sandbox"
 		location "Sandbox"
 		kind "ConsoleApp"
 		language "C++"
-		staticruntime "off" -- Use static runtime library to avoid linking with the dynamic CRT"
+		cppdialect "C++17"
+		staticruntime "off"
 
 
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -126,24 +127,24 @@ group ""
 			cppdialect "c++17"
 			systemversion "latest"
 
-			defines {
-				"CH_PLATFORM_WINDOWS"
-			}
+		defines {
+			"CH_PLATFORM_WINDOWS"
+		}
 
 		filter "configurations:Debug"
 			defines "CH_DEBUG"
-			runtime "Debug"	--MultiThreaded Debug Dll
-			symbols "On"
+			runtime "Debug"
+			symbols "on"
 
 		filter "configurations:Release"
 			defines "CH_RELEASE"
 			runtime "Release"
-			optimize "On"
+			optimize "on"
 
 		filter "configurations:Dist"
 			defines "CH_DIST"
 			runtime "Release"
-			optimize "On"
+			optimize "on"
 
 		filter {"system:windows","configurations:Debug"}
 			buildoptions "/utf-8"

@@ -1,7 +1,7 @@
 project "Glad"
 	kind "StaticLib"
 	language "C"
-	staticruntime "On"
+	staticruntime "off"
 	warnings "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -35,14 +35,12 @@ project "Glad"
 	filter { "system:windows", "configurations:Debug-AS" }	
 		runtime "Debug"
 		symbols "on"
-		sanitize { "Address" }
-		flags { "NoRuntimeChecks", "NoIncrementalLink" }
 
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "speed"
 
-    filter "configurations:Dist"
+	filter "configurations:Dist"
 		runtime "Release"
 		optimize "speed"
-        symbols "off"
+		symbols "off"

@@ -1,12 +1,16 @@
 #pragma once
 #ifdef CH_PLATFORM_WINDOWS
-	#ifdef CH_BUILD_DLL
-		#define CHERRY_API __declspec(dllexport)
+	#ifdef CH_DYNAMIC_LINKING
+		#ifdef CH_BUILD_DLL
+			#define CHERRY_API __declspec(dllexport)
+		#else
+			#define CHERRY_API __declspec(dllimport)
+		#endif // CH_BUILD_DLL
 	#else
-		#define CHERRY_API __declspec(dllimport)
-	#endif // CH_BUILD_DLL
+		#define CHERRY_API
+	#endif // CH_DYNAMIC_LINKING
 #else
-#error CHERRY ONLY SUPPORTS WINDOWS
+	#error CHERRY ONLY SUPPORTS WINDOWS
 #endif // CH_PLATFORM_WINDOWS
 
 #ifndef CH_DEBUG
