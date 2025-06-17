@@ -40,6 +40,7 @@ namespace Cherry {
 
 		static Window* Create(const WindowProps& props = WindowProps());
 	};
+
 }
 
 
