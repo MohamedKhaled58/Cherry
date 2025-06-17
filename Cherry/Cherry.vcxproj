@@ -79,7 +79,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>CHpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>CH_PLATFORM_WINDOWS;CH_BUILD_DLL;GLFW_INCLUDE_NONE;CH_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI_API;CH_PLATFORM_WINDOWS;CH_BUILD_DLL;GLFW_INCLUDE_NONE;CH_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;Vendor\spdlog\include;Vendor\GLFW\include;Vendor\Glad\include;Vendor\imgui;Vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -103,7 +103,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>CHpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>CH_PLATFORM_WINDOWS;CH_BUILD_DLL;GLFW_INCLUDE_NONE;CH_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI_API;CH_PLATFORM_WINDOWS;CH_BUILD_DLL;GLFW_INCLUDE_NONE;CH_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;Vendor\spdlog\include;Vendor\GLFW\include;Vendor\Glad\include;Vendor\imgui;Vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -130,7 +130,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>CHpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>CH_PLATFORM_WINDOWS;CH_BUILD_DLL;GLFW_INCLUDE_NONE;CH_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI_API;CH_PLATFORM_WINDOWS;CH_BUILD_DLL;GLFW_INCLUDE_NONE;CH_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;Vendor\spdlog\include;Vendor\GLFW\include;Vendor\Glad\include;Vendor\imgui;Vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -169,8 +169,6 @@
     <ClInclude Include="src\Cherry\LayerStack.h" />
     <ClInclude Include="src\Cherry\Log.h" />
     <ClInclude Include="src\Cherry\MouseButtonCodes.h" />
-    <ClInclude Include="src\Cherry\Platform\GLFW\GLFW.h" />
-    <ClInclude Include="src\Cherry\Platform\OpenGL\ImGuiOpenGlRenderer.h" />
     <ClInclude Include="src\Cherry\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Cherry\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Cherry\Window.h" />
@@ -598,12 +596,11 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Cherry\Application.cpp" />
+    <ClCompile Include="src\Cherry\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Cherry\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Cherry\Layer.cpp" />
     <ClCompile Include="src\Cherry\LayerStack.cpp" />
     <ClCompile Include="src\Cherry\Log.cpp" />
-    <ClCompile Include="src\Cherry\Platform\GLFW\GLFW.cpp" />
-    <ClCompile Include="src\Cherry\Platform\OpenGL\ImGuiOpenGlRenderer.cpp" />
     <ClCompile Include="src\Cherry\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Cherry\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>

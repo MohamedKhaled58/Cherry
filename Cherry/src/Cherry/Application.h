@@ -6,6 +6,8 @@
 #include "Cherry/Events/Event.h"
 #include "Cherry/Events/ApplicationEvent.h"
 
+#include "Cherry/ImGui/ImGuiLayer.h"
+
 
 namespace Cherry {
 
@@ -34,6 +36,7 @@ namespace Cherry {
 		static Application* s_Instance;
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 	};

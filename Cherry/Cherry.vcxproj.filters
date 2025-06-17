@@ -16,12 +16,6 @@
     <Filter Include="src\Cherry\Platform">
       <UniqueIdentifier>{5D5D2A86-C9BE-0794-522C-4E46BE8C3E53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Cherry\Platform\GLFW">
-      <UniqueIdentifier>{BCFA96BC-A81F-E63C-D16A-CBCCBDEEE45A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Cherry\Platform\OpenGL">
-      <UniqueIdentifier>{F1BB8653-DDCB-3224-4685-974232B421BD}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Cherry\Platform\Windows">
       <UniqueIdentifier>{97147A1C-0322-A802-8C08-A4EDF81474B9}</UniqueIdentifier>
     </Filter>
@@ -95,12 +89,6 @@
     </ClInclude>
     <ClInclude Include="src\Cherry\MouseButtonCodes.h">
       <Filter>src\Cherry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Cherry\Platform\GLFW\GLFW.h">
-      <Filter>src\Cherry\Platform\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Cherry\Platform\OpenGL\ImGuiOpenGlRenderer.h">
-      <Filter>src\Cherry\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Cherry\Platform\Windows\WindowsInput.h">
       <Filter>src\Cherry\Platform\Windows</Filter>
@@ -1373,6 +1361,9 @@
     <ClCompile Include="src\Cherry\Application.cpp">
       <Filter>src\Cherry</Filter>
     </ClCompile>
+    <ClCompile Include="src\Cherry\ImGui\ImGuiBuild.cpp">
+      <Filter>src\Cherry\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="src\Cherry\ImGui\ImGuiLayer.cpp">
       <Filter>src\Cherry\ImGui</Filter>
     </ClCompile>
@@ -1384,12 +1375,6 @@
     </ClCompile>
     <ClCompile Include="src\Cherry\Log.cpp">
       <Filter>src\Cherry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Cherry\Platform\GLFW\GLFW.cpp">
-      <Filter>src\Cherry\Platform\GLFW</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Cherry\Platform\OpenGL\ImGuiOpenGlRenderer.cpp">
-      <Filter>src\Cherry\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Cherry\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Cherry\Platform\Windows</Filter>

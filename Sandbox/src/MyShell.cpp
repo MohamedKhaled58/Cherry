@@ -1,22 +1,25 @@
 #include "Cherry.h"
 
+#include "imgui/imgui.h"
 
 class ExampleLayer : public Cherry::Layer
 {
 public:
 
-	ExampleLayer()
-		:Layer("Example") {
-	
+	ExampleLayer() :Layer("Example") 
+	{
 
-	
 	}
-	
 
-	
+	virtual void OnImGuiRender() override
+	{
+		ImGui::Begin("Example Layer");
+		ImGui::Text("Press ESC to exit the application.");
+		ImGui::End();
+	}
+
 	void OnUpdate() override
 	{
-			
 		// Poll input events
 		if (Cherry::Input::IsKeyPressed(CH_KEY_ESCAPE)) {
 			auto result = MessageBoxA(nullptr, "Are you sure you want to exit?", "Exit Confirmation", MB_YESNO | MB_ICONQUESTION);
@@ -45,9 +48,6 @@ public:
 			CH_CLIENT_TRACE("{0}",(char)keyEvent.GetKeyCode());
 		}
 	}
-
-private:
-
 };
 
 
@@ -57,9 +57,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer);
-		PushOverlay(new Cherry::ImGuiLayer());
-
-		
 	}
 
 	~Sandbox()

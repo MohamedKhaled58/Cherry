@@ -43,7 +43,6 @@ group ""
 			"%{prj.name}/src/**.h",
 			"%{prj.name}/src/**.cpp",
 			"%{prj.name}/vendor/glm/glm/**.hpp",
-			"%{prj.name}/vendor/glm/glm/**.cppm",
 			"%{prj.name}/vendor/glm/glm/**.inl"
 		}
 
@@ -114,7 +113,8 @@ group ""
 		includedirs {
 			"Cherry/Vendor/spdlog/include",
 			"Cherry/src",
-			"%{IncludeDir.glm}"
+			"%{IncludeDir.glm}",
+			"Cherry/vendor"
 		}
 
 		links {
