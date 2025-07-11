@@ -8,11 +8,13 @@
 #include <glad/glad.h>
 
 namespace Cherry {
+
 	static bool s_GLFWInitialized = false;
 	static void GLFWErrorCallback(int error_code, const char* description)
 	{
 		CH_CORE_ERROR("GLFW Error ({0}): {1}", error_code, description);
 	}
+
 
 	Window* Window::Create(const WindowProps& props)
 	{
@@ -58,7 +60,7 @@ namespace Cherry {
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
-		//SET GLFW CALLBACKS
+		//SETING GLFW CALLBACKS
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);

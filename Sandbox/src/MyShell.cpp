@@ -45,7 +45,7 @@ public:
 	{
 		if (event.GetEventType() == Cherry::EventType::KeyPressed) {
 			Cherry::KeyPressedEvent& keyEvent = (Cherry::KeyPressedEvent&)event;
-			CH_CLIENT_TRACE("{0}",(char)keyEvent.GetKeyCode());
+			//CH_CLIENT_TRACE("{0}",(char)keyEvent.GetKeyCode());
 		}
 	}
 };

@@ -90,12 +90,6 @@
     <ClInclude Include="src\Cherry\MouseButtonCodes.h">
       <Filter>src\Cherry</Filter>
     </ClInclude>
-    <ClInclude Include="src\Cherry\Platform\Windows\WindowsInput.h">
-      <Filter>src\Cherry\Platform\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Cherry\Platform\Windows\WindowsWindow.h">
-      <Filter>src\Cherry\Platform\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="src\Cherry\Window.h">
       <Filter>src\Cherry</Filter>
     </ClInclude>
@@ -1353,6 +1347,10 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Cherry\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CHpch.cpp">
@@ -1376,11 +1374,8 @@
     <ClCompile Include="src\Cherry\Log.cpp">
       <Filter>src\Cherry</Filter>
     </ClCompile>
-    <ClCompile Include="src\Cherry\Platform\Windows\WindowsInput.cpp">
-      <Filter>src\Cherry\Platform\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Cherry\Platform\Windows\WindowsWindow.cpp">
-      <Filter>src\Cherry\Platform\Windows</Filter>
-    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
   </ItemGroup>
 </Project>

@@ -4,17 +4,22 @@
 #include "Cherry/Events/Event.h"
 
 namespace Cherry {
+
 	struct WindowProps
 	{
 		std::string Title;
 		unsigned int Width;
 		unsigned int Height;
 
-		WindowProps(const std::string& title = "Cherry Engine",
+		WindowProps
+		(
+			const std::string& title = "Cherry Engine",
 			unsigned int width = 1280,
-			unsigned int height = 720)
+			unsigned int height = 720
+		)
 			: Title(title), Width(width), Height(height)
 		{
+
 		}
 	};
 
@@ -30,8 +35,9 @@ namespace Cherry {
 
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
-
-		virtual void* GetNativeWindow() const = 0;	// Returns a pointer to the native window (e.g., GLFWwindow* for GLFW)
+		
+		// Returns a pointer to the native window(GLFWwindow* for GLFW)
+		virtual void* GetNativeWindow() const = 0;
 
 		// Window attributes
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
