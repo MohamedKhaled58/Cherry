@@ -25,9 +25,10 @@ namespace Cherry
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		CH_CORE_ASSERT(status, "Failed to initialize OpenGLContext!");
 
-		CH_CORE_INFO("OpenGL Vendor   : {}", gl_to_cstr(glGetString(GL_VENDOR)));
-		CH_CORE_INFO("OpenGL Renderer : {}", gl_to_cstr(glGetString(GL_RENDERER)));
-		CH_CORE_INFO("OpenGL Version  : {}", gl_to_cstr(glGetString(GL_VERSION)));
+		CH_CORE_INFO("OpenGL Info:");
+		CH_CORE_INFO("	OpenGL Vendor   : {}", gl_to_cstr(glGetString(GL_VENDOR)));
+		CH_CORE_INFO("	OpenGL Renderer : {}", gl_to_cstr(glGetString(GL_RENDERER)));
+		CH_CORE_INFO("	OpenGL Version  : {}", gl_to_cstr(glGetString(GL_VERSION)));
 	}
 	void OpenGLContext::SwapBuffers()
 	{

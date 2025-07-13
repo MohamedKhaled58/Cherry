@@ -13,9 +13,7 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
-		ImGui::Begin("Example Layer");
-		ImGui::Text("Press ESC to exit the application.");
-		ImGui::End();
+
 	}
 
 	void OnUpdate() override
@@ -57,6 +55,7 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer);
+		CH_CLIENT_WARN("Sandbox");
 	}
 
 	~Sandbox()

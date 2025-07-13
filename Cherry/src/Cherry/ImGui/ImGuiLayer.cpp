@@ -92,11 +92,8 @@ namespace Cherry {
     // Render ImGui content, this is where you define your ImGui UI elements
     void ImGuiLayer::OnImGuiRender()
     {
-        static bool show = true;
-        ImGui::ShowDemoWindow(&show);
-        ImGui::Begin("Demo Window", &show);
-        ImGui::Checkbox("Show Demo Window", &show);
-        ImGui::Text("Hello, world!");
+        ImGui::Begin("CHERRY ENGINE");
+        ImGui::Text("Under Dev!");
         ImGui::End();
     }
 }
