@@ -6,9 +6,29 @@
 
 namespace Cherry {
 
-	 Application* Application::s_Instance = nullptr;
+	Application* Application::s_Instance = nullptr;
 
-	 // Create the application instance and initialize the window and ImGui layer
+	static GLenum ShaderDataTypeToOpenGlBaseType(ShaderDataType type)
+	{
+		switch (type)
+		{
+		case Cherry::ShaderDataType::Float:		return GL_FLOAT;
+		case Cherry::ShaderDataType::Float2:		return GL_FLOAT;
+		case Cherry::ShaderDataType::Float3:		return GL_FLOAT;
+		case Cherry::ShaderDataType::Float4:		return GL_FLOAT;
+		case Cherry::ShaderDataType::Mat3:			return GL_FLOAT;
+		case Cherry::ShaderDataType::Mat4:			return GL_FLOAT;
+		case Cherry::ShaderDataType::Int:			return GL_INT;
+		case Cherry::ShaderDataType::Int2:			return GL_INT;
+		case Cherry::ShaderDataType::Int3:			return GL_INT;
+		case Cherry::ShaderDataType::Int4:			return GL_INT;
+		case Cherry::ShaderDataType::Bool:			return GL_BOOL;
+		}
+		CH_CORE_ASSERT(false, "UnKnown ShaderDataType : {0}", type);
+		return 0;
+	}
+
+	// Create the application instance and initialize the window and ImGui layer
 	Application::Application()
 	{
 		s_Instance = this;
@@ -18,12 +38,14 @@ namespace Cherry {
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 
-		float Vertices[3 * 3] =
+		float Vertices[3 * 7] =
 		{
-			-0.5f,	-0.5f,	0.0f,		//LEFT POINT
-			 0.5f,	-0.5f,	0.0f,		//RIGHT PONT
-			 0.0f,	 0.5f,	0.0f		//TOP POINT
+			//     Position            |      Color (RGBA)
+			-0.5f, -0.5f,  0.0f,        1.0f, 0.5f, 0.0f, 1.0f,  // Left - Orange
+			 0.5f, -0.5f,  0.0f,        1.0f, 1.0f, 0.0f, 1.0f,  // Right - Yellow
+			 0.0f,  0.5f,  0.0f,        1.0f, 0.0f, 0.0f, 1.0f   // Top - Red
 		};
+
 
 		//	Vertex Array
 		glGenVertexArrays(1, &m_VertexArray);
@@ -32,8 +54,34 @@ namespace Cherry {
 		//	Vertex Buffer
 		m_VertexBuffer.reset(VertexBuffer::Create(Vertices, sizeof(Vertices), GL_STATIC_DRAW));
 
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+		{
+			BufferLayout layout = {
+				{ ShaderDataType::Float3, "a_Position" },
+				{ ShaderDataType::Float4, "a_Color" }
+			};
+			m_VertexBuffer->SetLayout(layout);
+		}
+
+		uint32_t Index = 0;
+		const auto& layout = m_VertexBuffer->GetLayout();
+		for (const auto& element : layout )
+		{
+			glEnableVertexAttribArray(Index);
+			glVertexAttribPointer
+			(
+				Index,
+				element.GetComponentCount(),
+				ShaderDataTypeToOpenGlBaseType(element.Type),
+				element.Normalized ? GL_TRUE : GL_FALSE,
+				layout.GetStride(),
+				(const void*)element.Offset
+			);
+
+			Index++;
+		}
+
+
+
 
 		//	Index Buffer
 		uint32_t Indices[3] = { 0 , 1 , 2 };
@@ -44,11 +92,15 @@ namespace Cherry {
 		std::string vertexSource = R"(
 			#version 330 core
 			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec4 a_Color;
 
 			out vec3 v_Position;
+			out vec4 v_Color;
+
 			void main()
 			{
 				v_Position = a_Position;
+				v_Color = a_Color;
 				gl_Position = vec4(a_Position, 1.0);
 			}
 		)";
@@ -58,13 +110,17 @@ namespace Cherry {
 			layout(location = 0) out vec4 color;
 
 			in vec3 v_Position;
+			in vec4 v_Color;
+
 			void main()
 			{
 				color = vec4(v_Position * 0.5 + 0.5, 1.0);
+				color = v_Color;
+
 			}
 		)";
 
-		m_Shader.reset(new Shader(vertexSource,fregmantSource));
+		m_Shader.reset(new Shader(vertexSource, fregmantSource));
 	}
 
 
@@ -103,7 +159,7 @@ namespace Cherry {
 		}
 		// Handle window events
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
-	
+
 	}
 
 	// Main loop of the application
@@ -113,7 +169,7 @@ namespace Cherry {
 
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
-		
+
 			m_Shader->Bind();
 			glBindVertexArray(m_VertexArray);
 			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
@@ -131,7 +187,7 @@ namespace Cherry {
 			m_ImGuiLayer->End();
 
 
-			
+
 
 			// Update Window
 			CH_CORE_ASSERT(m_Window, "Window is null!");

@@ -1,11 +1,61 @@
-#Directories
-.vs/
+# Build output
 bin/
 bin-int/
+*.obj
+*.o
+*.lib
+*.dll
+*.exe
 
-
-#Files
+# Visual Studio
+.vs/
+*.sdf
+*.suo
 *.user
-*.vcxproj.filters
+*.userosscache
+*.VC.db
+*.VC.opendb
+
+# Visual Studio project files
 *.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.ncb
+*.sln
+*.opensdf
+
+# ImGui .ini settings
+imgui.ini
 *.ini
+
+# Logs / temp files
+*.log
+*.tmp
+*.bak
+*.cache
+
+# System
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Premake cache
+*.make
+*.workspace
+*.project
+*.gch
+
+# Custom tools
+*.pdb
+*.idb
+*.ipch
+*.aps
+*.iobj
+*.ipdb
+
+# Editor settings
+.idea/
+*.code-workspace
+
+# Crash dumps (Windows)
+*.dmp

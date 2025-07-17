@@ -13,11 +13,17 @@
     <Filter Include="src\Cherry\ImGui">
       <UniqueIdentifier>{D30A54EB-BF03-733D-E835-58C2D48D5249}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Cherry\Platform">
-      <UniqueIdentifier>{5D5D2A86-C9BE-0794-522C-4E46BE8C3E53}</UniqueIdentifier>
+    <Filter Include="src\Cherry\Renderer">
+      <UniqueIdentifier>{AF640761-1BC6-E46E-A433-2B2110941B2E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Cherry\Platform\Windows">
-      <UniqueIdentifier>{97147A1C-0322-A802-8C08-A4EDF81474B9}</UniqueIdentifier>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\OpenGL">
+      <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Windows">
+      <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
@@ -90,8 +96,35 @@
     <ClInclude Include="src\Cherry\MouseButtonCodes.h">
       <Filter>src\Cherry</Filter>
     </ClInclude>
+    <ClInclude Include="src\Cherry\Renderer\Buffer.h">
+      <Filter>src\Cherry\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\Renderer\GraphicsContext.h">
+      <Filter>src\Cherry\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\Renderer\Renderer.h">
+      <Filter>src\Cherry\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\Renderer\Shader.h">
+      <Filter>src\Cherry\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cherry\Renderer\Texture.h">
+      <Filter>src\Cherry\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Cherry\Window.h">
       <Filter>src\Cherry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h">
+      <Filter>src\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>src\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="vendor\glm\glm\common.hpp">
       <Filter>vendor\glm\glm</Filter>
@@ -1347,15 +1380,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Cherry\Renderer\GraphicsContext.h" />
-    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
-    <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
-    <ClInclude Include="src\Cherry\Renderer\Shader.h" />
-    <ClInclude Include="src\Cherry\Renderer\Buffer.h" />
-    <ClInclude Include="src\Cherry\Renderer\Texture.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
-    <ClInclude Include="src\Cherry\Renderer\Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CHpch.cpp">
@@ -1379,13 +1403,29 @@
     <ClCompile Include="src\Cherry\Log.cpp">
       <Filter>src\Cherry</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
-    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
-    <ClCompile Include="src\Cherry\Renderer\Shader.cpp" />
-    <ClCompile Include="src\Cherry\Renderer\Buffer.cpp" />
-    <ClCompile Include="src\Cherry\Renderer\Texture.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
-    <ClCompile Include="src\Cherry\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Cherry\Renderer\Buffer.cpp">
+      <Filter>src\Cherry\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cherry\Renderer\Renderer.cpp">
+      <Filter>src\Cherry\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cherry\Renderer\Shader.cpp">
+      <Filter>src\Cherry\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cherry\Renderer\Texture.cpp">
+      <Filter>src\Cherry\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
