@@ -33,29 +33,3 @@ imgui.ini
 *.tmp
 *.bak
 *.cache
-
-# System
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Premake cache
-*.make
-*.workspace
-*.project
-*.gch
-
-# Custom tools
-*.pdb
-*.idb
-*.ipch
-*.aps
-*.iobj
-*.ipdb
-
-# Editor settings
-.idea/
-*.code-workspace
-
-# Crash dumps (Windows)
-*.dmp

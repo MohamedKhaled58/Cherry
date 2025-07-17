@@ -33,7 +33,7 @@ group ""
 		location "Cherry"
 		kind "StaticLib"
 		language "C++"
-		cppdialect "C++17"
+		cppdialect "C++20"
 		staticruntime "off"
 
 		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -66,7 +66,7 @@ group ""
 		}
 
 		filter "system:windows"
-			cppdialect "c++17"
+			cppdialect "c++20"
 			systemversion "latest"
 
 		defines {
@@ -99,7 +99,7 @@ group ""
 		location "Sandbox"
 		kind "ConsoleApp"
 		language "C++"
-		cppdialect "C++17"
+		cppdialect "C++20"
 		staticruntime "off"
 
 
@@ -124,7 +124,7 @@ group ""
 		dependson { "Cherry" }
 
 		filter "system:windows"
-			cppdialect "c++17"
+			cppdialect "c++20"
 			systemversion "latest"
 
 		defines {

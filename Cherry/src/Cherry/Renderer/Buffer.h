@@ -28,7 +28,7 @@ namespace Cherry {
 		case Cherry::ShaderDataType::Int4:			return 4 * 4;
 		case Cherry::ShaderDataType::Bool:			return 1;
 		}
-		CH_CORE_ASSERT(false, "UnKnown ShaderDataType : {0}", type);
+		CH_CORE_ASSERT(false, "UnKnown ShaderDataType");
 		return 0;
 	}
 
@@ -63,7 +63,7 @@ namespace Cherry {
 			case Cherry::ShaderDataType::Int4:			return 4;
 			case Cherry::ShaderDataType::Bool:			return 1;
 			}
-			CH_CORE_ASSERT(false, "UnKnown ShaderDataType : {0}", type);
+			CH_CORE_ASSERT(false, "UnKnown ShaderDataType!");
 
 			return 0;
 		}

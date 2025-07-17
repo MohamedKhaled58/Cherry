@@ -13,17 +13,18 @@
 	#error CHERRY ONLY SUPPORTS WINDOWS
 #endif // CH_PLATFORM_WINDOWS
 
-#ifndef CH_DEBUG
+#ifdef CH_DEBUG
 #define CH_ENABLE_ASSERTS
-#endif // CH_DEBUG
+#endif
 
 #ifdef CH_ENABLE_ASSERTS
-	#define CH_CLIENT_ASSERT(x, ...) {if(!(x)) {CH_CLIENT_ERROR("Assertion Failed: {0}",__VA__ARGS__);__debugbreak();}}
-	#define CH_CORE_ASSERT(x, ...) {if(!(x)) {CH_CORE_ERROR("Assertion Failed: {0}",__VA__ARGS__);__debugbreak();}}
+#define CH_CLIENT_ASSERT(x, ...) { if(!(x)) { CH_CLIENT_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#define CH_CORE_ASSERT(x, ...) { if(!(x)) { CH_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
 #else
-	#define CH_CLIENT_ASSERT(x, ...)
-	#define CH_CORE_ASSERT(x, ...)
-#endif // CH_ENABLE_ASSERTS
+#define CH_CLIENT_ASSERT(x, ...)
+#define CH_CORE_ASSERT(x, ...)
+#endif
+
 
 
 #define BIT(X) (1<<X)
