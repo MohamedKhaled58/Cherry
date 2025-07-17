@@ -118,7 +118,7 @@ namespace Cherry {
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
-		static VertexBuffer* Create(float* vertices, uint32_t size , uint32_t usage);
+		static VertexBuffer* Create(float* vertices, uint32_t size);
 	};
 
 
@@ -132,6 +132,6 @@ namespace Cherry {
 
 		virtual uint32_t GetCount() const = 0;
 
-		static IndexBuffer* Create(uint32_t* indices, uint32_t count, uint32_t usage);
+		static IndexBuffer* Create(uint32_t* indices, uint32_t count);
 	};
 }

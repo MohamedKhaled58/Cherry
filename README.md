@@ -1,7 +1,5 @@
 # Cherry Engine
 
-![Cherry Engine Banner](https://user-images.githubusercontent.com/8225057/191050833-b7ecf528-bfae-4a9f-ac1b-f3d83437a2f4.png)
-
 Cherry Engine is a modular, modern C++17 game engine/framework for Windows, designed for real-time rendering, extensibility, and rapid development. It leverages OpenGL for graphics, ImGui for UI, and a robust event/layer system for clean architecture.
 
 ---
@@ -21,9 +19,6 @@ Cherry Engine is a modular, modern C++17 game engine/framework for Windows, desi
 
 Cherry Engine is designed for real-time graphics and UI overlays. By default, it renders a colored triangle and an ImGui overlay:
 
-### Example ImGui Window
-
-![ImGui Example](https://user-images.githubusercontent.com/8225057/191050833-b7ecf528-bfae-4a9f-ac1b-f3d83437a2f4.png)
 
 ### Example OpenGL Output (Default Triangle)
 
@@ -45,7 +40,7 @@ Cherry Engine is designed for real-time graphics and UI overlays. By default, it
 
 ### Prerequisites
 - Windows (x64)
-- Visual Studio 2019+ or compatible C++17 compiler
+- Visual Studio 2019+ or compatible C++20 compiler
 - [Premake5](https://premake.github.io/) for project generation
 
 ### Build Instructions

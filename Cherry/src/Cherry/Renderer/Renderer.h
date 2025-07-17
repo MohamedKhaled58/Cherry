@@ -1,20 +1,19 @@
 #pragma once
 
-namespace Cherry {
+#include "Cherry/Renderer/RenderCommand.h"
 
-	enum class RendererAPI
-	{
-		None = 0,
-		OpenGL = 1
-	};
+namespace Cherry {
 
 	class Renderer 
 	{
 	public:
-		inline static RendererAPI GetAPI() { return s_RendererAPI; }
-		inline static RendererAPI SetAPI() { return s_RendererAPI; }
-	private:
-		static RendererAPI s_RendererAPI;
+		static void BeginScene();		//TODO:: All Scene Params
+		static void EndScene();
+
+		static void Submit(const std::shared_ptr<VertexArray>& vertexArray);
+		static void Flush();
+
+		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	};
 
 }

@@ -10,8 +10,8 @@ namespace Cherry {
 
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None:		CH_CLIENT_ASSERT(false, "RendererAPI::None is not Supported!"); return nullptr;
-		case RendererAPI::OpenGL:	return new OpenGLVertexArray();
+		case RendererAPI::API::None:	CH_CLIENT_ASSERT(false, "RendererAPI::None is not Supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:	return new OpenGLVertexArray();
 		}
 
 		CH_CLIENT_ASSERT(false, "UnKnown RendererAPI !");

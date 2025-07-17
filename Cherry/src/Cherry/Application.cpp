@@ -1,8 +1,7 @@
 #include "CHpch.h"
 #include "Application.h"
-#include <glad/glad.h>
-#include "Cherry/Input.h"
-#include "KeyCodes.h"
+
+#include "Cherry/Renderer/Renderer.h"
 
 namespace Cherry {
 
@@ -33,7 +32,7 @@ namespace Cherry {
 
 		//Creating Vertex Buffer
 		std::shared_ptr<VertexBuffer>m_VertexBuffer;
-		m_VertexBuffer.reset(VertexBuffer::Create(Vertices, sizeof(Vertices), GL_STATIC_DRAW));
+		m_VertexBuffer.reset(VertexBuffer::Create(Vertices, sizeof(Vertices)));
 		//Setting Buffer Layout
 		BufferLayout layout = {
 			{ ShaderDataType::Float3, "a_Position" },
@@ -51,7 +50,7 @@ namespace Cherry {
 		uint32_t Indices[3] = { 0 , 1 , 2 };
 
 		std::shared_ptr<IndexBuffer>m_IndexBuffer;
-		m_IndexBuffer.reset(IndexBuffer::Create(Indices, sizeof(Indices) / sizeof(uint32_t), GL_STATIC_DRAW));
+		m_IndexBuffer.reset(IndexBuffer::Create(Indices, sizeof(Indices) / sizeof(uint32_t)));
 
 		//Adding Index Buffer TO Vertex Array
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
@@ -59,10 +58,10 @@ namespace Cherry {
 		///////
 		float SquareVertices[3 * 4] = {
 			// x      y      z
-			-0.5f, -0.5f, 0.0f,  // Bottom-left  (0)
-			 0.5f, -0.5f, 0.0f,  // Bottom-right (1)
-			 0.5f,  0.5f, 0.0f,  // Top-right    (2)
-			-0.5f,  0.5f, 0.0f   // Top-left     (3)
+			-0.9f, -0.9f, 0.0f,  // Bottom-left  (0)
+			 0.9f, -0.9f, 0.0f,  // Bottom-right (1)
+			 0.9f,  0.9f, 0.0f,  // Top-right    (2)
+			-0.9f,  0.9f, 0.0f   // Top-left     (3)
 		};
 
 		uint32_t SquareIndices[6] = {
@@ -74,10 +73,10 @@ namespace Cherry {
 
 		std::shared_ptr<IndexBuffer>m_SquareIB;
 
-		m_SquareIB.reset(IndexBuffer::Create(SquareIndices, sizeof(SquareIndices) / sizeof(uint32_t), GL_STATIC_DRAW));
+		m_SquareIB.reset(IndexBuffer::Create(SquareIndices, sizeof(SquareIndices) / sizeof(uint32_t)));
 
 		std::shared_ptr<VertexBuffer>m_SquareVB;
-		m_SquareVB.reset((VertexBuffer::Create(SquareVertices, sizeof(SquareVertices), GL_STATIC_DRAW)));
+		m_SquareVB.reset((VertexBuffer::Create(SquareVertices, sizeof(SquareVertices))));
 		m_SquareVA->SetIndexBuffer(m_SquareIB);
 
 
@@ -203,19 +202,24 @@ namespace Cherry {
 
 		while (m_Running) {
 
-			glClearColor(0.1f, 0.1f, 0.1f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
 
-			
-			// Square
+			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			RenderCommand::Clear();
+			//
+			Renderer::BeginScene();
+			//
 			m_SquareS->Bind();
-			m_SquareVA->Bind();
-			glDrawElements(GL_TRIANGLES, m_SquareVA->GetIndexBuffers()->GetCount(), GL_UNSIGNED_INT, nullptr);
-
-			//Triangle
+			Renderer::Submit(m_SquareVA);
+			// 
 			m_Shader->Bind();
-			m_VertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffers()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(m_VertexArray);
+			// 
+			Renderer::EndScene();
+			// 
+			
+			//
+			//MULTITHREAD GAME
+			//Renderer::Flush();
 
 			// Update Input
 			for (Layer* layer : m_LayerStack)

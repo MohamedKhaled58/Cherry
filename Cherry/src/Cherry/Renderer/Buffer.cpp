@@ -7,24 +7,24 @@
 
 namespace Cherry {
 
-	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size, uint32_t usage)
+	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None:		CH_CLIENT_ASSERT(false, "RendererAPI::None is not Supported!"); return nullptr;
-		case RendererAPI::OpenGL:	return new OpenGLVertexBuffer(vertices, size, usage);
+		case RendererAPI::API::None:	CH_CLIENT_ASSERT(false, "RendererAPI::None is not Supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:	return new OpenGLVertexBuffer(vertices, size);
 		}
 
 		CH_CLIENT_ASSERT(false, "UnKnown RendererAPI !");
 		return nullptr;
 	}
 
-	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count, uint32_t usage)
+	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None:		CH_CLIENT_ASSERT(false, "RendererAPI::None is not Supported!"); return nullptr;
-		case RendererAPI::OpenGL:	return new OpenGLIndexBuffer(indices, count, usage);
+		case RendererAPI::API::None:	CH_CLIENT_ASSERT(false, "RendererAPI::None is not Supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:	return new OpenGLIndexBuffer(indices, count);
 		}
 
 		return nullptr;
