@@ -1,0 +1,17 @@
+[2025-07-19 02:36:06.881] [[CHERRY]] [warning] CHERRY Initialized Log With (7) Levels
+[2025-07-19 02:36:06.882] [[CHERRY]] [info] Orthographic Camera Initialized!
+[2025-07-19 02:36:06.882] [[CHERRY]] [info] Creating window [Cherry Engine] (1280, 720)
+[2025-07-19 02:36:07.370] [[CHERRY]] [info] Creating OpenGL context for window: 0x2dc4f9d07d0
+[2025-07-19 02:36:07.374] [[CHERRY]] [info] OpenGL Info:
+[2025-07-19 02:36:07.375] [[CHERRY]] [info] 	OpenGL Vendor   : NVIDIA Corporation
+[2025-07-19 02:36:07.375] [[CHERRY]] [info] 	OpenGL Renderer : NVIDIA GeForce RTX 3080 Laptop GPU/PCIe/SSE2
+[2025-07-19 02:36:07.375] [[CHERRY]] [info] 	OpenGL Version  : 4.6.0 NVIDIA 576.40
+[2025-07-19 02:36:07.375] [[CHERRY]] [info] ImGuiLayer created
+[2025-07-19 02:36:07.376] [[CHERRY]] [trace] Pushed Overlay: ImGuiLayer
+[2025-07-19 02:36:07.379] [[CHERRY]] [trace] Grid updated: 100 labels created
+[2025-07-19 02:36:07.379] [[CHERRY]] [info] Application initialized successfully
+[2025-07-19 02:36:07.379] [[CHERRY]] [trace] Pushed Layer: Example
+[2025-07-19 02:36:07.379] [[CLIENT]] [warning] Sandbox
+[2025-07-19 02:36:07.387] [[CHERRY]] [trace] Grid updated: 100 labels created
+[2025-07-19 02:36:08.866] [[CHERRY]] [trace] Application Destroyed!
+[2025-07-19 02:36:08.866] [[CHERRY]] [info] ImGuiLayer Destroyed

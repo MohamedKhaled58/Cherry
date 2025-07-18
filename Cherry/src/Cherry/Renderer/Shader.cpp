@@ -2,6 +2,7 @@
 #include "Shader.h"
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Cherry {
 	Shader::Shader(const std::string& vertexSource, const std::string& fragmentSource)
@@ -124,4 +125,43 @@ namespace Cherry {
 	{
 		glUseProgram(0);
 	}
+
+	// Function to upload a 4x4 matrix uniform to the shader program.
+	void Shader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix) const {
+
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location == -1) {
+			CH_CORE_ERROR("Uniform '{}' not found in shader!", name);
+		}
+		else {
+			glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+		}
+	}
+
+	void Shader::UploadUniformFloat3(const std::string& name, const glm::vec3& value)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location == -1)
+		{
+			// Optional: Log warning about uniform not found
+			// std::cout << "Warning: Uniform '" << name << "' not found in shader!" << std::endl;
+			return;
+		}
+
+		glUniform3f(location, value.x, value.y, value.z);
+	}
+
+	void Shader::UploadUniformFloat3(const std::string& name, float x, float y, float z)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location == -1)
+		{
+			// Optional: Log warning about uniform not found
+			// std::cout << "Warning: Uniform '" << name << "' not found in shader!" << std::endl;
+			return;
+		}
+
+		glUniform3f(location, x, y, z);
+	}
+
 }

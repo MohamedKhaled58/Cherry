@@ -11,7 +11,7 @@
 #include "Cherry/Renderer/Shader.h"
 #include "Cherry/Renderer/Buffer.h"
 #include "Cherry/Renderer/VertexArray.h"
-
+#include "Cherry/Renderer/Camera.h"
 
 namespace Cherry {
 
@@ -33,9 +33,22 @@ namespace Cherry {
 			return *m_Window;
 		}
 		inline static Application& Get() { return *s_Instance; }
-
 	private:
+		void UpdateGridForCamera();
+		bool m_GridNeedsUpdate = true; // Flag to track when grid needs updating
+
+		// Grid label storage
+		struct GridLabel {
+			std::string text;
+			glm::vec3 position;
+			bool isHorizontal; // true for X-axis labels, false for Y-axis labels
+		};
+
+		std::vector<GridLabel> m_GridLabels;
+		bool m_ShowGridLabels = true;
+	
 		bool OnWindowClose(WindowCloseEvent& e);
+
 	private:
 		static Application* s_Instance;
 
@@ -49,6 +62,13 @@ namespace Cherry {
 
 		std::shared_ptr<Shader> m_SquareS;
 		std::shared_ptr<VertexArray> m_SquareVA;
+		
+		
+		std::shared_ptr<Shader> m_GridShader;
+		std::shared_ptr<VertexArray> m_GridVertexArray;
+
+
+		OrthographicCamera m_Camera;
 
 	};
 
