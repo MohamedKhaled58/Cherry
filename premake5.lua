@@ -1,5 +1,5 @@
 workspace "Cherry"
-	startproject "Sandbox"
+	startproject "MyShell"
 	architecture "x64"
 
 	configurations {
@@ -15,10 +15,10 @@ workspace "Cherry"
 
 	-- Include directories relative to root folder (solution directory)
 	IncludeDir = {}
-	IncludeDir["GLFW"] = "Cherry/Vendor/GLFW/include"
-	IncludeDir["Glad"] = "Cherry/Vendor/Glad/include"
-	IncludeDir["ImGui"] = "Cherry/Vendor/imgui"
-	IncludeDir["glm"] = "Cherry/Vendor/glm"
+	IncludeDir["GLFW"]	=	"Cherry/Vendor/GLFW/include"
+	IncludeDir["Glad"]	=	"Cherry/Vendor/Glad/include"
+	IncludeDir["ImGui"]	=	"Cherry/Vendor/imgui"
+	IncludeDir["glm"]	=	"Cherry/Vendor/glm"
 
 	-- Include GLFW project first
 
@@ -94,9 +94,9 @@ group ""
 			runtime "Release"
 			optimize "on"
 
-	-- Sandbox project
-	project "Sandbox"
-		location "Sandbox"
+	-- MyShell project
+	project "MyShell"
+		location "MyShell"
 		kind "ConsoleApp"
 		language "C++"
 		cppdialect "C++20"
