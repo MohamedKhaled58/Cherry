@@ -2,25 +2,25 @@
 #include "Application.h"
 #include "Cherry/Renderer/Buffer.h"
 #include "Cherry/Renderer/Renderer.h"
+#include <GLFW/glfw3.h>
 
 
 namespace Cherry {
 
     Application* Application::s_Instance = nullptr;
 
-
     Application::Application()
     {
         s_Instance = this;
         m_Window = std::unique_ptr<Window>(Window::Create());
-        m_Window->SetEventCallback(CH_BIND_EVENT_FN(Application::OnEvent));
 
+        m_Window->SetEventCallback(CH_BIND_EVENT_FN(Application::OnEvent));
+        m_Window->SetVSync(true);
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
         CH_CORE_INFO("Application initialized successfully");
     }
 
-    // Destroy the application instance and clean up resources
     Application::~Application()
     {
         CH_CORE_TRACE("Application Destroyed!");
@@ -28,7 +28,6 @@ namespace Cherry {
         s_Instance = nullptr;
     }
 
-    // Initialize the application
     void Application::PushLayer(Layer* layer)
     {
         m_LayerStack.PushLayer(layer);
@@ -43,7 +42,6 @@ namespace Cherry {
         CH_CORE_TRACE("Pushed Overlay: {0}", layer->GetName());
     }
 
-    // Handle events in the application
     void Application::OnEvent(Event& e)
     {
         EventDispatcher dispatcher(e);
@@ -52,19 +50,20 @@ namespace Cherry {
             (*--it)->OnEvent(e);
             if (e.Handled) break;
         }
-        // Handle window events
         dispatcher.Dispatch<WindowCloseEvent>(CH_BIND_EVENT_FN(Application::OnWindowClose));
     }
 
-    // Main loop of the application
     void Application::Run()
     {
-        while (m_Running) {
-            // Update layers
-            for (Layer* layer : m_LayerStack)
-                layer->OnUpdate();
+        while (m_Running)
+        {
+            float time = (float)glfwGetTime();     //Should Be Platform::GetTime
+            TimeStep timeStep = time - m_LastFrameTime;
+            m_LastFrameTime = time;
 
-            // Update IMGUI
+            for (Layer* layer : m_LayerStack)
+                layer->OnUpdate(timeStep);
+
             if (m_ImGuiLayer) {
                 m_ImGuiLayer->Begin();
                 for (Layer* layer : m_LayerStack)
@@ -72,7 +71,6 @@ namespace Cherry {
                 m_ImGuiLayer->End();
             }
 
-            // Update Window
             CH_CORE_ASSERT(m_Window, "Window is null!");
             if (m_Window) {
                 m_Window->OnUpdate();
@@ -80,8 +78,6 @@ namespace Cherry {
         }
     }
 
-
-    // Handle window close event
     bool Application::OnWindowClose(WindowCloseEvent& e)
     {
         m_Running = false;

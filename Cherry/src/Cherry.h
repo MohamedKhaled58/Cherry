@@ -6,6 +6,8 @@
 #include "Cherry/Layer.h"
 #include "Cherry/Log.h"
 
+#include "Cherry/Core/TimeStep.h"
+
 
 #include "Cherry/Input.h"
 #include "Cherry/KeyCodes.h"

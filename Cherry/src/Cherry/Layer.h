@@ -1,5 +1,6 @@
 #pragma once
 #include "Cherry/Core.h"
+#include "Cherry/Core/TimeStep.h"
 #include "Cherry/Events/Event.h"
 
 namespace Cherry {
@@ -11,7 +12,7 @@ namespace Cherry {
 
 		virtual void OnAttach(){}
 		virtual void OnDetach(){}
-		virtual void OnUpdate(){}
+		virtual void OnUpdate(TimeStep timeStep){}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event){}
 

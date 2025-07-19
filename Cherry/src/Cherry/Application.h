@@ -6,12 +6,9 @@
 #include "Cherry/Events/Event.h"
 #include "Cherry/Events/ApplicationEvent.h"
 
-#include "Cherry/ImGui/ImGuiLayer.h"
+#include "Cherry/Core/TimeStep.h"
 
-#include "Cherry/Renderer/Shader.h"
-#include "Cherry/Renderer/Buffer.h"
-#include "Cherry/Renderer/VertexArray.h"
-#include "Cherry/Renderer/Camera.h"
+#include "Cherry/ImGui/ImGuiLayer.h"
 
 namespace Cherry {
 
@@ -33,15 +30,19 @@ namespace Cherry {
 			return *m_Window;
 		}
 		inline static Application& Get() { return *s_Instance; }
+
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
-	private:
-		static Application* s_Instance;
 
+	private:
 		std::unique_ptr<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+		float m_LastFrameTime = 0.0f;
+
+	private:
+		static Application* s_Instance;
 	};
 
 	// TO BE DEFINED IN CLIENT

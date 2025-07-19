@@ -150,23 +150,25 @@ public:
     }
 
 
-    void OnUpdate() override
+    void OnUpdate(Cherry::TimeStep timeStep) override
     {
+        CH_CLIENT_TRACE("Delta time {0}s  {1}ms ", timeStep.GetSeconds(),timeStep.GetMilliSeconds());
+
         if (Cherry::Input::IsKeyPressed(CH_KEY_LEFT))
-            m_CameraPosition.x -= m_CameraMoveSpeed;
+            m_CameraPosition.x -= m_CameraMoveSpeed * timeStep;
         else if (Cherry::Input::IsKeyPressed(CH_KEY_RIGHT))
-            m_CameraPosition.x += m_CameraMoveSpeed;
+            m_CameraPosition.x += m_CameraMoveSpeed * timeStep;
 
         if (Cherry::Input::IsKeyPressed(CH_KEY_DOWN))
-            m_CameraPosition.y -= m_CameraMoveSpeed;
+            m_CameraPosition.y -= m_CameraMoveSpeed * timeStep;
         else if (Cherry::Input::IsKeyPressed(CH_KEY_UP))
-            m_CameraPosition.y += m_CameraMoveSpeed;
+            m_CameraPosition.y += m_CameraMoveSpeed * timeStep;
 
 
         if (Cherry::Input::IsKeyPressed(CH_KEY_A))
-            m_CameraRotation += m_CameraRotationSpeed;
+            m_CameraRotation += m_CameraRotationSpeed * timeStep;
         else if (Cherry::Input::IsKeyPressed(CH_KEY_D))
-            m_CameraRotation -= m_CameraRotationSpeed;
+            m_CameraRotation -= m_CameraRotationSpeed * timeStep;
 
         // Clear screen
         Cherry::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
@@ -200,10 +202,12 @@ public:
         std::shared_ptr<Cherry::Shader> m_SquareS;
         std::shared_ptr<Cherry::VertexArray> m_SquareVA;
         Cherry::OrthographicCamera m_Camera;
+
         glm::vec3 m_CameraPosition;
         float m_CameraRotation;
-        float m_CameraMoveSpeed = 0.01f;
-        float m_CameraRotationSpeed = 1.0f;
+
+        float m_CameraMoveSpeed = 1.0f;
+        float m_CameraRotationSpeed = 90.0f;
 };
 
 
