@@ -1,6 +1,7 @@
 #include "Cherry.h"
 
 #include "imgui/imgui.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 
 class ShellLayer : public Cherry::Layer
@@ -8,7 +9,7 @@ class ShellLayer : public Cherry::Layer
 public:
 
     ShellLayer()
-        :Layer("Shell"),m_Camera(-1.6f, 1.6f, -0.9f, 0.9f, -1.0f, 1.0f), m_CameraPosition({0.0f,0.0f,0.0f}), m_CameraRotation(0.0f)
+        :Layer("Shell"),m_Camera(-1.6f, 1.6f, -0.9f, 0.9f, -1.0f, 1.0f), m_CameraPosition({0.0f,0.0f,0.0f}), m_CameraRotation(0.0f), m_SquarePosition(0.0f)
     {
         ///////////////////////////
        // Triangle Setup
@@ -51,10 +52,10 @@ public:
         ///////////////////////////
         float SquareVertices[3 * 4] = {
             // x      y      z
-            -0.75f, -0.75f, 0.0f,  // Bottom-left  (0)
-             0.75f, -0.75f, 0.0f,  // Bottom-right (1)
-             0.75f,  0.75f, 0.0f,  // Top-right    (2)
-            -0.75f,  0.75f, 0.0f   // Top-left     (3)
+            -0.5f, -0.5f, 0.0f,  // Bottom-left  (0)
+             0.5f, -0.5f, 0.0f,  // Bottom-right (1)
+             0.5f,  0.5f, 0.0f,  // Top-right    (2)
+            -0.5f,  0.5f, 0.0f   // Top-left     (3)
         };
         uint32_t SquareIndices[6] = {
             0, 1, 2,  // Triangle 1
@@ -88,6 +89,7 @@ public:
         layout(location = 1) in vec4 a_Color;
 
         uniform mat4 u_ViewProjection;
+        uniform mat4 u_Transform;
 
         out vec3 v_Position;
         out vec4 v_Color;
@@ -96,7 +98,7 @@ public:
         {
             v_Position = a_Position;
             v_Color = a_Color;
-            gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+            gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
         }
     )";
 
@@ -123,10 +125,11 @@ public:
 
         out vec3 v_Position;
         uniform mat4 u_ViewProjection;
+        uniform mat4 u_Transform;
         void main()
         {
             v_Position = a_Position;
-            gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+            gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
         }
     )";
 
@@ -170,6 +173,17 @@ public:
         else if (Cherry::Input::IsKeyPressed(CH_KEY_D))
             m_CameraRotation -= m_CameraRotationSpeed * timeStep;
 
+
+        if (Cherry::Input::IsKeyPressed(CH_KEY_J))
+            m_SquarePosition.x -= m_SquareMoveSpeed * timeStep;
+        else if (Cherry::Input::IsKeyPressed(CH_KEY_L))
+            m_SquarePosition.x += m_SquareMoveSpeed * timeStep;
+
+        if (Cherry::Input::IsKeyPressed(CH_KEY_I))
+            m_SquarePosition.y += m_SquareMoveSpeed * timeStep;
+        else if (Cherry::Input::IsKeyPressed(CH_KEY_K))
+            m_SquarePosition.y -= m_SquareMoveSpeed * timeStep;
+
         // Clear screen
         Cherry::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
         Cherry::RenderCommand::Clear();
@@ -177,16 +191,21 @@ public:
         m_Camera.SetPosition(m_CameraPosition);
         m_Camera.SetRotation(m_CameraRotation);
         Cherry::Renderer::BeginScene(m_Camera);
-        
-        // Render square with safety checks
-        if (m_SquareVA && m_SquareS && m_SquareVA->GetIndexBuffers()) {
-            Cherry::Renderer::Submit(m_SquareS, m_SquareVA);
-        }
 
-        // Render triangle with safety checks
-        if (m_VertexArray && m_Shader && m_VertexArray->GetIndexBuffers()) {
-            Cherry::Renderer::Submit(m_Shader, m_VertexArray);
+        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+        for (int y = 0; y < 20; y++)
+        {
+            for (int x = 0; x < 20; x++)
+            {
+                glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+                glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+                Cherry::Renderer::Submit(m_SquareS, m_SquareVA, transform);
+
+            }
         }
+       
+
+        //Cherry::Renderer::Submit(m_Shader, m_VertexArray);
 
         Cherry::Renderer::EndScene();
     }
@@ -208,6 +227,9 @@ public:
 
         float m_CameraMoveSpeed = 1.0f;
         float m_CameraRotationSpeed = 90.0f;
+
+        glm::vec3 m_SquarePosition;
+        float m_SquareMoveSpeed = 1.0f;
 };
 
 
