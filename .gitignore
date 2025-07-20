@@ -1,7 +1,6 @@
 # Build output
 bin/
 bin-int/
-*.txt
 *.obj
 *.o
 *.lib
@@ -30,6 +29,7 @@ imgui.ini
 *.ini
 
 # Logs / temp files
+*.txt
 *.log
 *.tmp
 *.bak

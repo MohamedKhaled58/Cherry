@@ -2,8 +2,8 @@
 #include <spdlog/sinks/basic_file_sink.h>
 
 namespace Cherry {
-	std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
-	std::shared_ptr<spdlog::logger> Log::s_ClientLogger;
+	REF(spdlog::logger) Log::s_CoreLogger;
+	REF(spdlog::logger) Log::s_ClientLogger;
 
 	void Log::Init()
 	{

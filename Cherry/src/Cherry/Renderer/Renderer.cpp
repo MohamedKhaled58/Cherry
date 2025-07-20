@@ -1,6 +1,7 @@
 #include "CHpch.h"
 #include "Renderer.h"
 #include "Cherry/Renderer/Shader.h"
+#include <Platform/OpenGL/OpenGLShader.h>
 
 
 namespace Cherry {
@@ -16,12 +17,13 @@ namespace Cherry {
 
 	}
 
-	void Renderer::Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray,const glm::mat4& transform)
+	void Renderer::Submit(const REF(Shader)& shader, const REF(VertexArray)& vertexArray,const glm::mat4& transform)
 	{
 		shader->Bind();
-		shader->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
-		//	MODEL MATRIX
-		shader->UploadUniformMat4("u_Transform", transform);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Transform", transform);
+		//mi->Bind();
+
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
 	}

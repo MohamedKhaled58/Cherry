@@ -1,7 +1,9 @@
 #include "Cherry.h"
+#include <Platform/OpenGL/OpenGLShader.h>
 
 #include "imgui/imgui.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 class ShellLayer : public Cherry::Layer
@@ -9,7 +11,7 @@ class ShellLayer : public Cherry::Layer
 public:
 
     ShellLayer()
-        :Layer("Shell"),m_Camera(-1.6f, 1.6f, -0.9f, 0.9f, -1.0f, 1.0f), m_CameraPosition({0.0f,0.0f,0.0f}), m_CameraRotation(0.0f), m_SquarePosition(0.0f)
+        :Layer("Shell"),m_Camera(-1.6f, 1.6f, -0.9f, 0.9f, -1.0f, 1.0f), m_CameraPosition({0.0f,0.0f,0.0f}), m_CameraRotation(0.0f)
     {
         ///////////////////////////
        // Triangle Setup
@@ -27,7 +29,7 @@ public:
         m_VertexArray.reset(Cherry::VertexArray::Create());
 
         // Creating Vertex Buffer
-        std::shared_ptr<Cherry::VertexBuffer>m_VertexBuffer;
+        REF(Cherry::VertexBuffer)m_VertexBuffer;
         m_VertexBuffer.reset(Cherry::VertexBuffer::Create(Vertices, sizeof(Vertices)));
 
         // Setting Buffer Layout
@@ -41,7 +43,7 @@ public:
         m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 
         // Creating Index Buffer
-        std::shared_ptr<Cherry::IndexBuffer>m_IndexBuffer;
+        REF(Cherry::IndexBuffer)m_IndexBuffer;
         m_IndexBuffer.reset(Cherry::IndexBuffer::Create(Indices, sizeof(Indices) / sizeof(uint32_t)));
 
         // Adding Index Buffer TO Vertex Array
@@ -63,21 +65,21 @@ public:
         };
 
         /////////Setting Up Square//////////
-        m_SquareVA.reset(Cherry::VertexArray::Create());
+        m_FlatColorVertexArray.reset(Cherry::VertexArray::Create());
 
         // Creating Vertex Buffer
-        std::shared_ptr<Cherry::VertexBuffer>m_SquareVB;
+        REF(Cherry::VertexBuffer)m_SquareVB;
         m_SquareVB.reset((Cherry::VertexBuffer::Create(SquareVertices, sizeof(SquareVertices))));
         Cherry::BufferLayout Squarelayout = {
             { Cherry::ShaderDataType::Float3, "a_Position" }
         };
         m_SquareVB->SetLayout(Squarelayout);
-        m_SquareVA->AddVertexBuffer(m_SquareVB);
+        m_FlatColorVertexArray->AddVertexBuffer(m_SquareVB);
 
         // Creating Index Buffer - FIXED: Actually add it to vertex array
-        std::shared_ptr<Cherry::IndexBuffer>m_SquareIB;
+        REF(Cherry::IndexBuffer)m_SquareIB;
         m_SquareIB.reset(Cherry::IndexBuffer::Create(SquareIndices, sizeof(SquareIndices) / sizeof(uint32_t)));
-        m_SquareVA->SetIndexBuffer(m_SquareIB);
+        m_FlatColorVertexArray->SetIndexBuffer(m_SquareIB);
 
 
         ///////////////////////////
@@ -114,12 +116,12 @@ public:
             color = v_Color;
         }
     )";
-        m_Shader.reset(new Cherry::Shader(vertexSource, fregmantSource));
+        m_Shader.reset(Cherry::Shader::Create(vertexSource, fregmantSource));
 
         ///////////////////////////
         // Square Shader
         ///////////////////////////
-        std::string vertexSourceSquare = R"(
+        std::string flatColorShaderVertexSrc = R"(
         #version 330 core
         layout(location = 0) in vec3 a_Position;
 
@@ -133,23 +135,25 @@ public:
         }
     )";
 
-        std::string fregmantSourceSquare = R"(
+        std::string flatColorShaderFragmentSrc = R"(
         #version 330 core
         layout(location = 0) out vec4 color;
 
         in vec3 v_Position;
-
+        uniform vec3 u_Color;
         void main()
         {
-            color = vec4(v_Position * 0.5 + 0.5, 1.0);
+            color = vec4(u_Color,1.0);
         }
     )";
-        m_SquareS.reset(new Cherry::Shader(vertexSourceSquare, fregmantSourceSquare));
+        m_FlatColorShader.reset(Cherry::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
     }
 
     virtual void OnImGuiRender() override
     {
-
+        ImGui::Begin("Setting");
+        ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+        ImGui::End();
     }
 
 
@@ -174,16 +178,6 @@ public:
             m_CameraRotation -= m_CameraRotationSpeed * timeStep;
 
 
-        if (Cherry::Input::IsKeyPressed(CH_KEY_J))
-            m_SquarePosition.x -= m_SquareMoveSpeed * timeStep;
-        else if (Cherry::Input::IsKeyPressed(CH_KEY_L))
-            m_SquarePosition.x += m_SquareMoveSpeed * timeStep;
-
-        if (Cherry::Input::IsKeyPressed(CH_KEY_I))
-            m_SquarePosition.y += m_SquareMoveSpeed * timeStep;
-        else if (Cherry::Input::IsKeyPressed(CH_KEY_K))
-            m_SquarePosition.y -= m_SquareMoveSpeed * timeStep;
-
         // Clear screen
         Cherry::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
         Cherry::RenderCommand::Clear();
@@ -192,20 +186,35 @@ public:
         m_Camera.SetRotation(m_CameraRotation);
         Cherry::Renderer::BeginScene(m_Camera);
 
-        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+        glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
+        glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
+
+       /* Cherry::MaterialRef material = new Cherry::Material(m_FlatColorShader);
+        Cherry::MaterialInstanceRef mi = new Cherry::MaterialInstance(material);
+
+        mi->SetValue("u_Color", redColor);
+        mi->SetTexture("u_Texture", texture);
+        squareMesh->SetMaterial(mi);*/
+
+        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->Bind();
+        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color",m_SquareColor);
+
+
+        static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
         for (int y = 0; y < 20; y++)
         {
             for (int x = 0; x < 20; x++)
             {
                 glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
                 glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-                Cherry::Renderer::Submit(m_SquareS, m_SquareVA, transform);
+
+                Cherry::Renderer::Submit(m_FlatColorShader, m_FlatColorVertexArray, transform);
 
             }
         }
        
 
-        //Cherry::Renderer::Submit(m_Shader, m_VertexArray);
+        Cherry::Renderer::Submit(m_Shader, m_VertexArray);
 
         Cherry::Renderer::EndScene();
     }
@@ -215,11 +224,11 @@ public:
     }
 
     private:
-        std::shared_ptr<Cherry::Shader> m_Shader;
-        std::shared_ptr<Cherry::VertexArray> m_VertexArray;
+        REF(Cherry::Shader) m_Shader;
+        REF(Cherry::VertexArray) m_VertexArray;
 
-        std::shared_ptr<Cherry::Shader> m_SquareS;
-        std::shared_ptr<Cherry::VertexArray> m_SquareVA;
+        REF(Cherry::Shader) m_FlatColorShader;
+        REF(Cherry::VertexArray) m_FlatColorVertexArray;
         Cherry::OrthographicCamera m_Camera;
 
         glm::vec3 m_CameraPosition;
@@ -228,8 +237,7 @@ public:
         float m_CameraMoveSpeed = 1.0f;
         float m_CameraRotationSpeed = 90.0f;
 
-        glm::vec3 m_SquarePosition;
-        float m_SquareMoveSpeed = 1.0f;
+        glm::vec3 m_SquareColor = { 0.3f,0.1f,0.8f };
 };
 
 
@@ -246,8 +254,6 @@ public:
 	{
 
 	}
-private:
-
 };
 Cherry::Application* Cherry::CreateApplication()
 {
