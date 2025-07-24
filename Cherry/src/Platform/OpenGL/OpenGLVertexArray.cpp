@@ -44,29 +44,27 @@ namespace Cherry {
 	void OpenGLVertexArray::AddVertexBuffer(const REF(VertexBuffer)& vertexBuffer)
 	{
 		//Check Why Not Working
-		CH_CORE_ASSERT(vertexBuffer->GetLayout().GetElement().size(),"Vertex Buffer Has No Layout!");
+		CH_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(),"Vertex Buffer Has No Layout!");
 		glBindVertexArray(m_RendererID);
 		vertexBuffer->Bind();
 
-		uint32_t Index = 0;
 		const auto& layout = vertexBuffer->GetLayout();
 		for (const auto& element : layout)
 		{
-			glEnableVertexAttribArray(Index);
-			glVertexAttribPointer
-			(
-				Index,
+			glEnableVertexAttribArray(m_VertexBufferIndex);
+			glVertexAttribPointer(
+				m_VertexBufferIndex,
 				element.GetComponentCount(),
 				ShaderDataTypeToOpenGlBaseType(element.Type),
 				element.Normalized ? GL_TRUE : GL_FALSE,
 				layout.GetStride(),
-				(const void*)element.Offset
-			);
+				(const void*)(intptr_t)element.Offset);
 
-			Index++;
+			m_VertexBufferIndex++;
 		}
 
 		m_VertexBuffers.push_back(vertexBuffer);
+
 	}
 	void OpenGLVertexArray::SetIndexBuffer(const REF(IndexBuffer)& indexBuffer)
 	{

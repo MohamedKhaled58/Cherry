@@ -1,16 +1,16 @@
-[2025-07-24 15:18:48.578] [[CHERRY]] [warning] CHERRY Initialized Log With (7) Levels
-[2025-07-24 15:18:48.578] [[CLIENT]] [info] Returned New Shell
-[2025-07-24 15:18:48.578] [[CHERRY]] [info] Creating window [Cherry Engine] (1280, 720)
-[2025-07-24 15:18:49.037] [[CHERRY]] [info] Creating OpenGL context for window: 0x26086def300
-[2025-07-24 15:18:49.041] [[CHERRY]] [info] OpenGL Info:
-[2025-07-24 15:18:49.042] [[CHERRY]] [info] 	OpenGL Vendor   : NVIDIA Corporation
-[2025-07-24 15:18:49.042] [[CHERRY]] [info] 	OpenGL Renderer : NVIDIA GeForce RTX 3080 Laptop GPU/PCIe/SSE2
-[2025-07-24 15:18:49.042] [[CHERRY]] [info] 	OpenGL Version  : 4.6.0 NVIDIA 576.40
-[2025-07-24 15:18:49.042] [[CHERRY]] [info] ImGuiLayer created
-[2025-07-24 15:18:49.043] [[CHERRY]] [trace] Pushed Overlay: ImGuiLayer
-[2025-07-24 15:18:49.043] [[CHERRY]] [info] Application initialized successfully
-[2025-07-24 15:18:49.043] [[CHERRY]] [info] Orthographic Camera Initialized!
-[2025-07-24 15:18:49.046] [[CHERRY]] [trace] Pushed Layer: Shell
-[2025-07-24 15:18:49.047] [[CLIENT]] [info] Pushed Layer: Layer
-[2025-07-24 15:18:54.524] [[CHERRY]] [trace] Application Destroyed!
-[2025-07-24 15:18:54.525] [[CHERRY]] [info] ImGuiLayer Destroyed
+[2025-07-24 15:32:59.356] [[CHERRY]] [warning] CHERRY Initialized Log With (7) Levels
+[2025-07-24 15:32:59.356] [[CLIENT]] [info] Returned New Shell
+[2025-07-24 15:32:59.356] [[CHERRY]] [info] Creating window [Cherry Engine] (1280, 720)
+[2025-07-24 15:32:59.811] [[CHERRY]] [info] Creating OpenGL context for window: 0x223ddd8f0b0
+[2025-07-24 15:32:59.816] [[CHERRY]] [info] OpenGL Info:
+[2025-07-24 15:32:59.816] [[CHERRY]] [info] 	OpenGL Vendor   : NVIDIA Corporation
+[2025-07-24 15:32:59.816] [[CHERRY]] [info] 	OpenGL Renderer : NVIDIA GeForce RTX 3080 Laptop GPU/PCIe/SSE2
+[2025-07-24 15:32:59.816] [[CHERRY]] [info] 	OpenGL Version  : 4.6.0 NVIDIA 576.40
+[2025-07-24 15:32:59.816] [[CHERRY]] [info] ImGuiLayer created
+[2025-07-24 15:32:59.817] [[CHERRY]] [trace] Pushed Overlay: ImGuiLayer
+[2025-07-24 15:32:59.818] [[CHERRY]] [info] Application initialized successfully
+[2025-07-24 15:32:59.818] [[CHERRY]] [info] Orthographic Camera Initialized!
+[2025-07-24 15:32:59.819] [[CHERRY]] [trace] Pushed Layer: Shell
+[2025-07-24 15:32:59.820] [[CLIENT]] [info] Pushed Layer: Layer
+[2025-07-24 15:33:02.775] [[CHERRY]] [trace] Application Destroyed!
+[2025-07-24 15:33:02.775] [[CHERRY]] [info] ImGuiLayer Destroyed

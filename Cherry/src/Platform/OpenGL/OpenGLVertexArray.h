@@ -27,6 +27,7 @@ namespace Cherry {
 		REF(IndexBuffer) m_IndexBuffer;
 
 		uint32_t m_RendererID = 0;
+		uint32_t m_VertexBufferIndex = 0;
 
 	};
 }

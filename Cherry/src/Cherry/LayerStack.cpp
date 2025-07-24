@@ -25,7 +25,7 @@ namespace Cherry {
     void LayerStack::PopLayer(Layer* layer) {
         auto it = std::find(m_Layers.begin(), m_Layers.begin() + m_LayerInsertIndex, layer);
 		// Ensure the layer is found and is not an overlay
-        if (it != m_Layers.end()) {
+       if (it != m_Layers.begin() + m_LayerInsertIndex) {
             m_Layers.erase(it);
             m_LayerInsertIndex--;
         }
