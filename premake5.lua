@@ -7,6 +7,12 @@ workspace "Cherry"
 		"Release",
 		"Dist"
 	}
+
+	flags
+	{
+		"MultiProcessorCompile"
+	}
+
 	defines {
 		"_CRT_SECURE_NO_WARNINGS"
 	}
