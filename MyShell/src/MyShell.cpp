@@ -50,14 +50,14 @@ public:
         m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
         ///////////////////////////
-        // Square Setup - FIXED
+        // Square Setup
         ///////////////////////////
-        float SquareVertices[3 * 4] = {
+        float SquareVertices[5 * 4] = {
             // x      y      z
-            -0.5f, -0.5f, 0.0f,  // Bottom-left  (0)
-             0.5f, -0.5f, 0.0f,  // Bottom-right (1)
-             0.5f,  0.5f, 0.0f,  // Top-right    (2)
-            -0.5f,  0.5f, 0.0f   // Top-left     (3)
+            -0.5f, -0.5f, 0.0f,    0.0f,0.0f,             // Bottom-left  (0)
+             0.5f, -0.5f, 0.0f,    1.0f,0.0f,                 // Bottom-right (1)
+             0.5f,  0.5f, 0.0f,    1.0f,1.0f,                 // Top-right    (2)
+            -0.5f,  0.5f, 0.0f,    0.0f,1.0f                  // Top-left     (3)
         };
         uint32_t SquareIndices[6] = {
             0, 1, 2,  // Triangle 1
@@ -71,7 +71,8 @@ public:
         REF(Cherry::VertexBuffer)m_SquareVB;
         m_SquareVB.reset((Cherry::VertexBuffer::Create(SquareVertices, sizeof(SquareVertices))));
         Cherry::BufferLayout Squarelayout = {
-            { Cherry::ShaderDataType::Float3, "a_Position" }
+            { Cherry::ShaderDataType::Float3, "a_Position" },
+            { Cherry::ShaderDataType::Float2, "a_TexCoord" }
         };
         m_SquareVB->SetLayout(Squarelayout);
         m_FlatColorVertexArray->AddVertexBuffer(m_SquareVB);
@@ -147,7 +148,49 @@ public:
         }
     )";
         m_FlatColorShader.reset(Cherry::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
-    }
+
+
+
+      /////////////////////////////
+      // Texture Shader
+      ///////////////////////////
+        std::string textureShaderVertexSrc = R"(
+        #version 330 core
+        layout(location = 0) in vec3 a_Position;
+        layout(location = 1) in vec2 a_TexCoord;
+
+        uniform mat4 u_ViewProjection;
+        uniform mat4 u_Transform;
+
+        out vec2 v_TexCoord;
+        void main()
+        {
+            v_TexCoord = a_TexCoord;
+            gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+        }
+    )";
+
+        std::string textureShaderFragmentSrc = R"(
+        #version 330 core
+        layout(location = 0) out vec4 color;
+
+        in vec3 v_Position;
+        in vec2 v_TexCoord;
+
+        uniform sampler2D u_Texture;
+        void main()
+        {
+            color = texture(u_Texture,v_TexCoord);
+        }
+    )";
+        m_TextureShader.reset(Cherry::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+
+        m_Texture = Cherry::Texture2D::Create("assets/textures/1.png");
+
+        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_TextureShader)->Bind();
+        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+
+    }//Shell Layer
 
     virtual void OnImGuiRender() override
     {
@@ -159,7 +202,7 @@ public:
 
     void OnUpdate(Cherry::TimeStep timeStep) override
     {
-        CH_CLIENT_TRACE("Delta time {0}s  {1}ms ", timeStep.GetSeconds(),timeStep.GetMilliSeconds());
+       // CH_CLIENT_TRACE("Delta time {0}s  {1}ms ", timeStep.GetSeconds(),timeStep.GetMilliSeconds());
 
         if (Cherry::Input::IsKeyPressed(CH_KEY_LEFT))
             m_CameraPosition.x -= m_CameraMoveSpeed * timeStep;
@@ -213,8 +256,11 @@ public:
             }
         }
        
+        m_Texture->Bind();
+        Cherry::Renderer::Submit(m_TextureShader, m_FlatColorVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
-        Cherry::Renderer::Submit(m_Shader, m_VertexArray);
+        //TRIANGLE
+       // Cherry::Renderer::Submit(m_Shader, m_VertexArray);
 
         Cherry::Renderer::EndScene();
     }
@@ -227,8 +273,11 @@ public:
         REF(Cherry::Shader) m_Shader;
         REF(Cherry::VertexArray) m_VertexArray;
 
-        REF(Cherry::Shader) m_FlatColorShader;
+        REF(Cherry::Shader) m_FlatColorShader,m_TextureShader;
         REF(Cherry::VertexArray) m_FlatColorVertexArray;
+
+        REF(Cherry::Texture2D) m_Texture;
+
         Cherry::OrthographicCamera m_Camera;
 
         glm::vec3 m_CameraPosition;
@@ -247,7 +296,9 @@ public:
 	MyShell()
 	{
 		PushLayer(new ShellLayer);
-		CH_CLIENT_INFO("Pushed Shell Layer");
+        ShellLayer::Layer layer;
+
+		CH_CLIENT_INFO("Pushed Layer: {0}", layer.GetName());
 	}
 
 	~MyShell()

@@ -21,6 +21,7 @@
 
 #include "Cherry/Renderer/Shader.h"
 #include "Cherry/Renderer/Buffer.h"
+#include "Cherry/Renderer/Texture.h"
 #include "Cherry/Renderer/VertexArray.h"
 
 #include "Cherry/Renderer/Camera.h"
