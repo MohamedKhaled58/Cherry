@@ -1,6 +1,7 @@
 # Build output
 bin/
 bin-int/
+MyShell/logs/
 *.obj
 *.o
 *.lib
