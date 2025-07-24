@@ -11,7 +11,7 @@ class ShellLayer : public Cherry::Layer
 public:
 
     ShellLayer()
-        :Layer("Shell"),m_Camera(-1.6f, 1.6f, -0.9f, 0.9f, -1.0f, 1.0f), m_CameraPosition({0.0f,0.0f,0.0f}), m_CameraRotation(0.0f)
+        :Layer("MyShell"),m_Camera(-1.6f, 1.6f, -0.9f, 0.9f, -1.0f, 1.0f), m_CameraPosition({0.0f,0.0f,0.0f}), m_CameraRotation(0.0f)
     {
         ///////////////////////////
        // Triangle Setup
@@ -186,6 +186,7 @@ public:
         m_TextureShader.reset(Cherry::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
 
         m_Texture = Cherry::Texture2D::Create("assets/textures/Checkerboard.png");
+        m_CherryLogoTexture = Cherry::Texture2D::Create("assets/textures/Cherrylogo.png");
 
         std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_TextureShader)->Bind();
         std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
@@ -258,6 +259,8 @@ public:
        
         m_Texture->Bind();
         Cherry::Renderer::Submit(m_TextureShader, m_FlatColorVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+        m_CherryLogoTexture->Bind();
+        Cherry::Renderer::Submit(m_TextureShader, m_FlatColorVertexArray);
 
         //TRIANGLE
        // Cherry::Renderer::Submit(m_Shader, m_VertexArray);
@@ -276,7 +279,7 @@ public:
         REF(Cherry::Shader) m_FlatColorShader,m_TextureShader;
         REF(Cherry::VertexArray) m_FlatColorVertexArray;
 
-        REF(Cherry::Texture2D) m_Texture;
+        REF(Cherry::Texture2D) m_Texture, m_CherryLogoTexture;
 
         Cherry::OrthographicCamera m_Camera;
 

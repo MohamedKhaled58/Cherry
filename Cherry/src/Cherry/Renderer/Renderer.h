@@ -11,6 +11,7 @@ namespace Cherry {
 	class Renderer 
 	{
 	public:
+		static void Init();
 		static void BeginScene(OrthographicCamera& camera);		//TODO:: All Scene Params
 		static void EndScene();
 
