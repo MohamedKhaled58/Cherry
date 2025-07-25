@@ -117,7 +117,7 @@ public:
             color = v_Color;
         }
     )";
-        m_Shader.reset(Cherry::Shader::Create(vertexSource, fregmantSource));
+        m_Shader = Cherry::Shader::Create("Triangle", vertexSource, fregmantSource);
 
         ///////////////////////////
         // Square Shader
@@ -147,15 +147,31 @@ public:
             color = vec4(u_Color,1.0);
         }
     )";
-        m_FlatColorShader.reset(Cherry::Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+        m_FlatColorShader = Cherry::Shader::Create("FlatColor", flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
   
-        m_TextureShader.reset(Cherry::Shader::Create("assets/shaders/Texture.glsl"));
+        auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
+        if (!textureShader) {
+            CH_CORE_ERROR("Failed to load Texture shader from assets/shaders/Texture.glsl");
+            // You might want to create a fallback shader or handle this error
+            return; // or create a default shader
+        }
 
+        // Debug: Print available shaders
+        auto names = m_ShaderLibrary.GetShaderNames();
+        CH_CORE_INFO("Loaded {} shaders:", names.size());
+        for (const auto& name : names) {
+            CH_CORE_INFO("  Available shader: '{}'", name);
+        }
+
+        // Load textures
         m_Texture = Cherry::Texture2D::Create("assets/textures/Checkerboard.png");
         m_CherryLogoTexture = Cherry::Texture2D::Create("assets/textures/Cherrylogo.png");
 
-        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_TextureShader)->Bind();
-        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+        // Setup texture shader
+        if (textureShader) {
+            std::dynamic_pointer_cast<Cherry::OpenGLShader>(textureShader)->Bind();
+            std::dynamic_pointer_cast<Cherry::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
+        }
 
     }//Shell Layer
 
@@ -186,7 +202,6 @@ public:
             m_CameraRotation += m_CameraRotationSpeed * timeStep;
         else if (Cherry::Input::IsKeyPressed(CH_KEY_D))
             m_CameraRotation -= m_CameraRotationSpeed * timeStep;
-
 
         // Clear screen
         Cherry::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
@@ -223,26 +238,36 @@ public:
             }
         }
        
-        m_Texture->Bind();
-        Cherry::Renderer::Submit(m_TextureShader, m_FlatColorVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
-        m_CherryLogoTexture->Bind();
-        Cherry::Renderer::Submit(m_TextureShader, m_FlatColorVertexArray);
+        auto textureShader = m_ShaderLibrary.Get("texture"); // lowercase!
+        if (textureShader) {
+            m_Texture->Bind();
+            Cherry::Renderer::Submit(textureShader, m_FlatColorVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
-        //TRIANGLE
-       // Cherry::Renderer::Submit(m_Shader, m_VertexArray);
+            m_CherryLogoTexture->Bind();
+            Cherry::Renderer::Submit(textureShader, m_FlatColorVertexArray);
+        }
+        else {
+            CH_CORE_WARN("Texture shader not found! Available shaders:");
+            auto names = m_ShaderLibrary.GetShaderNames();
+            for (const auto& name : names) {
+                CH_CORE_WARN("  '{}'", name);
+            }
+        }
 
         Cherry::Renderer::EndScene();
     }
 
     void OnEvent(Cherry::Event& event) override
     {
+
     }
 
     private:
+        Cherry::ShaderLibrary m_ShaderLibrary;
         REF(Cherry::Shader) m_Shader;
         REF(Cherry::VertexArray) m_VertexArray;
 
-        REF(Cherry::Shader) m_FlatColorShader,m_TextureShader;
+        REF(Cherry::Shader) m_FlatColorShader;
         REF(Cherry::VertexArray) m_FlatColorVertexArray;
 
         REF(Cherry::Texture2D) m_Texture, m_CherryLogoTexture;
@@ -262,18 +287,16 @@ public:
 class MyShell : public Cherry::Application
 {
 public:
-	MyShell()
-	{
-		PushLayer(new ShellLayer);
-        ShellLayer::Layer layer;
+    MyShell()
+    {
+        auto* shellLayer = new ShellLayer();
+        PushLayer(shellLayer);
+        CH_CLIENT_INFO("Pushed Layer: {0}", shellLayer->GetName());
+    }
 
-		CH_CLIENT_INFO("Pushed Layer: {0}", layer.GetName());
-	}
-
-	~MyShell()
-	{
-
-	}
+    ~MyShell()
+    {
+    }
 };
 Cherry::Application* Cherry::CreateApplication()
 {

@@ -19,10 +19,13 @@ namespace Cherry {
 		std::string source = ReadFile(filepath);
 		auto shaderSources = PreProcess(source);
 		Compile(shaderSources);
+
+		ExtractShaderNameFromPath(filepath);
 	}
 
 
-	OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource)
+	OpenGLShader::OpenGLShader(const std::string& name,const std::string& vertexSource, const std::string& fragmentSource)
+		:m_Name(name)
 	{
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSource;
@@ -36,23 +39,38 @@ namespace Cherry {
 		glDeleteProgram(m_RendererID);
 	}
 
+	// ALTERNATIVE: More modern C++17 approach using filesystem
 	std::string OpenGLShader::ReadFile(const std::string& filepath)
 	{
+		std::error_code ec;
 
-		std::string result;
-		std::ifstream in(filepath, std::ios::in, std::ios::binary);
-		if (in)
-		{
-			in.seekg(0, std::ios::end);
-			result.resize(in.tellg());
-			in.seekg(0, std::ios::beg);
-			in.read(&result[0], result.size());
-			in.close();
+		// Check if file exists first
+		if (!std::filesystem::exists(filepath, ec)) {
+			CH_CORE_ERROR("File does not exist: '{0}'", filepath);
+			return {};
 		}
-		else
-		{
-			CH_CORE_ERROR("Can't Open File '{0}'", filepath);
+
+		// Get file size efficiently
+		const auto size = std::filesystem::file_size(filepath, ec);
+		if (ec) {
+			CH_CORE_ERROR("Failed to get file size for '{0}': {1}", filepath, ec.message());
+			return {};
 		}
+
+		// Open file
+		std::ifstream in(filepath, std::ios::binary);
+		if (!in) {
+			CH_CORE_ERROR("Failed to open file '{0}'", filepath);
+			return {};
+		}
+
+		// Read entire file
+		std::string result(size, '\0');
+		if (!in.read(result.data(), static_cast<std::streamsize>(size))) {
+			CH_CORE_ERROR("Failed to read file '{0}'", filepath);
+			return {};
+		}
+
 		return result;
 	}
 
@@ -89,83 +107,100 @@ namespace Cherry {
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
-		// Get a program object.
 		GLuint program = glCreateProgram();
-		std::vector<GLenum>glShaderIDs(shaderSources.size());
-		for (auto& kv : shaderSources)
+
+		// Stack-allocated array for common cases (vertex + fragment = 2 shaders max)
+		constexpr size_t MAX_SHADERS = 2; // Adjust based on your needs
+		GLuint glShaderIDs[MAX_SHADERS];
+		size_t glShaderIDIndex = 0;
+
+		// Early check to prevent buffer overflow
+		if (shaderSources.size() > MAX_SHADERS) {
+			CH_CORE_ERROR("Too many shaders! Maximum supported: {0}", MAX_SHADERS);
+			glDeleteProgram(program);
+			return;
+		}
+
+		for (const auto& [type, source] : shaderSources) // C++17 structured binding
 		{
-			GLenum type = kv.first;
-			const std::string& source = kv.second;
-
-			// Create an empty shader type  handle
 			GLuint shader = glCreateShader(type);
-
-			// Send the vertex shader source code to GL
-			// Note that std::string's .c_str is NULL character terminated.
 			const GLchar* sourceCStr = source.c_str();
 			glShaderSource(shader, 1, &sourceCStr, 0);
-
-			// Compile the vertex shader
 			glCompileShader(shader);
 
 			GLint isCompiled = 0;
 			glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
 			if (isCompiled == GL_FALSE)
 			{
-				GLint maxLength = 0;
-				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+				// Get error message length
+				GLint logLength = 0;
+				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
 
-				// The maxLength includes the NULL character
-				std::vector<GLchar> infoLog(maxLength);
-				glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+				// Stack-allocated error message for small errors
+				if (logLength <= 512) {
+					char stackLog[512];
+					glGetShaderInfoLog(shader, logLength, nullptr, stackLog);
+					CH_CORE_ERROR("Shader compilation failed: {0}", stackLog);
+				}
+				else {
+					// Fallback to heap for very large error messages
+					std::vector<char> heapLog(logLength);
+					glGetShaderInfoLog(shader, logLength, nullptr, heapLog.data());
+					CH_CORE_ERROR("Shader compilation failed: {0}", heapLog.data());
+				}
 
-				// We don't need the shader anymore.
+				// Cleanup
 				glDeleteShader(shader);
-
-				// Use the infoLog as you see fit.
-				CH_CORE_ERROR("{0}", infoLog.data());
-				CH_CORE_ASSERT(false, "Shader Compilation Failure!");
-				break;
+				glDeleteProgram(program);
+				for (size_t i = 0; i < glShaderIDIndex; ++i) {
+					glDeleteShader(glShaderIDs[i]);
+				}
+				return;
 			}
-			glAttachShader(program, shader);
-			glShaderIDs.push_back(shader);
 
+			glAttachShader(program, shader);
+			glShaderIDs[glShaderIDIndex++] = shader;
 		}
 
-		// Link our program
+		// Link program
 		glLinkProgram(program);
 
-		// Note the different functions here: glGetProgram* instead of glGetShader*.
 		GLint isLinked = 0;
-		glGetProgramiv(program, GL_LINK_STATUS, (int*)&isLinked);
+		glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
 		if (isLinked == GL_FALSE)
 		{
-			GLint maxLength = 0;
-			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
+			GLint logLength = 0;
+			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLength);
 
-			// The maxLength includes the NULL character
-			std::vector<GLchar> infoLog(maxLength);
-			glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
+			// Same stack/heap strategy for linking errors
+			if (logLength <= 512) {
+				char stackLog[512];
+				glGetProgramInfoLog(program, logLength, nullptr, stackLog);
+				CH_CORE_ERROR("Shader linking failed: {0}", stackLog);
+			}
+			else {
+				std::vector<char> heapLog(logLength);
+				glGetProgramInfoLog(program, logLength, nullptr, heapLog.data());
+				CH_CORE_ERROR("Shader linking failed: {0}", heapLog.data());
+			}
 
-			// We don't need the program anymore.
+			// Cleanup
 			glDeleteProgram(program);
-
-			// Don't leak shaders either.
-			for (auto id : glShaderIDs)
-				glDeleteShader(id);
-
-			// Use the infoLog as you see fit.
-			CH_CORE_ERROR("{0}", infoLog.data());
-			CH_CORE_ASSERT(false, "Shader Link Failure!");
+			for (size_t i = 0; i < glShaderIDIndex; ++i) {
+				glDeleteShader(glShaderIDs[i]);
+			}
 			return;
 		}
 
-		// Always detach shaders after a successful link.
-		for (auto id : glShaderIDs)
-			glDetachShader(program,id);
+		// Cleanup shaders (they're linked into the program now)
+		for (size_t i = 0; i < glShaderIDIndex; ++i) {
+			glDetachShader(program, glShaderIDs[i]);
+			glDeleteShader(glShaderIDs[i]);
+		}
 
 		m_RendererID = program;
-	}
+	} 
+
 
 	void OpenGLShader::Bind() const
 	{
@@ -263,6 +298,9 @@ namespace Cherry {
 
 		glUniform1i(location, value);
 	}
+
+
+	
 
 
 }
