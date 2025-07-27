@@ -289,19 +289,15 @@ namespace Cherry {
     void OrthographicCameraController::UpdateCameraPosition(TimeStep ts) {
         glm::vec3 position = m_Camera.GetPosition();
 
-        // Calculate movement velocity
         float baseVelocity = m_CameraTranslationSpeed * ts;
-        float velocity = baseVelocity; // Consistent movement speed regardless of zoom
+        float velocity = baseVelocity * m_ZoomLevel;
 
-        // Calculate movement direction
         glm::vec2 movement(0.0f);
-
         if (m_KeyState.Left)  movement.x -= velocity;
         if (m_KeyState.Right) movement.x += velocity;
         if (m_KeyState.Down)  movement.y -= velocity;
         if (m_KeyState.Up)    movement.y += velocity;
 
-        // Apply rotation to movement if camera is rotated
         if (m_Rotation && m_Camera.GetRotation() != 0.0f && (movement.x != 0.0f || movement.y != 0.0f)) {
             float rotation = glm::radians(m_Camera.GetRotation());
             float cos_r = cos(rotation);
@@ -313,9 +309,12 @@ namespace Cherry {
             movement = rotatedMovement;
         }
 
-        // Apply movement to camera position
         position.x += movement.x;
         position.y += movement.y;
+
+        // Optional rounding for floating-point stability
+        position.x = round(position.x * 100.0f) / 100.0f;
+        position.y = round(position.y * 100.0f) / 100.0f;
 
         m_Camera.SetPosition(position);
     }

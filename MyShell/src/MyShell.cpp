@@ -1,6 +1,7 @@
+#include "CHpch.h"
 #include "Cherry.h"
 #include <Platform/OpenGL/OpenGLShader.h>
-
+#
 #include "imgui/imgui.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -12,7 +13,7 @@ class ShellLayer : public Cherry::Layer
 public:
 
     ShellLayer()
-       : Layer("MyShell"), m_CameraController(1.78f, true)
+       : Layer("MyShell"), m_CameraController(1280.0f / 720.0f, true)
     {
         ///////////////////////////
        // Triangle Setup
@@ -202,7 +203,7 @@ public:
         if (ImGui::CollapsingHeader("Rotation", ImGuiTreeNodeFlags_DefaultOpen))
         {
             float rotation = m_CameraController.GetCameraRotation();
-            ImGui::Text("Rotation: %.1f°", rotation);
+            ImGui::Text("Rotation: %.1fÂ°", rotation);
 
             float rotationSpeed = m_CameraController.GetRotationSpeed();
             if (ImGui::SliderFloat("Rotation Speed", &rotationSpeed, 10.0f, 360.0f))
@@ -300,7 +301,7 @@ public:
             float zoom = m_CameraController.GetZoomLevel();
 
             ImGui::Text("Position: (%.2f, %.2f, %.2f)", pos.x, pos.y, pos.z);
-            ImGui::Text("Rotation: %.1f°", rotation);
+            ImGui::Text("Rotation: %.1fÂ°", rotation);
             ImGui::Text("Zoom Level: %.2f", zoom);
             ImGui::Text("Zoom Range: %.2f - %.2f",
                 m_CameraController.GetMinZoom(),
@@ -318,16 +319,6 @@ public:
             }
         }
 
-        // Input Controls Info
-        if (ImGui::CollapsingHeader("Controls"))
-        {
-            ImGui::Text("Movement:");
-            ImGui::BulletText("WASD or Arrow Keys - Move camera");
-            ImGui::Text("Rotation:");
-            ImGui::BulletText("Q/E - Rotate camera (if enabled)");
-            ImGui::Text("Zoom:");
-            ImGui::BulletText("Mouse Wheel - Zoom in/out");
-        }
         // Controls Reference
         if (ImGui::CollapsingHeader("Controls"))
         {
@@ -361,9 +352,7 @@ public:
         // Use the camera from the controller instead of your manual camera
         Cherry::Renderer::BeginScene(m_CameraController.GetCamera());
 
-        // Remove these lines - the controller handles camera position/rotation now:
-        // m_Camera.SetPosition(m_CameraPosition);
-        // m_Camera.SetRotation(m_CameraRotation);
+ 
 
         // Rest of your rendering code stays the same...
         glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);

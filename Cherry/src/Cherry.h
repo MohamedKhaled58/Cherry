@@ -27,6 +27,7 @@
 #include "Cherry/Renderer/Camera.h"
 //---------------------------------------
 
+#include "Cherry/OrthographicCameraController.h"
 
 //------------Entry Point----------------
 #include "Cherry/EntryPoint.h"
