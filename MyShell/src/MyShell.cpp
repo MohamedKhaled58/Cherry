@@ -4,6 +4,7 @@
 #include "imgui/imgui.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <Cherry/OrthographicCameraController.h>
 
 
 class ShellLayer : public Cherry::Layer
@@ -11,7 +12,7 @@ class ShellLayer : public Cherry::Layer
 public:
 
     ShellLayer()
-        :Layer("MyShell"),m_Camera(-1.6f, 1.6f, -0.9f, 0.9f, -1.0f, 1.0f), m_CameraPosition({0.0f,0.0f,0.0f}), m_CameraRotation(0.0f)
+       : Layer("MyShell"), m_CameraController(1.78f, true)
     {
         ///////////////////////////
        // Triangle Setup
@@ -177,53 +178,199 @@ public:
 
     virtual void OnImGuiRender() override
     {
-        ImGui::Begin("Setting");
+        ImGui::Begin("Camera Controller");
+
+        // Camera Position Controls
+        if (ImGui::CollapsingHeader("Position", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            glm::vec3 position = m_CameraController.GetCameraPosition();
+            ImGui::Text("Position: (%.2f, %.2f, %.2f)", position.x, position.y, position.z);
+
+            float cameraSpeed = m_CameraController.GetCameraSpeed();
+            if (ImGui::SliderFloat("Camera Speed", &cameraSpeed, 0.1f, 20.0f))
+            {
+                m_CameraController.SetCameraSpeed(cameraSpeed);
+            }
+
+            if (ImGui::Button("Reset Camera"))
+            {
+                m_CameraController.Reset();
+            }
+        }
+
+        // Camera Rotation Controls
+        if (ImGui::CollapsingHeader("Rotation", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            float rotation = m_CameraController.GetCameraRotation();
+            ImGui::Text("Rotation: %.1f°", rotation);
+
+            float rotationSpeed = m_CameraController.GetRotationSpeed();
+            if (ImGui::SliderFloat("Rotation Speed", &rotationSpeed, 10.0f, 360.0f))
+            {
+                m_CameraController.SetRotationSpeed(rotationSpeed);
+            }
+
+            bool rotationEnabled = m_CameraController.IsRotationEnabled();
+            if (ImGui::Checkbox("Enable Rotation", &rotationEnabled))
+            {
+                m_CameraController.SetRotationEnabled(rotationEnabled);
+            }
+        }
+
+        // Camera Zoom Controls
+        if (ImGui::CollapsingHeader("Zoom", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            float zoomLevel = m_CameraController.GetZoomLevel();
+            float minZoom = m_CameraController.GetMinZoom();
+            float maxZoom = m_CameraController.GetMaxZoom();
+
+            if (ImGui::SliderFloat("Zoom Level", &zoomLevel, minZoom, maxZoom))
+            {
+                m_CameraController.SetZoomLevel(zoomLevel);
+            }
+
+            float zoomSpeed = m_CameraController.GetZoomSpeed();
+            if (ImGui::SliderFloat("Zoom Speed", &zoomSpeed, 0.1f, 2.0f))
+            {
+                m_CameraController.SetZoomSpeed(zoomSpeed);
+            }
+
+            // Zoom limits controls
+            ImGui::Separator();
+            ImGui::Text("Zoom Limits:");
+            float newMinZoom = minZoom;
+            float newMaxZoom = maxZoom;
+
+            if (ImGui::DragFloat("Min Zoom", &newMinZoom, 0.01f, 0.01f, maxZoom - 0.01f))
+            {
+                m_CameraController.SetZoomLimits(newMinZoom, maxZoom);
+            }
+
+            if (ImGui::DragFloat("Max Zoom", &newMaxZoom, 0.1f, minZoom + 0.01f, 100.0f))
+            {
+                m_CameraController.SetZoomLimits(minZoom, newMaxZoom);
+            }
+        }
+
+        // Camera Bounds Controls
+        if (ImGui::CollapsingHeader("Camera Bounds"))
+        {
+            bool boundsEnabled = m_CameraController.IsBoundsEnabled();
+            if (ImGui::Checkbox("Enable Bounds", &boundsEnabled))
+            {
+                m_CameraController.EnableBounds(boundsEnabled);
+            }
+
+            if (boundsEnabled)
+            {
+                glm::vec4 bounds = m_CameraController.GetBounds();
+                float left = bounds.x, right = bounds.y;
+                float bottom = bounds.z, top = bounds.w;
+
+                bool boundsChanged = false;
+                boundsChanged |= ImGui::DragFloat("Left", &left, 0.1f);
+                boundsChanged |= ImGui::DragFloat("Right", &right, 0.1f);
+                boundsChanged |= ImGui::DragFloat("Bottom", &bottom, 0.1f);
+                boundsChanged |= ImGui::DragFloat("Top", &top, 0.1f);
+
+                if (boundsChanged && left < right && bottom < top)
+                {
+                    m_CameraController.SetBounds(left, right, bottom, top);
+                }
+            }
+        }
+
+        // Mouse Controls
+        if (ImGui::CollapsingHeader("Mouse Controls"))
+        {
+            float mouseSensitivity = m_CameraController.GetMouseSensitivity();
+            if (ImGui::SliderFloat("Mouse Sensitivity", &mouseSensitivity, 0.0001f, 0.01f, "%.4f"))
+            {
+                m_CameraController.SetMouseSensitivity(mouseSensitivity);
+            }
+
+            ImGui::Text("Mouse panning: Hold middle mouse button and drag");
+        }
+
+        // Camera Information (Read-only)
+        if (ImGui::CollapsingHeader("Camera Info"))
+        {
+            glm::vec3 pos = m_CameraController.GetCameraPosition();
+            float rotation = m_CameraController.GetCameraRotation();
+            float zoom = m_CameraController.GetZoomLevel();
+
+            ImGui::Text("Position: (%.2f, %.2f, %.2f)", pos.x, pos.y, pos.z);
+            ImGui::Text("Rotation: %.1f°", rotation);
+            ImGui::Text("Zoom Level: %.2f", zoom);
+            ImGui::Text("Zoom Range: %.2f - %.2f",
+                m_CameraController.GetMinZoom(),
+                m_CameraController.GetMaxZoom());
+
+            if (m_CameraController.IsBoundsEnabled())
+            {
+                glm::vec4 bounds = m_CameraController.GetBounds();
+                ImGui::Text("Bounds: L:%.1f R:%.1f B:%.1f T:%.1f",
+                    bounds.x, bounds.y, bounds.z, bounds.w);
+            }
+            else
+            {
+                ImGui::Text("Bounds: Disabled");
+            }
+        }
+
+        // Input Controls Info
+        if (ImGui::CollapsingHeader("Controls"))
+        {
+            ImGui::Text("Movement:");
+            ImGui::BulletText("WASD or Arrow Keys - Move camera");
+            ImGui::Text("Rotation:");
+            ImGui::BulletText("Q/E - Rotate camera (if enabled)");
+            ImGui::Text("Zoom:");
+            ImGui::BulletText("Mouse Wheel - Zoom in/out");
+        }
+        // Controls Reference
+        if (ImGui::CollapsingHeader("Controls"))
+        {
+            ImGui::Text("Movement:");
+            ImGui::BulletText("WASD or Arrow Keys - Move camera");
+            ImGui::Text("Rotation:");
+            ImGui::BulletText("Q/E - Rotate camera (if enabled)");
+            ImGui::Text("Zoom:");
+            ImGui::BulletText("Mouse Wheel - Zoom in/out");
+            ImGui::Text("Mouse:");
+            ImGui::BulletText("Middle Mouse + Drag - Pan camera");
+        }
+
+        ImGui::End();
+
+        // Keep your existing settings window
+        ImGui::Begin("Render Settings");
         ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
         ImGui::End();
     }
 
-
     void OnUpdate(Cherry::TimeStep timeStep) override
     {
-       // CH_CLIENT_TRACE("Delta time {0}s  {1}ms ", timeStep.GetSeconds(),timeStep.GetMilliSeconds());
-
-        if (Cherry::Input::IsKeyPressed(CH_KEY_LEFT))
-            m_CameraPosition.x -= m_CameraMoveSpeed * timeStep;
-        else if (Cherry::Input::IsKeyPressed(CH_KEY_RIGHT))
-            m_CameraPosition.x += m_CameraMoveSpeed * timeStep;
-
-        if (Cherry::Input::IsKeyPressed(CH_KEY_DOWN))
-            m_CameraPosition.y -= m_CameraMoveSpeed * timeStep;
-        else if (Cherry::Input::IsKeyPressed(CH_KEY_UP))
-            m_CameraPosition.y += m_CameraMoveSpeed * timeStep;
-
-
-        if (Cherry::Input::IsKeyPressed(CH_KEY_A))
-            m_CameraRotation += m_CameraRotationSpeed * timeStep;
-        else if (Cherry::Input::IsKeyPressed(CH_KEY_D))
-            m_CameraRotation -= m_CameraRotationSpeed * timeStep;
+        // Update the camera controller (handles all input and camera movement)
+        m_CameraController.OnUpdate(timeStep);
 
         // Clear screen
         Cherry::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
         Cherry::RenderCommand::Clear();
 
-        m_Camera.SetPosition(m_CameraPosition);
-        m_Camera.SetRotation(m_CameraRotation);
-        Cherry::Renderer::BeginScene(m_Camera);
+        // Use the camera from the controller instead of your manual camera
+        Cherry::Renderer::BeginScene(m_CameraController.GetCamera());
 
+        // Remove these lines - the controller handles camera position/rotation now:
+        // m_Camera.SetPosition(m_CameraPosition);
+        // m_Camera.SetRotation(m_CameraRotation);
+
+        // Rest of your rendering code stays the same...
         glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
         glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
 
-       /* Cherry::MaterialRef material = new Cherry::Material(m_FlatColorShader);
-        Cherry::MaterialInstanceRef mi = new Cherry::MaterialInstance(material);
-
-        mi->SetValue("u_Color", redColor);
-        mi->SetTexture("u_Texture", texture);
-        squareMesh->SetMaterial(mi);*/
-
         std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->Bind();
-        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color",m_SquareColor);
-
+        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 
         static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
         for (int y = 0; y < 20; y++)
@@ -232,17 +379,14 @@ public:
             {
                 glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
                 glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-
                 Cherry::Renderer::Submit(m_FlatColorShader, m_FlatColorVertexArray, transform);
-
             }
         }
-       
-        auto textureShader = m_ShaderLibrary.Get("texture"); // lowercase!
+
+        auto textureShader = m_ShaderLibrary.Get("texture");
         if (textureShader) {
             m_Texture->Bind();
             Cherry::Renderer::Submit(textureShader, m_FlatColorVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
-
             m_CherryLogoTexture->Bind();
             Cherry::Renderer::Submit(textureShader, m_FlatColorVertexArray);
         }
@@ -257,9 +401,9 @@ public:
         Cherry::Renderer::EndScene();
     }
 
-    void OnEvent(Cherry::Event& event) override
+    void OnEvent(Cherry::Event& e) override
     {
-
+        m_CameraController.OnEvent(e);
     }
 
     private:
@@ -272,13 +416,7 @@ public:
 
         REF(Cherry::Texture2D) m_Texture, m_CherryLogoTexture;
 
-        Cherry::OrthographicCamera m_Camera;
-
-        glm::vec3 m_CameraPosition;
-        float m_CameraRotation;
-
-        float m_CameraMoveSpeed = 1.0f;
-        float m_CameraRotationSpeed = 90.0f;
+        Cherry::OrthographicCameraController m_CameraController;
 
         glm::vec3 m_SquareColor = { 0.3f,0.1f,0.8f };
 };

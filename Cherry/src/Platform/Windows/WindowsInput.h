@@ -1,5 +1,5 @@
 #pragma once
-#include <Cherry/Input.h>
+#include <Cherry/Core/Input.h>
 
 namespace Cherry {
 	class  WindowsInput : public Input {

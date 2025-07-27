@@ -20,8 +20,8 @@ namespace Cherry {
     void OrthographicCamera::ReCalculateViewMatrix()
     {
         // Create transformation matrix (translation * rotation)
-        glm::mat4 translation = glm::translate(glm::mat4(1.0f), m_Position);
-        glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_Rotation), glm::vec3(0.0f, 0.0f, 1.0f));
+        glm::mat4 translation = glm::translate(glm::mat4(1.0f), m_CameraPosition);
+        glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_CameraRotation), glm::vec3(0.0f, 0.0f, 1.0f));
         glm::mat4 transform = translation * rotation;
 
         // View matrix is the inverse of the transformation
@@ -59,13 +59,13 @@ namespace Cherry {
 
     void OrthographicCamera::Translate(const glm::vec3& delta)
     {
-        m_Position += delta;
+        m_CameraPosition += delta;
         ReCalculateViewMatrix();
     }
 
     void OrthographicCamera::Rotate(float deltaRotation)
     {
-        m_Rotation += deltaRotation;
+        m_CameraRotation += deltaRotation;
         ReCalculateViewMatrix();
     }
 

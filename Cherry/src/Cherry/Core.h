@@ -38,13 +38,6 @@
 
 
 namespace Cherry {
-    /**
-     * @brief Smart pointer utilities providing convenient type aliases and factory functions
-     *
-     * This class provides a clean interface for working with smart pointers,
-     * offering both unique_ptr (Scope) and shared_ptr (Ref) functionality
-     * with convenient factory methods for object creation.
-     */
     class SmartPointer {
     public:
         // Type aliases for smart pointers

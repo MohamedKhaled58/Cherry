@@ -9,9 +9,9 @@
 #include "Cherry/Core/TimeStep.h"
 
 
-#include "Cherry/Input.h"
-#include "Cherry/KeyCodes.h"
-#include "Cherry/MouseButtonCodes.h"
+#include "Cherry/Core/Input.h"
+#include "Cherry/Core/KeyCodes.h"
+#include "Cherry/Core/MouseButtonCodes.h"
 
 #include "Cherry/ImGui/ImGuiLayer.h"
 

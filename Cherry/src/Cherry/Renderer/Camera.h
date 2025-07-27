@@ -7,12 +7,12 @@ namespace Cherry {
         OrthographicCamera(float left, float right, float bottom, float top, float znear, float zfar);
 
         // Position
-        const glm::vec3& GetPosition() const { return m_Position; }
-        void SetPosition(const glm::vec3& position) { m_Position = position; ReCalculateViewMatrix(); }
+        const glm::vec3& GetPosition() const { return m_CameraPosition; }
+        void SetPosition(const glm::vec3& position) { m_CameraPosition = position; ReCalculateViewMatrix(); }
 
         // Rotation (Z-axis only)
-        float GetRotation() const { return m_Rotation; }
-        void SetRotation(float rotation) { m_Rotation = rotation; ReCalculateViewMatrix(); }
+        float GetRotation() const { return m_CameraRotation; }
+        void SetRotation(float rotation) { m_CameraRotation = rotation; ReCalculateViewMatrix(); }
 
         // Matrices
         const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
@@ -53,7 +53,7 @@ namespace Cherry {
         float m_zFar = 0.0f;
         float m_cLeft, m_cRight, m_cBottom, m_cTop;
 
-        glm::vec3 m_Position = glm::vec3(0.0f);
-        float m_Rotation = 0.0f;
+        glm::vec3 m_CameraPosition = glm::vec3(0.0f);
+        float m_CameraRotation = 0.0f;
     };
 }
