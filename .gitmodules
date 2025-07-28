@@ -1,16 +1,16 @@
-[submodule "Cherry/Vendor/spdlog"]
-	path = Cherry/Vendor/spdlog
+ 
+[submodule "Cherry/vendor/GLFW"]
+	path = Cherry/vendor/GLFW
+	url = https://github.com/glfw/glfw
+[submodule "Cherry/vendor/imgui"]
+	path = Cherry/vendor/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "Cherry/vendor/glm"]
+	path = Cherry/vendor/glm
+	url = https://github.com/g-truc/glm
+[submodule "Cherry/vendor/spdlog"]
+	path = Cherry/vendor/spdlog
 	url = https://github.com/gabime/spdlog
-	branch = v1.x
-[submodule "Cherry/Vendor/GLFW"]
-	path = Cherry/Vendor/GLFW
-	url = https://github.com/TheCherno/GLFW
-	branch = master
-[submodule "Cherry/Vendor/Imgui"]
-	path = Cherry/Vendor/Imgui
-	url = https://github.com/TheCherno/imgui
-	branch = docking
-[submodule "Cherry/Vendor/glm"]
-	path = Cherry/Vendor/glm
-	url = https://github.com/g-truc/glm.git
-	branch = master
+[submodule "Cherry/vendor/Glad"]
+	path = Cherry/vendor/Glad
+	url = https://github.com/Dav1dde/glad
