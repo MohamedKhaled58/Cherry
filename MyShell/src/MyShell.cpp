@@ -392,7 +392,20 @@ public:
 
     void OnEvent(Cherry::Event& e) override
     {
+        // Let camera controller handle the event first (it handles aspect ratio automatically)
         m_CameraController.OnEvent(e);
+
+        // Handle window resize events
+        if (e.GetEventType() == Cherry::EventType::WindowResize)
+        {
+            Cherry::WindowResizeEvent& resizeEvent = (Cherry::WindowResizeEvent&)e;
+            uint32_t width = resizeEvent.GetWidth();
+            uint32_t height = resizeEvent.GetHeight();
+
+            CH_CLIENT_INFO("Layer received window resize: {}x{}", width, height);
+            // Don't change zoom - let camera controller handle aspect ratio only
+            // Add any other layer-specific resize logic here
+        }
     }
 
     private:

@@ -178,6 +178,22 @@ namespace Cherry {
         return false;
     }
 
+    void OrthographicCameraController::OnWindowResize(WindowResizeEvent& e)
+    {
+        // Get new window dimensions
+        float width = (float)e.GetWidth();
+        float height = (float)e.GetHeight();
+
+        // Avoid division by zero
+        if (height == 0.0f) return;
+
+        // Update aspect ratio
+        m_AspectRatio = width / height;
+
+        // Recalculate the camera projection with new aspect ratio
+        RecalculateView();
+    }
+
     bool OrthographicCameraController::OnMouseButtonPressed(MouseButtonPressedEvent& e) {
         if (e.GetMouseButton() == CH_MOUSE_BUTTON_3) {
             m_MousePanning = true;
@@ -373,5 +389,8 @@ namespace Cherry {
     bool OrthographicCameraController::AreBoundsValid(float left, float right, float bottom, float top) const {
         return left < right && bottom < top;
     }
+
+
+
 
 } // namespace Cherry

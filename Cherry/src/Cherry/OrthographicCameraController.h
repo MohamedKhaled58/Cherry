@@ -58,6 +58,7 @@ namespace Cherry {
         bool IsBoundsEnabled() const { return m_BoundsEnabled; }
         glm::vec4 GetBounds() const { return { m_BoundsLeft, m_BoundsRight, m_BoundsBottom, m_BoundsTop }; }
 
+
         // ===== Utility Methods =====
 
         // Reset camera to default position
@@ -80,6 +81,7 @@ namespace Cherry {
         bool OnMouseMoved(MouseMovedEvent& e);
         bool OnKeyPressed(KeyPressedEvent& e);
         bool OnKeyReleased(KeyReleasedEvent& e);
+        void OnWindowResize(WindowResizeEvent& e);
 
         // ===== Helper Methods =====
         void UpdateCameraPosition(TimeStep ts);
@@ -142,6 +144,7 @@ namespace Cherry {
         float m_MaxZoomLevel = 10.0f;
 
         // ===== Camera Instance (initialized last) =====
+        
         OrthographicCamera m_Camera;
 
         // ===== Constants =====

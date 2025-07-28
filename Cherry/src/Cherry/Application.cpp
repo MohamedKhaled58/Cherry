@@ -52,28 +52,43 @@ namespace Cherry {
             if (e.Handled) break;
         }
         dispatcher.Dispatch<WindowCloseEvent>(CH_BIND_EVENT_FN(Application::OnWindowClose));
+        dispatcher.Dispatch<WindowResizeEvent>(CH_BIND_EVENT_FN(Application::OnWindowResize));
     }
 
     void Application::Run()
     {
         while (m_Running)
         {
-            float time = (float)glfwGetTime();     //Should Be Platform::GetTime
+            // Calculate delta time
+            float time = (float)glfwGetTime();     // TODO: Should be Platform::GetTime()
             TimeStep timeStep = time - m_LastFrameTime;
             m_LastFrameTime = time;
 
-            for (Layer* layer : m_LayerStack)
-                layer->OnUpdate(timeStep);
-
-            if (m_ImGuiLayer) {
-                m_ImGuiLayer->Begin();
+            // Only update layers if window is not minimized
+            if (!m_Minimized)
+            {
+                // Update all layers
                 for (Layer* layer : m_LayerStack)
-                    layer->OnImGuiRender();
-                m_ImGuiLayer->End();
+                {
+                    layer->OnUpdate(timeStep);
+                }
+
+                // Render ImGui
+                if (m_ImGuiLayer)
+                {
+                    m_ImGuiLayer->Begin();
+                    for (Layer* layer : m_LayerStack)
+                    {
+                        layer->OnImGuiRender();
+                    }
+                    m_ImGuiLayer->End();
+                }
             }
 
+            // Always update window (handles events even when minimized)
             CH_CORE_ASSERT(m_Window, "Window is null!");
-            if (m_Window) {
+            if (m_Window)
+            {
                 m_Window->OnUpdate();
             }
         }
@@ -83,5 +98,37 @@ namespace Cherry {
     {
         m_Running = false;
         return true;
+    }
+    bool Application::OnWindowResize(WindowResizeEvent& e)
+    {
+        // Get new window dimensions
+        unsigned int width = e.GetWidth();
+        unsigned int height = e.GetHeight();
+
+        // Handle window minimization (width or height = 0)
+        if (width == 0 || height == 0)
+        {
+            m_Minimized = true;
+            return false; // Don't block the event
+        }
+
+        // Window is no longer minimized if it was before
+        m_Minimized = false;
+
+        // Update renderer viewport to match new window size
+        Cherry::Renderer::OnWindowResize(width, height);
+
+        // DON'T update camera controller here - it should be handled in the layer
+        // The Application class shouldn't directly manage layer-specific components
+        // Each layer should handle its own camera controller in its OnEvent method
+
+        // Store new window dimensions (if you need them in Application class)
+
+        // Log the resize for debugging (optional)
+        CH_CORE_INFO("Window resized to {}x{}", width, height);
+
+        // Return false to allow the event to propagate to other layers
+        // This ensures each layer can handle the resize event for their own cameras
+        return false;
     }
 }
