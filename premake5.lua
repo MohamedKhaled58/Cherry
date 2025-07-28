@@ -1,160 +1,168 @@
 workspace "Cherry"
-	startproject "MyShell"
-	architecture "x64"
+    architecture "x64"
+    startproject "MyShell"
+    
+    configurations {
+        "Debug",
+        "Release",
+        "Dist"
+    }
+    
+    -- Global flags and defines
+    flags {
+        "MultiProcessorCompile"
+    }
+    
+    defines {
+        "_CRT_SECURE_NO_WARNINGS"
+    }
+    
+    -- Output directory pattern
+    outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+    
+    -- Include directories relative to workspace root
+    IncludeDir = {}
+    IncludeDir["GLFW"] = "Cherry/vendor/GLFW/include"
+    IncludeDir["Glad"] = "Cherry/vendor/Glad/include"
+    IncludeDir["ImGui"] = "Cherry/vendor/imgui"
+    IncludeDir["glm"] = "Cherry/vendor/glm"
+    IncludeDir["stb_image"] = "Cherry/vendor/stb_image"
+    IncludeDir["spdlog"] = "Cherry/vendor/spdlog/include"
 
-	configurations {
-		"Debug",
-		"Release",
-		"Dist"
-	}
-
-	flags
-	{
-		"MultiProcessorCompile"
-	}
-
-	defines {
-		"_CRT_SECURE_NO_WARNINGS"
-	}
-
-	outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-
-	-- Include directories relative to root folder (solution directory)
-	IncludeDir = {}
-	IncludeDir["GLFW"]	=	"Cherry/Vendor/GLFW/include"
-	IncludeDir["Glad"]	=	"Cherry/Vendor/Glad/include"
-	IncludeDir["ImGui"]	=	"Cherry/Vendor/imgui"
-	IncludeDir["glm"]	=	"Cherry/Vendor/glm"
-	IncludeDir["stb_image"]	=	"Cherry/Vendor/stb_image"
-
-	-- Include GLFW project first
-
+-- ===== DEPENDENCIES =====
 group "Dependencies"
-	include "Cherry/Vendor/GLFW"
-	include "Cherry/Vendor/Glad"
-	include "Cherry/Vendor/imgui"
+    include "Cherry/vendor/GLFW"
+    include "Cherry/vendor/Glad"
+    include "Cherry/vendor/imgui"
 group ""
-	-- Cherry project
-	
-	project "Cherry"
-		location "Cherry"
-		kind "StaticLib"
-		language "C++"
-		cppdialect "C++20"
-		staticruntime "off"
 
-		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+-- ===== CHERRY ENGINE =====
+project "Cherry"
+    location "Cherry"
+    kind "StaticLib"
+    language "C++"
+    cppdialect "C++20"
+    staticruntime "off"
+    
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+    
+    -- Precompiled headers
+    pchheader "CHpch.h"
+    pchsource "Cherry/src/CHpch.cpp"
+    
+    -- Source files
+    files {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/stb_image/**.h",
+        "%{prj.name}/vendor/stb_image/**.cpp",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl"
+    }
+    
+    -- Include directories
+    includedirs {
+        "%{prj.name}/src",
+        "%{IncludeDir.spdlog}",
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.Glad}",
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.stb_image}"
+    }
+    
+    -- Link libraries
+    links {
+        "GLFW",
+        "Glad",
+        "ImGui",
+        "opengl32.lib"
+    }
+    
+    -- Windows-specific settings
+    filter "system:windows"
+        systemversion "latest"
+        buildoptions { "/utf-8" }
+        
+        defines {
+            "CH_PLATFORM_WINDOWS",
+            "CH_BUILD_DLL",
+            "GLFW_INCLUDE_NONE"
+        }
+    
+    -- Configuration-specific settings
+    filter "configurations:Debug"
+        defines { "CH_DEBUG" }
+        runtime "Debug"
+        symbols "On"
+    
+    filter "configurations:Release"
+        defines { "CH_RELEASE" }
+        runtime "Release"
+        optimize "On"
+    
+    filter "configurations:Dist"
+        defines { "CH_DIST" }
+        runtime "Release"
+        optimize "On"
 
-		pchheader "CHpch.h"
-		pchsource "Cherry/src/CHpch.cpp"
-
-		files {
-			"%{prj.name}/src/**.h",
-			"%{prj.name}/src/**.cpp",
-			"%{prj.name}/Vendor/stb_image/**.cpp",
-			"%{prj.name}/Vendor/stb_image/**.h",
-			"%{prj.name}/Vendor/glm/glm/**.hpp",
-			"%{prj.name}/Vendor/glm/glm/**.inl"
-		}
-
-		includedirs {
-			"Cherry/src",
-			"Cherry/Vendor/spdlog/include",
-			"%{IncludeDir.GLFW}",
-			"%{IncludeDir.Glad}",
-			"%{IncludeDir.ImGui}",
-			"%{IncludeDir.glm}",
-			"%{IncludeDir.stb_image}"
-		}
-
-		links { 
-			"GLFW",
-			"Glad",
-			"ImGui",
-			"opengl32.lib"
-		}
-
-		filter "system:windows"
-			cppdialect "c++20"
-			systemversion "latest"
-
-		defines {
-			"CH_PLATFORM_WINDOWS",
-			"CH_BUILD_DLL",
-			"GLFW_INCLUDE_NONE"
-		}
-
-		filter "system:windows"
-			systemversion "latest"
-			buildoptions "/utf-8"
-			
-		filter "configurations:Debug"
-			defines "CH_DEBUG"
-			runtime "Debug"
-			symbols "on"
-
-		filter "configurations:Release"
-			defines "CH_RELEASE"
-			runtime "Release"
-			optimize "on"
-
-		filter "configurations:Dist"
-			defines "CH_DIST"
-			runtime "Release"
-			optimize "on"
-
-	-- MyShell project
-	project "MyShell"
-		location "MyShell"
-		kind "ConsoleApp"
-		language "C++"
-		cppdialect "C++20"
-		staticruntime "off"
-
-
-		targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-		objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-		files {
-			"%{prj.name}/src/**.h",
-			"%{prj.name}/src/**.cpp"
-		}
-
-		includedirs {
-			"Cherry/Vendor/spdlog/include",
-			"Cherry/src",
-			"%{IncludeDir.glm}",
-			"Cherry/vendor"
-		}
-
-		links {
-			"Cherry"
-		}
-		dependson { "Cherry" }
-
-		filter "system:windows"
-			cppdialect "c++20"
-			systemversion "latest"
-
-		defines {
-			"CH_PLATFORM_WINDOWS"
-		}
-
-		filter "configurations:Debug"
-			defines "CH_DEBUG"
-			runtime "Debug"
-			symbols "on"
-
-		filter "configurations:Release"
-			defines "CH_RELEASE"
-			runtime "Release"
-			optimize "on"
-
-		filter "configurations:Dist"
-			defines "CH_DIST"
-			runtime "Release"
-			optimize "on"
-
-		filter {"system:windows","configurations:Debug"}
-			buildoptions "/utf-8"
+-- ===== MYSHELL APPLICATION =====
+project "MyShell"
+    location "MyShell"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++20"
+    staticruntime "off"
+    
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+    
+    -- Source files
+    files {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp"
+    }
+    
+    -- Include directories
+    includedirs {
+        "Cherry/src",
+        "%{IncludeDir.spdlog}",
+        "%{IncludeDir.glm}",
+        "Cherry/vendor"
+    }
+    
+    -- Link libraries
+    links {
+        "Cherry"
+    }
+    
+    -- Dependencies
+    dependson {
+        "Cherry"
+    }
+    
+    -- Windows-specific settings
+    filter "system:windows"
+        systemversion "latest"
+        buildoptions { "/utf-8" }
+        
+        defines {
+            "CH_PLATFORM_WINDOWS"
+        }
+    
+    -- Configuration-specific settings
+    filter "configurations:Debug"
+        defines { "CH_DEBUG" }
+        runtime "Debug"
+        symbols "On"
+    
+    filter "configurations:Release"
+        defines { "CH_RELEASE" }
+        runtime "Release"
+        optimize "On"
+    
+    filter "configurations:Dist"
+        defines { "CH_DIST" }
+        runtime "Release"
+        optimize "On"

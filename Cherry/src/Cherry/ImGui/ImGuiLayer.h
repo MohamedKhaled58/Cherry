@@ -1,6 +1,5 @@
 #pragma once
-
-#include "Cherry/Layer.h"
+#include "Cherry/Core/Layer.h"
 #include <Cherry/Events/MouseEvent.h>
 #include <Cherry/Events/KeyEvent.h>
 #include <Cherry/Events/ApplicationEvent.h>

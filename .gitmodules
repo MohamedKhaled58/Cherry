@@ -1,12 +1,16 @@
 [submodule "Cherry/Vendor/spdlog"]
 	path = Cherry/Vendor/spdlog
 	url = https://github.com/gabime/spdlog
+	branch = v1.x
 [submodule "Cherry/Vendor/GLFW"]
 	path = Cherry/Vendor/GLFW
 	url = https://github.com/TheCherno/GLFW
+	branch = master
 [submodule "Cherry/Vendor/Imgui"]
 	path = Cherry/Vendor/Imgui
 	url = https://github.com/TheCherno/imgui
+	branch = docking
 [submodule "Cherry/Vendor/glm"]
 	path = Cherry/Vendor/glm
 	url = https://github.com/g-truc/glm.git
+	branch = master

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <Cherry/Core.h>
+#include <Cherry/Core/Core.h>
 #include <unordered_map>
 #include <vector>
 #include <chrono>

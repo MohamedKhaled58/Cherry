@@ -1,5 +1,5 @@
 #pragma once
-#include "Cherry/Window.h"
+#include "Cherry/Core/Window.h"
 #include <GLFW/glfw3.h>
 #include "Cherry/Renderer/GraphicsContext.h"
 

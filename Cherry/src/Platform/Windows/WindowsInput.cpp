@@ -1,7 +1,7 @@
 #include "CHpch.h"
 #include "WindowsInput.h"
 
-#include "Cherry/Application.h"
+#include "Cherry/Core/Application.h"
 #include "glfw/glfw3.h"
 namespace Cherry
 {

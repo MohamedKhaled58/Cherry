@@ -1,5 +1,5 @@
 #pragma once
-#include "Cherry/Core.h"
+#include "Cherry/Core/Core.h"
 #include <utility> // for std::pair
 
 namespace Cherry {

@@ -15,7 +15,7 @@
 #include <regex>
 
 
-#include "Cherry/Log.h"
+#include "Cherry/Core/Log.h"
 
 #ifdef CH_PLATFORM_WINDOWS
 #include <Windows.h>

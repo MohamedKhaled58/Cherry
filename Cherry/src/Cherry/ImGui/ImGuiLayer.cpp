@@ -5,7 +5,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
 
-#include "Cherry/Application.h"
+#include "Cherry/Core/Application.h"
 
 //Temporary include for GLFW and glad
 #include <GLFW/glfw3.h>

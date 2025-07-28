@@ -2,9 +2,9 @@
 // TO BE USED BY CHERRY ***APPS***
 
 
-#include "Cherry/Application.h"
-#include "Cherry/Layer.h"
-#include "Cherry/Log.h"
+#include "Cherry/Core/Application.h"
+#include "Cherry/Core/Layer.h"
+#include "Cherry/Core/Log.h"
 
 #include "Cherry/Core/TimeStep.h"
 
@@ -30,5 +30,5 @@
 #include "Cherry/OrthographicCameraController.h"
 
 //------------Entry Point----------------
-#include "Cherry/EntryPoint.h"
+#include "Cherry/Core/EntryPoint.h"
 //---------------------------------------
