@@ -30,5 +30,4 @@
 #include "Cherry/OrthographicCameraController.h"
 
 //------------Entry Point----------------
-#include "Cherry/Core/EntryPoint.h"
 //---------------------------------------

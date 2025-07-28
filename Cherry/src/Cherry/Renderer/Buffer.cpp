@@ -7,12 +7,12 @@
 
 namespace Cherry {
 
-	VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
+	REF(VertexBuffer) VertexBuffer::Create(float* vertices, uint32_t size)
 	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:	CH_CLIENT_ASSERT(false, "RendererAPI::None is not Supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:	return new OpenGLVertexBuffer(vertices, size);
+		case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLVertexBuffer>(vertices, size);
 		}
 
 		CH_CLIENT_ASSERT(false, "UnKnown RendererAPI !");

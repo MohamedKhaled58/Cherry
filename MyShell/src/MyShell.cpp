@@ -1,11 +1,13 @@
-#include "CHpch.h"
 #include "Cherry.h"
+#include "Cherry/Core/EntryPoint.h"
+
 #include <Platform/OpenGL/OpenGLShader.h>
 #
 #include "imgui/imgui.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <Cherry/OrthographicCameraController.h>
+#include "Sandbox2D.h"
 
 
 class ShellLayer : public Cherry::Layer
@@ -28,11 +30,11 @@ public:
         uint32_t Indices[3] = { 0 , 1 , 2 };
 
         /////////Setting Up Triangle//////////
-        m_VertexArray.reset(Cherry::VertexArray::Create());
+        m_VertexArray = Cherry::VertexArray::Create();
 
         // Creating Vertex Buffer
         REF(Cherry::VertexBuffer)m_VertexBuffer;
-        m_VertexBuffer.reset(Cherry::VertexBuffer::Create(Vertices, sizeof(Vertices)));
+        m_VertexBuffer = (Cherry::VertexBuffer::Create(Vertices, sizeof(Vertices)));
 
         // Setting Buffer Layout
         Cherry::BufferLayout layout = {
@@ -67,11 +69,11 @@ public:
         };
 
         /////////Setting Up Square//////////
-        m_FlatColorVertexArray.reset(Cherry::VertexArray::Create());
+        m_FlatColorVertexArray = Cherry::VertexArray::Create();
 
         // Creating Vertex Buffer
         REF(Cherry::VertexBuffer)m_SquareVB;
-        m_SquareVB.reset((Cherry::VertexBuffer::Create(SquareVertices, sizeof(SquareVertices))));
+        m_SquareVB = Cherry::VertexBuffer::Create(SquareVertices, sizeof(SquareVertices));
         Cherry::BufferLayout Squarelayout = {
             { Cherry::ShaderDataType::Float3, "a_Position" },
             { Cherry::ShaderDataType::Float2, "a_TexCoord" }
@@ -429,9 +431,8 @@ class MyShell : public Cherry::Application
 public:
     MyShell()
     {
-        auto* shellLayer = new ShellLayer();
-        PushLayer(shellLayer);
-        CH_CLIENT_INFO("Pushed Layer: {0}", shellLayer->GetName());
+        //PushLayer(new ShellLayer());
+        PushLayer(new Cherry::Sandbox2D());
     }
 
     ~MyShell()

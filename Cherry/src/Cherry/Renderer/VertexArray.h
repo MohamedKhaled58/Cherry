@@ -20,6 +20,6 @@ namespace Cherry {
 		virtual const REF(IndexBuffer)& GetIndexBuffers() const = 0;
 
 
-		static VertexArray* Create();
+		static REF(VertexArray) Create();
 	};
 }
