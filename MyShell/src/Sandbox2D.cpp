@@ -8,7 +8,7 @@
 
 namespace Cherry {
     Sandbox2D::Sandbox2D()
-        :Layer("Sandbox2D"),m_CameraController(1280.0f/720.0f,true)
+        :Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f, true)
     {
 
     }
@@ -57,44 +57,30 @@ namespace Cherry {
 
     void Sandbox2D::OnUpdate(TimeStep timeStep)
     {
-        CH_PROFILE_FUNCTION();
+        m_CameraController.OnUpdate(timeStep);
 
-        // Update camera
-        {
-            CH_PROFILE_SCOPE("Camera Update");
-            m_CameraController.OnUpdate(timeStep);
-        }
+        Cherry::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+        Cherry::RenderCommand::Clear();
 
-        // Render scene
-        {
-            CH_PROFILE_SCOPE("Renderer Prep");
-            Cherry::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-            Cherry::RenderCommand::Clear();
-        }
-
-        {
-            CH_PROFILE_SCOPE("Scene Rendering");
-            //Cherry::Renderer2D::BeginScene(m_CameraController.GetCamera());
+        // Use the camera from the controller instead of your manual camera
+        Cherry::Renderer::BeginScene(m_CameraController.GetCamera());
 
         // Rest of your rendering code stays the same...
-            glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
-            glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
+        glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
+        glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
 
-            std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->Bind();
-            std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat4("u_Color", m_SquareColor);
+        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->Bind();
+        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat4("u_Color", m_SquareColor);
 
-            m_FlatColorShader->Bind();
-            Cherry::Renderer::Submit(m_FlatColorShader, m_FlatColorVertexArray);
+        m_FlatColorShader->Bind();
+        Cherry::Renderer::Submit(m_FlatColorShader, m_FlatColorVertexArray);
 
 
-            Cherry::Renderer::EndScene();
-        }
+        Cherry::Renderer::EndScene();
     }
 
-	void Sandbox2D::OnImGuiRender()
-	{
-        CH_PROFILE_FUNCTION();
-
+    void Sandbox2D::OnImGuiRender()
+    {
         ImGui::Begin("Camera Controller");
 
         // Camera Position Controls
@@ -254,10 +240,10 @@ namespace Cherry {
         ImGui::Begin("Render Settings");
         ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
         ImGui::End();
-	}
+    }
 
-	void Sandbox2D::OnEvent(Event& e)
-	{
-		m_CameraController.OnEvent(e);
-	}
+    void Sandbox2D::OnEvent(Event& e)
+    {
+        m_CameraController.OnEvent(e);
+    }
 }

@@ -30,5 +30,4 @@
 #include "Cherry/OrthographicCameraController.h"
 
 //-------------------------------
-#include "Cherry/Core/Debug/Profiler.h"
 //---------------------------------------

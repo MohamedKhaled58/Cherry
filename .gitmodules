@@ -5,6 +5,7 @@
 [submodule "Cherry/vendor/imgui"]
 	path = Cherry/vendor/imgui
 	url = https://github.com/ocornut/imgui
+	branch = docking
 [submodule "Cherry/vendor/glm"]
 	path = Cherry/vendor/glm
 	url = https://github.com/g-truc/glm

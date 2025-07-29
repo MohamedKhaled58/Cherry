@@ -3,7 +3,6 @@
 #include "Cherry/Renderer/Buffer.h"
 #include "Cherry/Renderer/Renderer.h"
 #include <GLFW/glfw3.h>
-#include "Cherry/Core/Debug/Profiler.h"
 
 
 namespace Cherry {
@@ -59,14 +58,10 @@ namespace Cherry {
 
     void Application::Run()
     {
-        CH_PROFILE_FUNCTION();
 
         while (m_Running)
         {
-            CH_PROFILE_FRAME_MARK();  // Essential - call once per frame
-            CH_PROFILE_FUNCTION();    // Profile the entire Run function
 
-            CH_PROFILE_SCOPE("RunLoop");
 
             float time = (float)glfwGetTime();
             TimeStep timestep = time - m_LastFrameTime;
@@ -75,18 +70,15 @@ namespace Cherry {
             if (!m_Minimized)
             {
                 {
-                    CH_PROFILE_SCOPE("LayerStack OnUpdate");
                     for (Layer* layer : m_LayerStack)
                         layer->OnUpdate(timestep);
                 }
             }
 
             {
-                CH_PROFILE_SCOPE("LayerStack OnImGuiRender");
                 m_ImGuiLayer->Begin();
 
                 // Render profiler UI
-                Profiler::Get().OnImGuiRender();
 
                 for (Layer* layer : m_LayerStack)
                     layer->OnImGuiRender();
@@ -95,7 +87,6 @@ namespace Cherry {
             }
 
             {
-                CH_PROFILE_SCOPE("Window OnUpdate");
                 m_Window->OnUpdate();
             }
         }

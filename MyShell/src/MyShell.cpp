@@ -15,7 +15,7 @@ class ShellLayer : public Cherry::Layer
 public:
 
     ShellLayer()
-       : Layer("MyShell"), m_CameraController(1280.0f / 720.0f, true)
+        : Layer("MyShell"), m_CameraController(1280.0f / 720.0f, true)
     {
         ///////////////////////////
        // Triangle Setup
@@ -152,7 +152,7 @@ public:
         }
     )";
         m_FlatColorShader = Cherry::Shader::Create("FlatColor", flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
-  
+
         auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
         if (!textureShader) {
             CH_CORE_ERROR("Failed to load Texture shader from assets/shaders/Texture.glsl");
@@ -354,7 +354,7 @@ public:
         // Use the camera from the controller instead of your manual camera
         Cherry::Renderer::BeginScene(m_CameraController.GetCamera());
 
- 
+
 
         // Rest of your rendering code stays the same...
         glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
@@ -410,19 +410,19 @@ public:
         }
     }
 
-    private:
-        Cherry::ShaderLibrary m_ShaderLibrary;
-        REF(Cherry::Shader) m_Shader;
-        REF(Cherry::VertexArray) m_VertexArray;
+private:
+    Cherry::ShaderLibrary m_ShaderLibrary;
+    REF(Cherry::Shader) m_Shader;
+    REF(Cherry::VertexArray) m_VertexArray;
 
-        REF(Cherry::Shader) m_FlatColorShader;
-        REF(Cherry::VertexArray) m_FlatColorVertexArray;
+    REF(Cherry::Shader) m_FlatColorShader;
+    REF(Cherry::VertexArray) m_FlatColorVertexArray;
 
-        REF(Cherry::Texture2D) m_Texture, m_CherryLogoTexture;
+    REF(Cherry::Texture2D) m_Texture, m_CherryLogoTexture;
 
-        Cherry::OrthographicCameraController m_CameraController;
+    Cherry::OrthographicCameraController m_CameraController;
 
-        glm::vec3 m_SquareColor = { 0.3f,0.1f,0.8f };
+    glm::vec3 m_SquareColor = { 0.3f,0.1f,0.8f };
 };
 
 
@@ -442,5 +442,5 @@ public:
 Cherry::Application* Cherry::CreateApplication()
 {
     CH_CLIENT_INFO("Returned New Shell");
-	return new MyShell();
+    return new MyShell();
 }

@@ -6,7 +6,6 @@
 #include "backends/imgui_impl_glfw.h"
 
 #include "Cherry/Core/Application.h"
-#include "Cherry/Core/Debug/Profiler.h"
 
 //Temporary include for GLFW and glad
 #include <GLFW/glfw3.h>
@@ -93,7 +92,6 @@ namespace Cherry {
     // Render ImGui content, this is where you define your ImGui UI elements For The Engine
     void ImGuiLayer::OnImGuiRender()
     {
-        Profiler::Get().OnImGuiRender();
     }
 }
 
