@@ -1,5 +1,6 @@
 #include "CHpch.h"
 #include "Renderer.h"
+#include "Cherry/Renderer/Renderer2D.h"
 #include "Cherry/Renderer/Shader.h"
 #include <Platform/OpenGL/OpenGLShader.h>
 
@@ -11,6 +12,7 @@ namespace Cherry {
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
+		Renderer2D::Init();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)

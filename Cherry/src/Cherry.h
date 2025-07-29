@@ -17,6 +17,7 @@
 
 //------------Renderer----------------
 #include "Cherry/Renderer/Renderer.h"
+#include "Cherry/Renderer/Renderer2D.h"
 #include "Cherry/Renderer/RenderCommand.h"
 
 #include "Cherry/Renderer/Shader.h"

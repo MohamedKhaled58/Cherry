@@ -70,6 +70,7 @@ namespace Cherry {
 
         // Camera information
         glm::vec3 GetCameraPosition() const { return m_Camera.GetPosition(); }
+        void SetCameraPosition(const glm::vec3& position) { m_Camera.SetPosition(position); }
         float GetCameraRotation() const { return m_Camera.GetRotation(); }
 
     private:

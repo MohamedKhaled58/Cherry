@@ -16,38 +16,6 @@ namespace Cherry {
     void Sandbox2D::OnAttach()
     {
 
-        ///////////////////////////
-        // Square Setup
-        ///////////////////////////
-        float SquareVertices[5 * 4] = {
-            // x      y      z
-            -0.5f, -0.5f, 0.0f,             // Bottom-left  (0)
-             0.5f, -0.5f, 0.0f,                 // Bottom-right (1)
-             0.5f,  0.5f, 0.0f,                 // Top-right    (2)
-            -0.5f,  0.5f, 0.0f                 // Top-left     (3)
-        };
-        uint32_t SquareIndices[6] = {
-            0, 1, 2,  // Triangle 1
-            2, 3, 0   // Triangle 2
-        };
-
-        /////////Setting Up Square//////////
-        m_FlatColorVertexArray = Cherry::VertexArray::Create();
-
-        // Creating Vertex Buffer
-        REF(Cherry::VertexBuffer)m_FlatColorVertexBuffer;
-        m_FlatColorVertexBuffer = (Cherry::VertexBuffer::Create(SquareVertices, sizeof(SquareVertices)));
-        Cherry::BufferLayout Squarelayout = {
-            { Cherry::ShaderDataType::Float3, "a_Position" }
-        };
-        m_FlatColorVertexBuffer->SetLayout(Squarelayout);
-        m_FlatColorVertexArray->AddVertexBuffer(m_FlatColorVertexBuffer);
-
-        // Creating Index Buffer - FIXED: Actually add it to vertex array
-        REF(Cherry::IndexBuffer)m_SquareIB;
-        m_SquareIB.reset(Cherry::IndexBuffer::Create(SquareIndices, sizeof(SquareIndices) / sizeof(uint32_t)));
-        m_FlatColorVertexArray->SetIndexBuffer(m_SquareIB);
-        m_FlatColorShader = Cherry::Shader::Create("assets/shaders/FlatColor.glsl");
     }
 
     void Sandbox2D::OnDetach()
@@ -57,26 +25,24 @@ namespace Cherry {
 
     void Sandbox2D::OnUpdate(TimeStep timeStep)
     {
+        //  UPDATE
         m_CameraController.OnUpdate(timeStep);
 
-        Cherry::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-        Cherry::RenderCommand::Clear();
+        //  RENDER
+        RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+        RenderCommand::Clear();
 
-        // Use the camera from the controller instead of your manual camera
-        Cherry::Renderer::BeginScene(m_CameraController.GetCamera());
+        Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-        // Rest of your rendering code stays the same...
-        glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
-        glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
-
-        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->Bind();
-        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat4("u_Color", m_SquareColor);
-
-        m_FlatColorShader->Bind();
-        Cherry::Renderer::Submit(m_FlatColorShader, m_FlatColorVertexArray);
+        Renderer2D::DrawQuad({ 0.0f, 0.0f,0.5f }, { 0.2f, 0.2f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+        Renderer2D::DrawQuad({ 0.0f, 0.0f,0.8f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 
 
-        Cherry::Renderer::EndScene();
+        Renderer2D::EndScene();
+
+        //TODO : Add These Func (Shader::SetMat4 , Shader::SetFloat4)
+        //std::dynamic_pointer_cast<OpenGLShader>(m_FlatColorShader)->Bind();
+        //std::dynamic_pointer_cast<OpenGLShader>(m_FlatColorShader)->UploadUniformFloat4("u_Color", m_SquareColor);
     }
 
     void Sandbox2D::OnImGuiRender()
@@ -89,6 +55,16 @@ namespace Cherry {
             glm::vec3 position = m_CameraController.GetCameraPosition();
             ImGui::Text("Position: (%.2f, %.2f, %.2f)", position.x, position.y, position.z);
 
+            float pos[3] = { position.x, position.y, position.z }; // Convert to float array for ImGui
+            if (ImGui::SliderFloat3("Position", pos, -20.0f, 20.0f))
+            {
+                // If the slider changed the values, update the camera
+                position = glm::vec3(position.x, position.y, position.z);
+                m_CameraController.SetCameraPosition(position);
+            }
+        }
+
+
             float cameraSpeed = m_CameraController.GetCameraSpeed();
             if (ImGui::SliderFloat("Camera Speed", &cameraSpeed, 0.1f, 20.0f))
             {
@@ -99,7 +75,7 @@ namespace Cherry {
             {
                 m_CameraController.Reset();
             }
-        }
+        
 
         // Camera Rotation Controls
         if (ImGui::CollapsingHeader("Rotation", ImGuiTreeNodeFlags_DefaultOpen))

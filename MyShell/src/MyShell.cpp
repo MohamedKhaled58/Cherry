@@ -48,7 +48,7 @@ public:
 
         // Creating Index Buffer
         REF(Cherry::IndexBuffer)m_IndexBuffer;
-        m_IndexBuffer.reset(Cherry::IndexBuffer::Create(Indices, sizeof(Indices) / sizeof(uint32_t)));
+        m_IndexBuffer = Cherry::IndexBuffer::Create(Indices, sizeof(Indices) / sizeof(uint32_t));
 
         // Adding Index Buffer TO Vertex Array
         m_VertexArray->SetIndexBuffer(m_IndexBuffer);
@@ -83,7 +83,7 @@ public:
 
         // Creating Index Buffer - FIXED: Actually add it to vertex array
         REF(Cherry::IndexBuffer)m_SquareIB;
-        m_SquareIB.reset(Cherry::IndexBuffer::Create(SquareIndices, sizeof(SquareIndices) / sizeof(uint32_t)));
+        m_SquareIB = Cherry::IndexBuffer::Create(SquareIndices, sizeof(SquareIndices) / sizeof(uint32_t));
         m_FlatColorVertexArray->SetIndexBuffer(m_SquareIB);
 
 

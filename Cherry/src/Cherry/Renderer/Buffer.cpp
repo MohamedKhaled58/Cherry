@@ -19,12 +19,12 @@ namespace Cherry {
 		return nullptr;
 	}
 
-	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count)
+	REF(IndexBuffer) IndexBuffer::Create(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:	CH_CLIENT_ASSERT(false, "RendererAPI::None is not Supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:	return new OpenGLIndexBuffer(indices, count);
+		case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLIndexBuffer>(indices, count);
 		}
 
 		return nullptr;
