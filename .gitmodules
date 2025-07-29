@@ -11,6 +11,3 @@
 [submodule "Cherry/vendor/spdlog"]
 	path = Cherry/vendor/spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "Cherry/vendor/Glad"]
-	path = Cherry/vendor/Glad
-	url = https://github.com/Dav1dde/glad

@@ -126,10 +126,10 @@ project "MyShell"
     
     -- Include directories
     includedirs {
-        "Cherry/src",
-        "%{IncludeDir.spdlog}",
-        "%{IncludeDir.glm}",
-        "Cherry/vendor"
+        "Cherry/vendor/spdlog/include",
+		"Cherry/src",
+		"Cherry/vendor",
+		"%{IncludeDir.glm}"
     }
     
     -- Link libraries

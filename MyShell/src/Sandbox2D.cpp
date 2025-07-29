@@ -57,30 +57,44 @@ namespace Cherry {
 
     void Sandbox2D::OnUpdate(TimeStep timeStep)
     {
-        m_CameraController.OnUpdate(timeStep);
+        CH_PROFILE_FUNCTION();
 
-        Cherry::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-        Cherry::RenderCommand::Clear();
+        // Update camera
+        {
+            CH_PROFILE_SCOPE("Camera Update");
+            m_CameraController.OnUpdate(timeStep);
+        }
 
-        // Use the camera from the controller instead of your manual camera
-        Cherry::Renderer::BeginScene(m_CameraController.GetCamera());
+        // Render scene
+        {
+            CH_PROFILE_SCOPE("Renderer Prep");
+            Cherry::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+            Cherry::RenderCommand::Clear();
+        }
+
+        {
+            CH_PROFILE_SCOPE("Scene Rendering");
+            //Cherry::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
         // Rest of your rendering code stays the same...
-        glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
-        glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
+            glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
+            glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
 
-        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->Bind();
-        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat4("u_Color", m_SquareColor);
+            std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->Bind();
+            std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat4("u_Color", m_SquareColor);
 
-        m_FlatColorShader->Bind();
-        Cherry::Renderer::Submit(m_FlatColorShader, m_FlatColorVertexArray);
+            m_FlatColorShader->Bind();
+            Cherry::Renderer::Submit(m_FlatColorShader, m_FlatColorVertexArray);
 
 
-        Cherry::Renderer::EndScene();
+            Cherry::Renderer::EndScene();
+        }
     }
 
 	void Sandbox2D::OnImGuiRender()
 	{
+        CH_PROFILE_FUNCTION();
+
         ImGui::Begin("Camera Controller");
 
         // Camera Position Controls

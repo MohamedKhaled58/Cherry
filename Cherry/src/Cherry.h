@@ -29,5 +29,6 @@
 
 #include "Cherry/OrthographicCameraController.h"
 
-//------------Entry Point----------------
+//-------------------------------
+#include "Cherry/Core/Debug/Profiler.h"
 //---------------------------------------

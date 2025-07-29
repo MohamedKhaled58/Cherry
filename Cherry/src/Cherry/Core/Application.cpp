@@ -3,6 +3,7 @@
 #include "Cherry/Renderer/Buffer.h"
 #include "Cherry/Renderer/Renderer.h"
 #include <GLFW/glfw3.h>
+#include "Cherry/Core/Debug/Profiler.h"
 
 
 namespace Cherry {
@@ -55,44 +56,51 @@ namespace Cherry {
         dispatcher.Dispatch<WindowResizeEvent>(CH_BIND_EVENT_FN(Application::OnWindowResize));
     }
 
+
     void Application::Run()
     {
+        CH_PROFILE_FUNCTION();
+
         while (m_Running)
         {
-            // Calculate delta time
-            float time = (float)glfwGetTime();     // TODO: Should be Platform::GetTime()
-            TimeStep timeStep = time - m_LastFrameTime;
+            CH_PROFILE_FRAME_MARK();  // Essential - call once per frame
+            CH_PROFILE_FUNCTION();    // Profile the entire Run function
+
+            CH_PROFILE_SCOPE("RunLoop");
+
+            float time = (float)glfwGetTime();
+            TimeStep timestep = time - m_LastFrameTime;
             m_LastFrameTime = time;
 
-            // Only update layers if window is not minimized
             if (!m_Minimized)
             {
-                // Update all layers
-                for (Layer* layer : m_LayerStack)
                 {
-                    layer->OnUpdate(timeStep);
-                }
-
-                // Render ImGui
-                if (m_ImGuiLayer)
-                {
-                    m_ImGuiLayer->Begin();
+                    CH_PROFILE_SCOPE("LayerStack OnUpdate");
                     for (Layer* layer : m_LayerStack)
-                    {
-                        layer->OnImGuiRender();
-                    }
-                    m_ImGuiLayer->End();
+                        layer->OnUpdate(timestep);
                 }
             }
 
-            // Always update window (handles events even when minimized)
-            CH_CORE_ASSERT(m_Window, "Window is null!");
-            if (m_Window)
             {
+                CH_PROFILE_SCOPE("LayerStack OnImGuiRender");
+                m_ImGuiLayer->Begin();
+
+                // Render profiler UI
+                Profiler::Get().OnImGuiRender();
+
+                for (Layer* layer : m_LayerStack)
+                    layer->OnImGuiRender();
+
+                m_ImGuiLayer->End();
+            }
+
+            {
+                CH_PROFILE_SCOPE("Window OnUpdate");
                 m_Window->OnUpdate();
             }
         }
     }
+
 
     bool Application::OnWindowClose(WindowCloseEvent& e)
     {
