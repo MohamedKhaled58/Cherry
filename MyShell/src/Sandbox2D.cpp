@@ -1,7 +1,6 @@
 #include "Cherry.h"
 #include "Sandbox2D.h"
 
-#include <Platform/OpenGL/OpenGLShader.h>
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <Cherry/Renderer/Renderer.h>
@@ -34,15 +33,11 @@ namespace Cherry {
 
         Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-        Renderer2D::DrawQuad({ 0.0f, 0.0f,0.5f }, { 0.2f, 0.2f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-        Renderer2D::DrawQuad({ 0.0f, 0.0f,0.8f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+        Renderer2D::DrawQuad({ -1.0f, 0.0f}, glm::radians(0.0f), { 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
+        Renderer2D::DrawQuad({ 0.5f, -0.5f}, glm::radians(0.0f), { 1.0f, 1.0f }, { 0.2f, 0.8f, 0.0f, 1.5f });
 
 
         Renderer2D::EndScene();
-
-        //TODO : Add These Func (Shader::SetMat4 , Shader::SetFloat4)
-        //std::dynamic_pointer_cast<OpenGLShader>(m_FlatColorShader)->Bind();
-        //std::dynamic_pointer_cast<OpenGLShader>(m_FlatColorShader)->UploadUniformFloat4("u_Color", m_SquareColor);
     }
 
     void Sandbox2D::OnImGuiRender()
@@ -55,7 +50,7 @@ namespace Cherry {
             glm::vec3 position = m_CameraController.GetCameraPosition();
             ImGui::Text("Position: (%.2f, %.2f, %.2f)", position.x, position.y, position.z);
 
-            float pos[3] = { position.x, position.y, position.z }; // Convert to float array for ImGui
+            float pos[3] = { position.x, position.y, position.z };
             if (ImGui::SliderFloat3("Position", pos, -20.0f, 20.0f))
             {
                 // If the slider changed the values, update the camera

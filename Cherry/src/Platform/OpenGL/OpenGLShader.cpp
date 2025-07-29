@@ -211,6 +211,21 @@ namespace Cherry {
 	{
 		glUseProgram(0);
 	}
+	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value)
+	{
+		UploadUniformMat4(name, value);
+	}
+
+	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& value)
+	{
+		UploadUniformFloat4(name, value);
+
+	}
+
+	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& value)
+	{
+		UploadUniformFloat3(name, value);
+	}
 
 	// Function to upload a 4x4 matrix uniform to the shader program.
 	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix) const {
