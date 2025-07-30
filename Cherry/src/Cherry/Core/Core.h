@@ -45,38 +45,8 @@
 #define BIT(X) (1 << X)
 #define CH_BIND_EVENT_FN(fn) (std::bind(&fn, this, std::placeholders::_1))
 
-// =============================================================================
-// Profiling macros - Conditional compilation for zero overhead in release
-// =============================================================================
-#ifdef CH_PROFILE
-    // Resolve which function signature macro to use based on compiler
-#if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
-#define CH_FUNC_SIG __PRETTY_FUNCTION__
-#elif defined(__DMC__) && (__DMC__ >= 0x810)
-#define CH_FUNC_SIG __PRETTY_FUNCTION__
-#elif (defined(__FUNCSIG__) || (_MSC_VER))
-#define CH_FUNC_SIG __FUNCSIG__
-#elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) || (defined(__IBMCPP__) && (__IBMCPP__ >= 500))
-#define CH_FUNC_SIG __FUNCTION__
-#elif defined(__BORLANDC__) && (__BORLANDC__ >= 0x550)
-#define CH_FUNC_SIG __FUNC__
-#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
-#define CH_FUNC_SIG __func__
-#elif defined(__cplusplus) && (__cplusplus >= 201103)
-#define CH_FUNC_SIG __func__
-#else
-#define CH_FUNC_SIG "CH_FUNC_SIG unknown!"
-#endif
 
-// ImGui-based real-time profiling macros
-#define PROFILE_SCOPE(name) InstrumentationTimer timer_##__LINE__(name)
-#define CH_PROFILE_FUNCTION() CH_PROFILE_SCOPE(CH_FUNC_SIG)
-#define CH_PROFILE_FRAME_MARK() static ::Cherry::FrameTimer s_frameTimer##__LINE__; s_frameTimer##__LINE__.NewFrame()
-#else
-#define CH_PROFILE_SCOPE(name)
-#define CH_PROFILE_FUNCTION()
-#define CH_PROFILE_FRAME_MARK()
-#endif
+
 
 namespace Cherry {
 

@@ -1,34 +1,27 @@
 #pragma once
-// TO BE USED BY CHERRY ***APPS***
 
-
+// Core
 #include "Cherry/Core/Application.h"
 #include "Cherry/Core/Layer.h"
 #include "Cherry/Core/Log.h"
-
 #include "Cherry/Core/TimeStep.h"
-
-
 #include "Cherry/Core/Input.h"
 #include "Cherry/Core/KeyCodes.h"
 #include "Cherry/Core/MouseButtonCodes.h"
 
+// ImGui
 #include "Cherry/ImGui/ImGuiLayer.h"
 
-//------------Renderer----------------
+// Renderer
 #include "Cherry/Renderer/Renderer.h"
 #include "Cherry/Renderer/Renderer2D.h"
+#include "Cherry/Renderer/BatchRenderer2D.h"
 #include "Cherry/Renderer/RenderCommand.h"
-
 #include "Cherry/Renderer/Shader.h"
 #include "Cherry/Renderer/Buffer.h"
 #include "Cherry/Renderer/Texture.h"
 #include "Cherry/Renderer/VertexArray.h"
-
 #include "Cherry/Renderer/Camera.h"
-//---------------------------------------
 
+// Camera Controller
 #include "Cherry/OrthographicCameraController.h"
-
-//-------------------------------
-//---------------------------------------

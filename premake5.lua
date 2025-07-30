@@ -23,6 +23,10 @@ IncludeDir["Glad"] = "Cherry/vendor/Glad/include"
 IncludeDir["ImGui"] = "Cherry/vendor/imgui"
 IncludeDir["glm"] = "Cherry/vendor/glm"
 IncludeDir["stb_image"] = "Cherry/vendor/stb_image"
+-- Add to IncludeDir table
+IncludeDir["entt"] = "Cherry/vendor/entt"
+IncludeDir["Box2D"] = "Cherry/vendor/Box2D/include"
+IncludeDir["rapidjson"] = "Cherry/vendor/rapidjson/include"
 
 group "Dependencies"
 	include "Cherry/vendor/GLFW"
@@ -52,6 +56,8 @@ project "Cherry"
 		"%{prj.name}/vendor/stb_image/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl",
+		"%{prj.name}/vendor/entt/**.hpp"  -- Add this
+
 	}
 
 	defines
@@ -67,7 +73,10 @@ project "Cherry"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.entt}",        -- Add this
+		"%{IncludeDir.Box2D}",       -- Add this
+		"%{IncludeDir.rapidjson}"    -- Add this
 	}
 
 	links 

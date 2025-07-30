@@ -12,3 +12,12 @@
 [submodule "Cherry/vendor/spdlog"]
 	path = Cherry/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "Cherry/vendor/entt"]
+	path = Cherry/vendor/entt
+	url = https://github.com/skypjack/entt.git
+[submodule "Cherry/vendor/Box2D"]
+	path = Cherry/vendor/Box2D
+	url = https://github.com/erincatto/box2d.git
+[submodule "Cherry/vendor/rapidjson"]
+	path = Cherry/vendor/rapidjson
+	url = https://github.com/Tencent/rapidjson.git

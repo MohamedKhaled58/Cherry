@@ -211,6 +211,13 @@ namespace Cherry {
 	{
 		glUseProgram(0);
 	}
+	void OpenGLShader::SetIntArray(const std::string& name, int* values, uint32_t count)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location != -1) {
+			glUniform1iv(location, count, values);
+		}
+	}
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value)
 	{
 		UploadUniformMat4(name, value);

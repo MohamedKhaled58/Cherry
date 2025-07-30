@@ -14,11 +14,13 @@
 #include <unordered_set>
 #include <regex>
 
+// Add GLM includes
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Cherry/Core/Log.h"
 
 #ifdef CH_PLATFORM_WINDOWS
 #include <Windows.h>
-#endif // CH_PLATFORM_WINDOWS
-
-
+#endif
