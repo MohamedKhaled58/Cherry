@@ -1,8 +1,5 @@
 #include "Cherry.h"
 #include "Cherry/Core/EntryPoint.h"
-
-#include <Platform/OpenGL/OpenGLShader.h>
-#
 #include "imgui/imgui.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -109,7 +106,7 @@ public:
         }
     )";
 
-        std::string fregmantSource = R"(
+        std::string fragmentSource = R"(
         #version 330 core
         layout(location = 0) out vec4 color;
 
@@ -121,7 +118,7 @@ public:
             color = v_Color;
         }
     )";
-        m_Shader = Cherry::Shader::Create("Triangle", vertexSource, fregmantSource);
+        m_Shader = Cherry::Shader::Create("Triangle", vertexSource, fragmentSource);
 
         ///////////////////////////
         // Square Shader
@@ -173,8 +170,8 @@ public:
 
         // Setup texture shader
         if (textureShader) {
-            std::dynamic_pointer_cast<Cherry::OpenGLShader>(textureShader)->Bind();
-            std::dynamic_pointer_cast<Cherry::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
+            textureShader->Bind();
+            textureShader->SetInt("u_Texture", 0);
         }
 
     }//Shell Layer
@@ -354,14 +351,8 @@ public:
         // Use the camera from the controller instead of your manual camera
         Cherry::Renderer::BeginScene(m_CameraController.GetCamera());
 
-
-
-        // Rest of your rendering code stays the same...
-        glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
-        glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
-
-        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->Bind();
-        std::dynamic_pointer_cast<Cherry::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+        m_FlatColorShader->Bind();
+        m_FlatColorShader->SetFloat3("u_Color", m_SquareColor);
 
         static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
         for (int y = 0; y < 20; y++)

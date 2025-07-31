@@ -14,6 +14,7 @@ namespace Cherry {
 
     void Sandbox2D::OnAttach()
     {
+        m_CheckerboardTexture = Cherry::Texture2D::Create("assets/textures/Checkerboard.png");
 
     }
 
@@ -35,6 +36,8 @@ namespace Cherry {
 
         Renderer2D::DrawQuad({ -1.0f, 0.0f}, glm::radians(0.0f), { 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
         Renderer2D::DrawQuad({ 0.5f, -0.5f}, glm::radians(0.0f), { 1.0f, 1.0f }, { 0.2f, 0.8f, 0.0f, 1.5f });
+
+        Renderer2D::DrawQuad({ 0.0f, 0.0f , -0.1}, glm::radians(0.0f), { 10.0f, 10.0f }, m_CheckerboardTexture);
 
 
         Renderer2D::EndScene();

@@ -227,6 +227,12 @@ namespace Cherry {
 		UploadUniformFloat3(name, value);
 	}
 
+	void OpenGLShader::SetInt(const std::string& name, int value)
+	{
+		UploadUniformInt(name, value);
+
+	}
+
 	// Function to upload a 4x4 matrix uniform to the shader program.
 	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix) const {
 

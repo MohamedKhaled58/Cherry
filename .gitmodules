@@ -1,14 +1,14 @@
  
 [submodule "Cherry/vendor/GLFW"]
 	path = Cherry/vendor/GLFW
-	url = https://github.com/glfw/glfw
+	url = https://github.com/glfw/glfw.git
 [submodule "Cherry/vendor/imgui"]
 	path = Cherry/vendor/imgui
-	url = https://github.com/ocornut/imgui
+	url = https://github.com/ocornut/imgui.git
 	branch = docking
 [submodule "Cherry/vendor/glm"]
 	path = Cherry/vendor/glm
 	url = https://github.com/g-truc/glm
 [submodule "Cherry/vendor/spdlog"]
 	path = Cherry/vendor/spdlog
-	url = https://github.com/gabime/spdlog
+	url = https://github.com/gabime/spdlog.git

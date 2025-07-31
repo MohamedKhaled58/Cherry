@@ -22,6 +22,7 @@ namespace Cherry {
 		//TEMP
 		REF(Shader) m_FlatColorShader;
 		REF(VertexArray) m_FlatColorVertexArray;
+		REF(Texture2D) m_CheckerboardTexture;
 
 
 		glm::vec4 m_SquareColor = { 0.3f,0.1f,0.8f,1.0f };
