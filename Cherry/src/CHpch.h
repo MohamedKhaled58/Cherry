@@ -13,6 +13,12 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <regex>
+#include <thread>
+#include <future>
+#include <mutex>
+#include <condition_variable>
+#include <queue>
+#include <type_traits>
 
 // Add GLM includes
 #include <glm/glm.hpp>

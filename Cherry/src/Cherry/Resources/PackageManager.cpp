@@ -66,13 +66,12 @@ namespace Cherry {
     uint32_t StringHasher::GenerateID(const std::string& str) {
         std::string buffer(str);
 
-        // Convert to lowercase and normalize path separators to forward slashes
+        // Convert to lowercase and normalize path separators
         std::transform(buffer.begin(), buffer.end(), buffer.begin(), [](unsigned char c) {
             if (std::isupper(c)) return static_cast<char>(std::tolower(c));
             if (c == '\\') return '/';
             return static_cast<char>(c);
             });
-
 
         return StringToID(buffer.c_str());
     }
@@ -262,5 +261,139 @@ namespace Cherry {
         return true;
     }
 
+    void PackageManager::ClosePackage(const std::string& packagePath) {
+        std::lock_guard<std::mutex> lock(m_PackagesMutex);
 
-}
+        auto it = std::find_if(m_Packages.begin(), m_Packages.end(),
+            [&packagePath](const std::unique_ptr<PackageFile>& pkg) {
+                return pkg && pkg->GetPackagePath() == packagePath;
+            });
+
+        if (it != m_Packages.end()) {
+            m_Packages.erase(it);
+            CH_CORE_INFO("Closed package: {}", packagePath);
+        }
+    }
+
+    void PackageManager::CloseAllPackages() {
+        std::lock_guard<std::mutex> lock(m_PackagesMutex);
+        m_Packages.clear();
+        m_FileCache.clear();
+        m_CurrentCacheSize = 0;
+        CH_CORE_INFO("Closed all packages and cleared cache");
+    }
+
+    void* PackageManager::LoadFile(const std::string& filename, uint32_t& size) {
+        // Generate file IDs
+        uint32_t packageID = StringHasher::PackName(filename);
+        uint32_t fileID = StringHasher::RealName(filename);
+
+        // Check cache first
+        auto cacheIt = m_FileCache.find(filename);
+        if (cacheIt != m_FileCache.end()) {
+            size = static_cast<uint32_t>(cacheIt->second.size());
+            void* buffer = malloc(size);
+            if (buffer) {
+                memcpy(buffer, cacheIt->second.data(), size);
+                return buffer;
+            }
+        }
+
+        // Find package containing the file
+        PackageFile* package = FindPackageContaining(fileID);
+        if (!package) {
+            CH_CORE_WARN("File not found in any package: {}", filename);
+            size = 0;
+            return nullptr;
+        }
+
+        // Load from package
+        void* data = package->LoadFile(fileID, size);
+        if (data && size > 0) {
+            // Add to cache if size is reasonable
+            if (size <= 1024 * 1024 && m_CurrentCacheSize + size <= m_MaxCacheSize) {
+                std::vector<uint8_t> cacheData(static_cast<uint8_t*>(data),
+                    static_cast<uint8_t*>(data) + size);
+                m_FileCache[filename] = std::move(cacheData);
+                m_CurrentCacheSize += size;
+            }
+        }
+
+        return data;
+    }
+
+    bool PackageManager::FileExists(const std::string& filename) const {
+        uint32_t packageID = StringHasher::PackName(filename);
+        uint32_t fileID = StringHasher::RealName(filename);
+
+        // Check cache
+        if (m_FileCache.find(filename) != m_FileCache.end()) {
+            return true;
+        }
+
+        // Check packages
+        std::lock_guard<std::mutex> lock(m_PackagesMutex);
+        for (const auto& pkg : m_Packages) {
+            if (pkg && pkg->IsOpen() && pkg->FileExists(fileID)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    PackageFile* PackageManager::FindPackageContaining(uint32_t fileID) {
+        std::lock_guard<std::mutex> lock(m_PackagesMutex);
+
+        for (const auto& pkg : m_Packages) {
+            if (pkg && pkg->IsOpen() && pkg->FileExists(fileID)) {
+                return pkg.get();
+            }
+        }
+
+        return nullptr;
+    }
+
+    void PackageManager::BeforeUse() {
+        // Initialize any required resources
+        CH_CORE_TRACE("PackageManager ready for use");
+    }
+
+    void PackageManager::AfterUse() {
+        // Cleanup temporary resources but keep packages open
+        // Clear cache if memory pressure is high
+        if (m_CurrentCacheSize > m_MaxCacheSize * 0.8f) {
+            m_FileCache.clear();
+            m_CurrentCacheSize = 0;
+            CH_CORE_INFO("Cleared package cache due to memory pressure");
+        }
+    }
+
+    size_t PackageManager::GetLoadedPackageCount() const {
+        std::lock_guard<std::mutex> lock(m_PackagesMutex);
+        return m_Packages.size();
+    }
+
+    size_t PackageManager::GetTotalMemoryUsage() const {
+        return m_CurrentCacheSize;
+    }
+
+    void PackageManager::PrintPackageInfo() const {
+        std::lock_guard<std::mutex> lock(m_PackagesMutex);
+
+        CH_CORE_INFO("=== Package Manager Status ===");
+        CH_CORE_INFO("Loaded packages: {}/{}", m_Packages.size(), MAX_PACKAGES);
+        CH_CORE_INFO("Cache size: {:.2f} MB / {:.2f} MB",
+            m_CurrentCacheSize / (1024.0f * 1024.0f),
+            m_MaxCacheSize / (1024.0f * 1024.0f));
+        CH_CORE_INFO("Cached files: {}", m_FileCache.size());
+
+        for (const auto& pkg : m_Packages) {
+            if (pkg && pkg->IsOpen()) {
+                CH_CORE_INFO("  Package: {} (ID: {})",
+                    pkg->GetPackagePath(), pkg->GetPackageID());
+            }
+        }
+    }
+
+} // namespace Cherry

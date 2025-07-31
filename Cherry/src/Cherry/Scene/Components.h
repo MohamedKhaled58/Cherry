@@ -1,13 +1,20 @@
-
 #pragma once
+#include "CHpch.h"
 #include "Cherry/Core/Core.h"
 #include "Cherry/Renderer/Texture.h"
 #include "Cherry/Renderer/Camera.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <string>
+#include <unordered_map>
+#include "ScriptableEntity.h"
+
 
 namespace Cherry {
+
+    // Forward declarations
+    class ScriptableEntity;
+    struct AnimationClip;
 
     struct IDComponent {
         std::string ID;
@@ -70,24 +77,27 @@ namespace Cherry {
 
     struct CameraComponent {
         OrthographicCamera Camera;
-        bool Primary = true; // TODO: think about moving to Scene
+        bool Primary = true;
         bool FixedAspectRatio = false;
 
         CameraComponent() = default;
         CameraComponent(const CameraComponent&) = default;
     };
 
-    // Script component for game logic
+    // Fixed NativeScriptComponent
     struct NativeScriptComponent {
         ScriptableEntity* Instance = nullptr;
 
-        ScriptableEntity* (*InstantiateScript)();
-        void (*DestroyScript)(NativeScriptComponent*);
+        std::function<ScriptableEntity* ()> InstantiateScript;
+        std::function<void(NativeScriptComponent*)> DestroyScript;
 
         template<typename T>
         void Bind() {
             InstantiateScript = []() { return static_cast<ScriptableEntity*>(new T()); };
-            DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->Instance; nsc->Instance = nullptr; };
+            DestroyScript = [](NativeScriptComponent* nsc) {
+                delete nsc->Instance;
+                nsc->Instance = nullptr;
+                };
         }
     };
 
@@ -97,7 +107,6 @@ namespace Cherry {
         BodyType Type = BodyType::Static;
         bool FixedRotation = false;
 
-        // Storage for runtime body
         void* RuntimeBody = nullptr;
 
         RigidBody2DComponent() = default;
@@ -108,13 +117,11 @@ namespace Cherry {
         glm::vec2 Offset = { 0.0f, 0.0f };
         glm::vec2 Size = { 0.5f, 0.5f };
 
-        // Physics material properties
         float Density = 1.0f;
         float Friction = 0.5f;
         float Restitution = 0.0f;
         float RestitutionThreshold = 0.5f;
 
-        // Storage for runtime fixture
         void* RuntimeFixture = nullptr;
 
         BoxCollider2DComponent() = default;
@@ -125,20 +132,30 @@ namespace Cherry {
         glm::vec2 Offset = { 0.0f, 0.0f };
         float Radius = 0.5f;
 
-        // Physics material properties
         float Density = 1.0f;
         float Friction = 0.5f;
         float Restitution = 0.0f;
         float RestitutionThreshold = 0.5f;
 
-        // Storage for runtime fixture
         void* RuntimeFixture = nullptr;
 
         CircleCollider2DComponent() = default;
         CircleCollider2DComponent(const CircleCollider2DComponent&) = default;
     };
 
-    // Animation components
+    // Simple AnimationClip definition to fix compilation
+    struct AnimationClip {
+        std::string Name;
+        float Duration = 1.0f;
+        bool IsLooping = true;
+
+        AnimationClip() = default;
+        AnimationClip(const std::string& name, float duration = 1.0f)
+            : Name(name), Duration(duration) {
+        }
+    };
+
+    // Fixed AnimationComponent
     struct AnimationComponent {
         std::string CurrentAnimation;
         float AnimationTime = 0.0f;
@@ -146,7 +163,6 @@ namespace Cherry {
         bool IsPlaying = false;
         bool IsLooping = true;
 
-        // Animation state machine
         std::unordered_map<std::string, AnimationClip> Animations;
         std::unordered_map<std::string, std::string> Transitions;
 
@@ -176,7 +192,7 @@ namespace Cherry {
         }
     };
 
-    // Game-specific components for MMO
+    // Additional game components...
     struct PlayerComponent {
         std::string PlayerName;
         uint32_t PlayerID = 0;
@@ -197,7 +213,7 @@ namespace Cherry {
     struct NPCComponent {
         std::string NPCName;
         uint32_t NPCID = 0;
-        std::string NPCType; // "monster", "trader", "quest_giver", etc.
+        std::string NPCType;
         uint32_t Health = 100;
         uint32_t MaxHealth = 100;
         bool IsHostile = false;
@@ -235,59 +251,11 @@ namespace Cherry {
         }
     };
 
-    struct InventoryComponent {
-        struct Item {
-            uint32_t ItemID = 0;
-            std::string Name;
-            uint32_t Quantity = 1;
-            std::string IconPath;
-
-            Item() = default;
-            Item(uint32_t id, const std::string& name, uint32_t qty = 1)
-                : ItemID(id), Name(name), Quantity(qty) {
-            }
-        };
-
-        std::vector<Item> Items;
-        uint32_t MaxSlots = 20;
-        uint32_t Gold = 0;
-
-        InventoryComponent() = default;
-        InventoryComponent(const InventoryComponent&) = default;
-        InventoryComponent(uint32_t maxSlots) : MaxSlots(maxSlots) {}
-
-        bool AddItem(const Item& item) {
-            if (Items.size() < MaxSlots) {
-                Items.push_back(item);
-                return true;
-            }
-            return false;
-        }
-
-        bool RemoveItem(uint32_t itemID, uint32_t quantity = 1) {
-            for (auto it = Items.begin(); it != Items.end(); ++it) {
-                if (it->ItemID == itemID) {
-                    if (it->Quantity > quantity) {
-                        it->Quantity -= quantity;
-                        return true;
-                    }
-                    else if (it->Quantity == quantity) {
-                        Items.erase(it);
-                        return true;
-                    }
-                    break;
-                }
-            }
-            return false;
-        }
-    };
-
     struct NetworkComponent {
         uint32_t NetworkID = 0;
         bool IsLocalPlayer = false;
-        bool IsDirty = false; // Needs network update
+        bool IsDirty = false;
 
-        // Network sync data
         glm::vec3 LastSyncedPosition = { 0.0f, 0.0f, 0.0f };
         glm::vec3 LastSyncedRotation = { 0.0f, 0.0f, 0.0f };
         float LastSyncTime = 0.0f;
@@ -299,7 +267,6 @@ namespace Cherry {
         }
     };
 
-    // Audio component
     struct AudioSourceComponent {
         std::string AudioPath;
         bool IsPlaying = false;
@@ -317,22 +284,52 @@ namespace Cherry {
         }
     };
 
-    // Particle system component
+    struct InventoryComponent {
+        std::unordered_map<uint32_t, uint32_t> Items; // ItemID -> Quantity
+        uint32_t MaxSlots = 20;
+        uint32_t UsedSlots = 0;
+
+        InventoryComponent() = default;
+        InventoryComponent(const InventoryComponent&) = default;
+        InventoryComponent(uint32_t maxSlots) : MaxSlots(maxSlots) {}
+
+        bool AddItem(uint32_t itemID, uint32_t quantity = 1) {
+            if (UsedSlots >= MaxSlots) return false;
+            Items[itemID] += quantity;
+            UsedSlots++;
+            return true;
+        }
+
+        bool RemoveItem(uint32_t itemID, uint32_t quantity = 1) {
+            auto it = Items.find(itemID);
+            if (it == Items.end() || it->second < quantity) return false;
+            it->second -= quantity;
+            if (it->second == 0) {
+                Items.erase(it);
+                UsedSlots--;
+            }
+            return true;
+        }
+    };
+
     struct ParticleSystemComponent {
-        std::string ParticleTexturePath;
-        uint32_t MaxParticles = 1000;
-        float EmissionRate = 100.0f;
-        glm::vec3 StartVelocity = { 0.0f, 5.0f, 0.0f };
-        glm::vec3 VelocityVariation = { 2.0f, 1.0f, 2.0f };
-        glm::vec4 StartColor = { 1.0f, 1.0f, 1.0f, 1.0f };
-        glm::vec4 EndColor = { 1.0f, 1.0f, 1.0f, 0.0f };
-        float StartSize = 1.0f;
-        float EndSize = 0.0f;
-        float LifeTime = 5.0f;
-        float LifeTimeVariation = 1.0f;
+        std::string ParticleEffect;
+        bool IsActive = false;
+        float EmissionRate = 10.0f;
+        float Lifetime = 2.0f;
+        glm::vec4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+        float Size = 1.0f;
+        glm::vec2 Velocity = { 0.0f, 0.0f };
+        float VelocityVariation = 0.5f;
 
         ParticleSystemComponent() = default;
         ParticleSystemComponent(const ParticleSystemComponent&) = default;
+        ParticleSystemComponent(const std::string& effect)
+            : ParticleEffect(effect) {
+        }
+
+        void Start() { IsActive = true; }
+        void Stop() { IsActive = false; }
     };
 
 } // namespace Cherry

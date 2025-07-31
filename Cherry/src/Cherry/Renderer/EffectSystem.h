@@ -1,4 +1,5 @@
 #pragma once
+#include "ParticleSystem.h"
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>

@@ -1,42 +1,40 @@
 #pragma once
+#include "CHpch.h"
+#include "../entt/entt.hpp"
 #include "Cherry/Core/Core.h"
 #include "Cherry/Core/TimeStep.h"
 #include "Cherry/Renderer/Camera.h"
-#include <entt.hpp>
 #include <string>
+#include "EditorCamera.h"
 
 namespace Cherry {
 
     class Entity;
+    class EditorCamera;
+    class ScriptableEntity;
 
     class Scene {
     public:
         Scene();
         ~Scene();
 
-        // Entity management
         Entity CreateEntity(const std::string& name = std::string());
         Entity CreateEntityWithUUID(const std::string& name = std::string());
         void DestroyEntity(Entity entity);
         void DuplicateEntity(Entity entity);
 
-        // Entity queries
         Entity FindEntityByName(const std::string& name);
         Entity GetEntityByUUID(uint64_t uuid);
 
-        // Scene lifecycle
+        void OnUpdateEditor(TimeStep ts, EditorCamera& camera);
         void OnUpdateRuntime(TimeStep ts);
-        void OnUpdateEditor(TimeStep ts, OrthographicCamera& camera);
         void OnViewportResize(uint32_t width, uint32_t height);
 
-        // Primary camera
         Entity GetPrimaryCameraEntity();
 
-        // Scene serialization
         void Serialize(const std::string& filepath);
         bool Deserialize(const std::string& filepath);
 
-        // Template methods for component handling
         template<typename... Components>
         auto GetAllEntitiesWith() {
             return m_Registry.view<Components...>();
@@ -46,18 +44,15 @@ namespace Cherry {
         void OnComponentAdded(Entity entity, T& component);
 
     private:
-        template<typename T>
-
         void OnPhysics2DStart();
         void OnPhysics2DStop();
 
-        void RenderScene(OrthographicCamera& camera);
+        void RenderScene(EditorCamera& camera);
 
     private:
         entt::registry m_Registry;
         uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
-        // Physics world
         void* m_PhysicsWorld = nullptr;
 
         friend class Entity;
