@@ -3,6 +3,7 @@
 #include <memory>
 #include <unordered_map>
 #include <glm/glm.hpp>
+#include "AudioManager.h"
 namespace Cherry {
     class AudioManager {
     public:

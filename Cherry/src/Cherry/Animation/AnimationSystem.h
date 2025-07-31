@@ -4,6 +4,7 @@
 #include <Cherry/Core/TimeStep.h>
 #include <unordered_map>
 #include <Cherry/Scene/Entity.h>
+#include <Cherry/Scene/Components.h>
 
 namespace Cherry {
     class AnimationSystem {

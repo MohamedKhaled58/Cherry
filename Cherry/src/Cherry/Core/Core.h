@@ -46,10 +46,6 @@
 #define CH_BIND_EVENT_FN(fn) (std::bind(&fn, this, std::placeholders::_1))
 
 
-
-
-namespace Cherry {
-
     // =============================================================================
     // Smart Pointer Utility Class
     // Provides convenient factory functions and utilities for std::unique_ptr
@@ -150,9 +146,8 @@ namespace Cherry {
     // Convenience macros for shorter syntax (optional but recommended)
     // These provide a more concise way to work with smart pointers
     // =============================================================================
-#define SCOPE(type) Cherry::SmartPointer::Scope<type>
-#define REF(type) Cherry::SmartPointer::Ref<type>
-#define CREATE_SCOPE(type, ...) Cherry::SmartPointer::CreateScope<type>(__VA_ARGS__)
-#define CREATE_REF(type, ...) Cherry::SmartPointer::CreateRef<type>(__VA_ARGS__)
+#define SCOPE(type) SmartPointer::Scope<type>
+#define REF(type) SmartPointer::Ref<type>
+#define CREATE_SCOPE(type, ...) SmartPointer::CreateScope<type>(__VA_ARGS__)
+#define CREATE_REF(type, ...) SmartPointer::CreateRef<type>(__VA_ARGS__)
 
-} // namespace Cherry

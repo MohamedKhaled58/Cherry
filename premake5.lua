@@ -23,7 +23,6 @@ IncludeDir["Glad"] = "Cherry/vendor/Glad/include"
 IncludeDir["ImGui"] = "Cherry/vendor/imgui"
 IncludeDir["glm"] = "Cherry/vendor/glm"
 IncludeDir["stb_image"] = "Cherry/vendor/stb_image"
--- Add to IncludeDir table
 IncludeDir["entt"] = "Cherry/vendor/entt"
 IncludeDir["Box2D"] = "Cherry/vendor/Box2D/include"
 IncludeDir["rapidjson"] = "Cherry/vendor/rapidjson/include"
@@ -113,6 +112,226 @@ project "Cherry"
 		defines "CH_DIST"
 		runtime "Release"
 		optimize "on"
+
+-------------------------------------------------
+	project "3DBaseCode"
+	location "3DBaseCode"
+	kind "StaticLib"
+	language "C++"
+	cppdialect "C++20"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+
+files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Cherry/vendor/spdlog/include",
+		"Cherry/src",
+		"Cherry/vendor",
+		"%{IncludeDir.glm}"
+	}
+
+	links
+	{
+		"Cherry"
+	}
+
+    -- Windows-specific settings
+    filter "system:windows"
+        systemversion "latest"
+        buildoptions { "/utf-8" }
+
+		defines
+		{
+			"CH_PLATFORM_WINDOWS"
+		}
+
+	filter "configurations:Debug"
+		defines "CH_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "CH_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "CH_DIST"
+		runtime "Release"
+		optimize "on"
+
+
+-------------------------------------------------
+	project "3DGameMap"
+	location "3DGameMap"
+	kind "StaticLib"
+	language "C++"
+	cppdialect "C++20"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+
+files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Cherry/vendor/spdlog/include",
+		"%{IncludeDir.glm}"
+	}
+
+	links
+	{
+		"BaseCode"
+	}
+
+    -- Windows-specific settings
+    filter "system:windows"
+        systemversion "latest"
+        buildoptions { "/utf-8" }
+
+		defines
+		{
+			"CH_PLATFORM_WINDOWS"
+		}
+
+	filter "configurations:Debug"
+		defines "CH_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "CH_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "CH_DIST"
+		runtime "Release"
+		optimize "on"
+
+-------------------------------------------------
+	project "DataModule"
+	location "DataModule"
+	kind "StaticLib"
+	language "C++"
+	cppdialect "C++20"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+
+files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Cherry/vendor/spdlog/include"
+	}
+
+	links
+	{
+	}
+
+    -- Windows-specific settings
+    filter "system:windows"
+        systemversion "latest"
+        buildoptions { "/utf-8" }
+
+		defines
+		{
+			"CH_PLATFORM_WINDOWS"
+		}
+
+	filter "configurations:Debug"
+		defines "CH_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "CH_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "CH_DIST"
+		runtime "Release"
+		optimize "on"
+
+-------------------------------------------------
+	project "3DRole"
+	location "3DRole"
+	kind "StaticLib"
+	language "C++"
+	cppdialect "C++20"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+
+files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Cherry/vendor/spdlog/include",
+		"Cherry/src",
+		"Cherry/vendor",
+		"%{IncludeDir.glm}"
+	}
+
+	links
+	{
+		"BaseCode"
+	}
+
+    -- Windows-specific settings
+    filter "system:windows"
+        systemversion "latest"
+        buildoptions { "/utf-8" }
+
+		defines
+		{
+			"CH_PLATFORM_WINDOWS"
+		}
+
+	filter "configurations:Debug"
+		defines "CH_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "CH_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "CH_DIST"
+		runtime "Release"
+		optimize "on"
+
 
 project "MyShell"
 	location "MyShell"

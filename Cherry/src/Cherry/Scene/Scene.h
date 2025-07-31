@@ -26,7 +26,7 @@ namespace Cherry {
 
         // Scene lifecycle
         void OnUpdateRuntime(TimeStep ts);
-        void OnUpdateEditor(TimeStep ts, EditorCamera& camera);
+        void OnUpdateEditor(TimeStep ts, OrthographicCamera& camera);
         void OnViewportResize(uint32_t width, uint32_t height);
 
         // Primary camera
@@ -47,12 +47,11 @@ namespace Cherry {
 
     private:
         template<typename T>
-        void OnComponentAdded(Entity entity, T& component) {}
 
         void OnPhysics2DStart();
         void OnPhysics2DStop();
 
-        void RenderScene(EditorCamera& camera);
+        void RenderScene(OrthographicCamera& camera);
 
     private:
         entt::registry m_Registry;
@@ -66,24 +65,5 @@ namespace Cherry {
         friend class SceneHierarchyPanel;
     };
 
-    // Script base class for game logic
-    class ScriptableEntity {
-    public:
-        virtual ~ScriptableEntity() {}
-
-        template<typename T>
-        T& GetComponent() {
-            return m_Entity.GetComponent<T>();
-        }
-
-    protected:
-        virtual void OnCreate() {}
-        virtual void OnDestroy() {}
-        virtual void OnUpdate(TimeStep ts) {}
-
-    private:
-        Entity m_Entity;
-        friend class Scene;
-    };
 
 } // namespace Cherry
