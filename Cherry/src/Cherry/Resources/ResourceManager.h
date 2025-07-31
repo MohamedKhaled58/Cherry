@@ -1,6 +1,7 @@
 #pragma once
 #include "Cherry/Core/Core.h"
 #include "Cherry/Core/Threading.h"
+#include "PackageManager.h"
 #include <future>
 #include <filesystem>
 #include <unordered_map>
@@ -11,7 +12,6 @@ namespace Cherry {
 
     // Forward declarations
     class Resource;
-    class PackageFile;
     class FileWatcher;
 
     enum class ResourceType {
@@ -60,42 +60,7 @@ namespace Cherry {
         std::atomic<uint32_t> m_RefCount;
     };
 
-    // Package file system inspired by C3's .wdf/.dnp files
-    class PackageFile {
-    public:
-        struct FileEntry {
-            uint32_t Offset;
-            uint32_t Size;
-            uint32_t CompressedSize;
-            uint32_t CRC32;
-            bool IsCompressed;
-        };
-
-        PackageFile(const std::string& packagePath);
-        ~PackageFile();
-
-        bool Open();
-        void Close();
-        bool IsOpen() const { return m_IsOpen; }
-
-        std::vector<uint8_t> ReadFile(const std::string& relativePath);
-        bool FileExists(const std::string& relativePath) const;
-
-        const std::unordered_map<std::string, FileEntry>& GetFileEntries() const {
-            return m_FileEntries;
-        }
-
-    private:
-        std::string m_PackagePath;
-        std::ifstream m_FileStream;
-        std::unordered_map<std::string, FileEntry> m_FileEntries;
-        bool m_IsOpen = false;
-        mutable std::mutex m_AccessMutex;
-
-        bool ReadHeader();
-        uint32_t CalculateCRC32(const std::vector<uint8_t>& data);
-        std::vector<uint8_t> Decompress(const std::vector<uint8_t>& compressedData);
-    };
+    // PackageFile is now defined in PackageManager.h
 
     class ResourceManager {
     public:

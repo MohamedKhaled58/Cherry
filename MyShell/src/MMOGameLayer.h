@@ -1,6 +1,8 @@
 // MyShell/src/MMOGameLayer.h
 #pragma once
 #include "Cherry.h"
+#include "imgui/imgui.h"
+#include "imgui/misc/cpp/imgui_stdlib.h"
 #include "Cherry/Network/MMONetworking.h"
 #include "Cherry/Renderer/Sprite2D.h"
 #include "Cherry/Animation/AnimationSystem.h"
@@ -25,7 +27,7 @@ namespace Cherry {
         // Core systems
         OrthographicCameraController m_CameraController;
         std::unique_ptr<SpriteBatch> m_SpriteBatch;
-        std::unique_ptr<EnhancedPackageManager> m_PackageManager;
+
 
         // Game state
         enum class GameState {
@@ -138,7 +140,6 @@ namespace Cherry {
 
         // Initialize core systems
         m_SpriteBatch = std::make_unique<SpriteBatch>(5000);
-        m_PackageManager = std::make_unique<EnhancedPackageManager>();
 
         // Initialize MMO client
         MMOClient::Get().Initialize();
@@ -159,9 +160,9 @@ namespace Cherry {
             });
 
         // Load game packages
-        m_PackageManager->LoadPackage("assets/packages/characters.cpkg");
-        m_PackageManager->LoadPackage("assets/packages/maps.cpkg");
-        m_PackageManager->LoadPackage("assets/packages/ui.cpkg");
+        EnhancedPackageManager::Get().LoadPackage("assets/packages/characters.cpkg");
+        EnhancedPackageManager::Get().LoadPackage("assets/packages/maps.cpkg");
+        EnhancedPackageManager::Get().LoadPackage("assets/packages/ui.cpkg");
 
         LoadGameResources();
 
@@ -174,7 +175,6 @@ namespace Cherry {
         // Cleanup
         MMOClient::Get().Shutdown();
         m_SpriteBatch.reset();
-        m_PackageManager.reset();
 
         CH_CORE_INFO("MMO Game Layer detached");
     }
@@ -332,7 +332,7 @@ namespace Cherry {
             velocity *= movementSpeed;
 
             // Update local position
-            m_LocalPlayer.Position += velocity * ts;
+            m_LocalPlayer.Position += velocity * (float)ts;
             m_LocalPlayer.Velocity = velocity;
 
             // Update camera to follow player
@@ -345,7 +345,8 @@ namespace Cherry {
             if (velocity.y > 0) direction |= 4; // Up
             if (velocity.y < 0) direction |= 8; // Down
 
-            MMONetworkManager::Get().SendMovementUpdate(m_LocalPlayer.Position, velocity, direction);
+            // TODO: Implement movement networking
+            // MMONetworkManager::Get().SendMovementUpdate(m_LocalPlayer.Position, velocity, direction);
 
             // Update animation
             UpdatePlayerAnimation("walk", true);
@@ -628,7 +629,7 @@ namespace Cherry {
 
         // Example: Loading from enhanced package system
         uint32_t size;
-        void* spriteData = m_PackageManager->LoadFile("characters/warrior_male.sprite", size);
+        void* spriteData = EnhancedPackageManager::Get().LoadFile("characters/warrior_male.sprite", size);
         if (spriteData) {
             // Process sprite data
             free(spriteData);

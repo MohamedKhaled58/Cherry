@@ -10,6 +10,8 @@
 namespace Cherry {
 
 	static bool s_GLFWInitialized = false;
+	static int s_WindowCount = 0;
+	
 	static void GLFWErrorCallback(int error_code, const char* description)
 	{
 		CH_CORE_ERROR("GLFW Error ({0}): {1}", error_code, description);
@@ -43,12 +45,13 @@ namespace Cherry {
 
 		if (!s_GLFWInitialized)
 		{
-			// TODO: glfwTerminate on system shutdown
 			int success = glfwInit();
 			CH_CORE_ASSERT(success, "Could not intialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
+		
+		s_WindowCount++;
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 
@@ -163,6 +166,25 @@ namespace Cherry {
 	void WindowsWindow::Shutdown()
 	{
 		glfwDestroyWindow(m_Window);
+		
+		s_WindowCount--;
+		if (s_WindowCount == 0 && s_GLFWInitialized)
+		{
+			glfwTerminate();
+			s_GLFWInitialized = false;
+			CH_CORE_INFO("GLFW terminated - all windows closed");
+		}
+	}
+	
+	void WindowsWindow::TerminateGLFW()
+	{
+		if (s_GLFWInitialized)
+		{
+			glfwTerminate();
+			s_GLFWInitialized = false;
+			s_WindowCount = 0;
+			CH_CORE_INFO("GLFW force terminated during application shutdown");
+		}
 	}
 
 	void WindowsWindow::OnUpdate()

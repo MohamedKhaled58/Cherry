@@ -1,7 +1,52 @@
 #pragma once
 #include <filesystem>
 #include <unordered_map>
+#include <memory>
+#include <vector>
+#include <string>
+#include <cstdint>
+
 namespace Cherry {
+    // Asset system type definitions
+    using AssetHandle = uint64_t;
+    static constexpr AssetHandle INVALID_ASSET_HANDLE = 0;
+
+    enum class AssetType {
+        None = 0,
+        Texture2D,
+        Model,
+        Audio,
+        Shader,
+        Scene,
+        Script,
+        Material
+    };
+
+    struct AssetMetadata {
+        AssetHandle Handle = INVALID_ASSET_HANDLE;
+        AssetType Type = AssetType::None;
+        std::filesystem::path FilePath;
+        std::string Name;
+        size_t FileSize = 0;
+        uint64_t LastModified = 0;
+        bool IsLoaded = false;
+    };
+
+    // Base class for all assets
+    class Asset {
+    public:
+        virtual ~Asset() = default;
+        virtual AssetType GetType() const = 0;
+        virtual const std::string& GetName() const = 0;
+        virtual bool IsValid() const = 0;
+
+        AssetHandle GetHandle() const { return m_Handle; }
+
+    protected:
+        AssetHandle m_Handle = INVALID_ASSET_HANDLE;
+        friend class AssetManager;
+    };
+
     class AssetManager {
     public:
         // Asset importing with metadata

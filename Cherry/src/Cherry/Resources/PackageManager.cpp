@@ -396,4 +396,86 @@ namespace Cherry {
         }
     }
 
+    // ===== EnhancedPackageManager Implementation =====
+    
+    void EnhancedPackageManager::SetWorkerThreadCount(size_t count) {
+        // Shutdown existing threads
+        m_ShutdownRequested = true;
+        for (auto& thread : m_WorkerThreads) {
+            if (thread.joinable()) {
+                thread.join();
+            }
+        }
+        m_WorkerThreads.clear();
+        
+        // Start new worker threads
+        m_ShutdownRequested = false;
+        for (size_t i = 0; i < count; ++i) {
+            m_WorkerThreads.emplace_back(&EnhancedPackageManager::WorkerThreadFunction, this);
+        }
+    }
+    
+    void EnhancedPackageManager::WorkerThreadFunction() {
+        while (!m_ShutdownRequested) {
+            std::unique_lock<std::mutex> lock(m_QueueMutex);
+            m_QueueCondition.wait(lock, [this] { return !m_LoadQueue.empty() || m_ShutdownRequested; });
+            
+            if (m_ShutdownRequested) break;
+            
+            if (!m_LoadQueue.empty()) {
+                auto request = std::move(const_cast<LoadRequest&>(m_LoadQueue.top()));
+                m_LoadQueue.pop();
+                lock.unlock();
+                
+                // Process the load request (stub implementation)
+                try {
+                    // Load file data
+                    uint32_t size = 0;
+                    void* data = LoadFile(request.Filename, size);
+                    request.Promise.set_value(data);
+                } catch (...) {
+                    request.Promise.set_exception(std::current_exception());
+                }
+            }
+        }
+    }
+    
+    void EnhancedPackageManager::CacheMaintenanceThread() {
+        while (!m_ShutdownRequested) {
+            std::this_thread::sleep_for(std::chrono::seconds(30)); // Run every 30 seconds
+            EvictOldCacheEntries();
+        }
+    }
+    
+    void EnhancedPackageManager::EvictOldCacheEntries() {
+        std::unique_lock<std::shared_mutex> lock(m_CacheMutex);
+        auto now = std::chrono::steady_clock::now();
+        
+        for (auto it = m_EnhancedCache.begin(); it != m_EnhancedCache.end();) {
+            auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - it->second.LastAccess).count();
+            if (elapsed > m_CacheRetentionTime) {
+                it = m_EnhancedCache.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+    
+    std::future<void*> EnhancedPackageManager::LoadFileAsync(const std::string& filename, LoadPriority priority) {
+        LoadRequest request;
+        request.Filename = filename;
+        request.Priority = priority;
+        request.RequestTime = std::chrono::steady_clock::now();
+        
+        auto future = request.Promise.get_future();
+        
+        {
+            std::lock_guard<std::mutex> lock(m_QueueMutex);
+            m_LoadQueue.push(std::move(request));
+        }
+        m_QueueCondition.notify_one();
+        
+        return future;
+    }
+
 } // namespace Cherry

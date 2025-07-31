@@ -1,20 +1,125 @@
 #pragma once
 #include "Cherry/Core/Core.h"
-#include "Cherry/Resources/PackageManager.h"
 #include <thread>
 #include <atomic>
 #include <shared_mutex>
+#include <cstdio>
+#include <vector>
+#include <unordered_map>
+#include <string>
+#include <mutex>
+#include <memory>
+#include <future>
+#include <queue>
+#include <condition_variable>
 
 namespace Cherry {
 
+    // Forward declarations
+    class FileWatcher;
+
+    // String hashing utility (compatible with C3Engine)
+    class StringHasher {
+    public:
+        static uint32_t StringToID(const char* str);
+        static uint32_t GenerateID(const std::string& str);
+        static uint32_t PackName(const std::string& filename);
+        static uint32_t RealName(const std::string& filename);
+    };
+
+    // Base package file structures
+    struct PackageFileHeader {
+        char Version[8] = "PKG_1.0";    // Package version
+        uint32_t FileCount = 0;         // Number of files
+        uint32_t IndexOffset = 0;       // Offset to file index
+        uint32_t Reserved[13] = { 0 };  // Reserved for future use
+    };
+
+    struct PackageFileEntry {
+        uint32_t UID;           // String hash ID
+        uint32_t Offset;        // File offset in package
+        uint32_t Size;          // File size
+        uint32_t IsCompressed;  // Compression flag
+        uint32_t Reserved[4] = { 0 };
+    };
+
+    // Base PackageFile class
+    class PackageFile {
+    public:
+        PackageFile();
+        virtual ~PackageFile();
+
+        virtual bool Open(const std::string& filename);
+        virtual void Close();
+        virtual void* LoadFile(uint32_t fileID, uint32_t& size);
+        virtual bool FileExists(uint32_t fileID) const;
+
+        bool IsOpen() const { return m_FileHandle != nullptr; }
+        const std::string& GetPackagePath() const { return m_PackagePath; }
+        uint32_t GetPackageID() const { return m_PackageID; }
+
+    protected:
+        virtual bool ReadHeader();
+        virtual bool ReadIndex();
+        PackageFileEntry* FindFile(uint32_t fileID);
+
+        std::FILE* m_FileHandle;
+        std::string m_PackagePath;
+        uint32_t m_PackageID;
+        PackageFileHeader m_Header;
+        std::unordered_map<uint32_t, PackageFileEntry> m_FileIndex;
+        mutable std::mutex m_AccessMutex;
+    };
+
+    // Base PackageManager class
+    class PackageManager {
+    public:
+        static PackageManager& Get() {
+            static PackageManager instance;
+            return instance;
+        }
+
+        virtual ~PackageManager() = default;
+
+        virtual bool OpenPackage(const std::string& packagePath);
+        virtual void ClosePackage(const std::string& packagePath);
+        virtual void CloseAllPackages();
+        virtual void* LoadFile(const std::string& filename, uint32_t& size);
+        virtual bool FileExists(const std::string& filename) const;
+
+        // Cache management
+        void SetCacheSize(size_t maxSize) { m_MaxCacheSize = maxSize; }
+        size_t GetCacheSize() const { return m_CurrentCacheSize; }
+
+        // Utility methods
+        void BeforeUse();
+        void AfterUse();
+        size_t GetLoadedPackageCount() const;
+        size_t GetTotalMemoryUsage() const;
+        void PrintPackageInfo() const;
+
+    protected:
+        PackageManager() = default;
+        PackageFile* FindPackageContaining(uint32_t fileID);
+
+        static constexpr size_t MAX_PACKAGES = 16;
+        std::vector<std::unique_ptr<PackageFile>> m_Packages;
+        mutable std::mutex m_PackagesMutex;
+
+        // Simple file cache
+        std::unordered_map<std::string, std::vector<uint8_t>> m_FileCache;
+        size_t m_CurrentCacheSize = 0;
+        size_t m_MaxCacheSize = 64 * 1024 * 1024; // 64MB default
+    };
+
     // Enhanced package format similar to C3Engine's WDF/DNP
     struct PackageFileHeader_V2 {
-        char Signature[8] = "CHRYPKG2";  // Cherry Package v2
+        char Signature[9] = "CHRYPKG2";  // Cherry Package v2 (need 9 chars for null terminator)
         uint32_t Version = 0x00020000;
         uint32_t FileCount = 0;
         uint32_t IndexOffset = 0;
         uint32_t Flags = 0;
-        uint8_t Reserved[40] = { 0 };
+        uint8_t Reserved[39] = { 0 };  // Adjusted to maintain struct size
     };
 
     struct PackageFileEntry_V2 {
@@ -131,6 +236,38 @@ namespace Cherry {
 
         std::unique_ptr<BatchLoader> CreateBatchLoader();
 
+        // Package management (inherits from base + enhanced features)
+        bool LoadPackage(const std::string& packagePath) { return OpenPackage(packagePath); }
+        void UnloadPackage(const std::string& packagePath) { ClosePackage(packagePath); }
+
+        // Enhanced initialization
+        void Initialize() {
+            // Initialize base package manager
+            m_ShutdownRequested = false;
+            
+            // Start worker threads
+            SetWorkerThreadCount(std::thread::hardware_concurrency());
+            
+            // Start cache maintenance
+            std::thread([this]() { CacheMaintenanceThread(); }).detach();
+        }
+
+        void Shutdown() {
+            // Signal shutdown
+            m_ShutdownRequested = true;
+            m_QueueCondition.notify_all();
+            
+            // Wait for worker threads
+            for (auto& thread : m_WorkerThreads) {
+                if (thread.joinable()) {
+                    thread.join();
+                }
+            }
+            
+            // Close all packages
+            CloseAllPackages();
+        }
+
         // Statistics and monitoring
         struct PackageStats {
             size_t TotalPackages = 0;
@@ -148,9 +285,12 @@ namespace Cherry {
         // Thread pool for async operations
         void SetWorkerThreadCount(size_t count);
 
+    public:
+        // Allow unique_ptr to call destructor
+        ~EnhancedPackageManager() = default;
+        
     private:
         EnhancedPackageManager() = default;
-        ~EnhancedPackageManager() = default;
 
         // Priority queue for loading requests
         struct LoadRequest {
@@ -194,6 +334,9 @@ namespace Cherry {
         mutable std::mutex m_StatsMutex;
         PackageStats m_Stats;
     };
+
+    // Global instance declaration
+    extern PackageManager& g_PackageManager;
 
     // Utility functions for compatibility with C3Engine
     namespace C3Compat {

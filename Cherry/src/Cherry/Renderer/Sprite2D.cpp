@@ -336,7 +336,10 @@ namespace Cherry {
         // Add vertices
         const auto& vertices = sprite->GetVertices();
         for (const auto& vertex : vertices) {
-            BatchVertex batchVertex = vertex;
+            BatchVertex batchVertex;
+            // Copy base class data
+            static_cast<EnhancedSpriteVertex&>(batchVertex) = vertex;
+            // Set batch-specific data
             batchVertex.TextureIndex = textureIndex;
             m_Vertices.push_back(batchVertex);
         }

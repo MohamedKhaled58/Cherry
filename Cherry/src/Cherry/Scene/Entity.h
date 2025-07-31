@@ -2,6 +2,7 @@
 #include "Cherry/Core/Core.h"
 #include "Scene.h"
 #include <../entt/entt.hpp>
+#include <functional> // for std::hash
 
 namespace Cherry {
 
@@ -55,9 +56,26 @@ namespace Cherry {
             return !(*this == other);
         }
 
+        // Accessor methods for hash function
+        entt::entity GetEntityHandle() const { return m_EntityHandle; }
+        Scene* GetScene() const { return m_Scene; }
+
     private:
         entt::entity m_EntityHandle{ entt::null };
         Scene* m_Scene = nullptr;
     };
 
 } // namespace Cherry
+
+// Hash specialization for Cherry::Entity to enable use in std::unordered_map
+namespace std {
+    template<>
+    struct hash<Cherry::Entity> {
+        size_t operator()(const Cherry::Entity& entity) const noexcept {
+            // Combine hash of entity handle and scene pointer
+            size_t h1 = hash<entt::entity>{}(entity.GetEntityHandle());
+            size_t h2 = hash<Cherry::Scene*>{}(entity.GetScene());
+            return h1 ^ (h2 << 1); // Simple hash combination
+        }
+    };
+}

@@ -4,6 +4,7 @@
 #include "Cherry/Renderer/Camera.h"
 #include "Cherry/Renderer/Shader.h"
 #include <glm/glm.hpp>
+#include <memory>
 
 
 namespace Cherry {
@@ -12,6 +13,7 @@ namespace Cherry {
 	{
 	public:
 		static void Init();
+		static void Shutdown();
 		static void OnWindowResize(uint32_t width, uint32_t height);
 		static void BeginScene(OrthographicCamera& camera);		//TODO:: All Scene Params
 		static void EndScene();
@@ -28,8 +30,7 @@ namespace Cherry {
 			glm::mat4 ViewProjectionMatrix;
 		};
 
-
-		static SceneData* m_SceneData;
+		static std::unique_ptr<SceneData> m_SceneData;
 	};
 
 }

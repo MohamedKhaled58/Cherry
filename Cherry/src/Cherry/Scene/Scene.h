@@ -26,7 +26,7 @@ namespace Cherry {
         Entity FindEntityByName(const std::string& name);
         Entity GetEntityByUUID(uint64_t uuid);
 
-        void OnUpdateEditor(TimeStep ts, EditorCamera& camera);
+        void OnUpdateEditor(TimeStep ts, OrthographicCamera& camera);
         void OnUpdateRuntime(TimeStep ts);
         void OnViewportResize(uint32_t width, uint32_t height);
 
@@ -47,7 +47,7 @@ namespace Cherry {
         void OnPhysics2DStart();
         void OnPhysics2DStop();
 
-        void RenderScene(EditorCamera& camera);
+        void RenderScene(OrthographicCamera& camera);
 
     private:
         entt::registry m_Registry;

@@ -211,7 +211,7 @@ namespace Cherry {
 
         constexpr size_t quadVertexCount = 4;
         const float textureIndex = 0.0f; // White Texture
-        constexpr glm::vec2 textureCoords[] = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+        const glm::vec2 textureCoords[4] = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
         const float tilingFactor = 1.0f;
 
         if (s_Data.QuadIndexCount >= RenderLimits::MaxIndices)
@@ -236,7 +236,7 @@ namespace Cherry {
         CH_PROFILE_FUNCTION();
 
         constexpr size_t quadVertexCount = 4;
-        constexpr glm::vec2 textureCoords[] = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+        const glm::vec2 textureCoords[4] = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
 
         if (s_Data.QuadIndexCount >= RenderLimits::MaxIndices)
             NextBatch();

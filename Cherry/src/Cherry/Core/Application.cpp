@@ -4,6 +4,10 @@
 #include "Cherry/Renderer/Renderer.h"
 #include <GLFW/glfw3.h>
 
+#ifdef CH_PLATFORM_WINDOWS
+#include "Platform/Windows/WindowsWindow.h"
+#endif
+
 
 namespace Cherry {
 
@@ -24,8 +28,18 @@ namespace Cherry {
 
     Application::~Application()
     {
+        CH_CORE_TRACE("Application shutting down...");
+        
+        // Shutdown renderer and cleanup resources
+        Renderer::Shutdown();
+        
+        // Ensure GLFW is properly terminated (safety measure)
+        #ifdef CH_PLATFORM_WINDOWS
+        WindowsWindow::TerminateGLFW();
+        #endif
+        
         CH_CORE_TRACE("Application Destroyed!");
-
+        
         s_Instance = nullptr;
     }
 

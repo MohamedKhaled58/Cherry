@@ -20,7 +20,10 @@ namespace Cherry
 		bool IsVSync() const override;
 
 		// Returns the native window pointer (GLFWwindow* in this case)
-		inline virtual void* GetNativeWindow() const override { return m_Window; } 
+		inline virtual void* GetNativeWindow() const override { return m_Window; }
+		
+		// Static cleanup function for application shutdown
+		static void TerminateGLFW(); 
 
 	private:
 		virtual void Init(const WindowProps& props);

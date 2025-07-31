@@ -322,25 +322,8 @@ namespace Cherry {
         static float ComputeRMS(const std::vector<int16_t>& samples);
     };
 
-    // Audio component for ECS integration
-    struct AudioSourceComponent {
-        std::string ClipPath;
-        AudioHandle Handle = INVALID_AUDIO_HANDLE;
-        float Volume = 1.0f;
-        float Pitch = 1.0f;
-        bool IsLooping = false;
-        bool PlayOnAwake = false;
-        bool Is3D = true;
-        std::string MixerChannel = "SFX";
-
-        // 3D settings
-        float MinDistance = 1.0f;
-        float MaxDistance = 100.0f;
-        float RolloffFactor = 1.0f;
-
-        AudioSourceComponent() = default;
-        AudioSourceComponent(const std::string& clipPath) : ClipPath(clipPath) {}
-    };
+    // Forward declaration - AudioSourceComponent is defined in Components.h
+    struct AudioSourceComponent;
 
     // Audio system for ECS
     class AudioSystem {

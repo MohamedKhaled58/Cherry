@@ -2,17 +2,21 @@
 #include "Renderer.h"
 #include "Cherry/Renderer/Renderer2D.h"
 #include "Cherry/Renderer/Shader.h"
-#include <Platform/OpenGL/OpenGLShader.h>
-
 
 namespace Cherry {
 
-	Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;  // Initialize to nullptr
+	std::unique_ptr<Renderer::SceneData> Renderer::m_SceneData = std::make_unique<Renderer::SceneData>();
 
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
 		Renderer2D::Init();
+	}
+
+	void Renderer::Shutdown()
+	{
+		Renderer2D::Shutdown();
+		m_SceneData.reset();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
@@ -33,9 +37,8 @@ namespace Cherry {
 	void Renderer::Submit(const REF(Shader)& shader, const REF(VertexArray)& vertexArray,const glm::mat4& transform)
 	{
 		shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Transform", transform);
-		//mi->Bind();
+		shader->SetMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+		shader->SetMat4("u_Transform", transform);
 
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);

@@ -13,7 +13,7 @@
 namespace Cherry {
 
     // Forward declarations
-    class NetworkMessage;
+    struct NetworkMessage;
     class PacketSerializer;
     class PacketDeserializer;
 

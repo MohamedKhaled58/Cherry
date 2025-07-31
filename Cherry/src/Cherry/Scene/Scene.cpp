@@ -130,12 +130,13 @@ namespace Cherry {
         }
 
         // Render the scene
-        Camera* mainCamera = nullptr;
+        OrthographicCamera* mainCamera = nullptr;
         glm::mat4 cameraTransform;
         {
             auto view = m_Registry.view<TransformComponent, CameraComponent>();
             for (auto entity : view) {
-                auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
+                auto& transform = view.get<TransformComponent>(entity);
+                auto& camera = view.get<CameraComponent>(entity);
                 if (camera.Primary) {
                     mainCamera = &camera.Camera;
                     cameraTransform = transform.GetTransform();
@@ -160,7 +161,8 @@ namespace Cherry {
         {
             auto view = m_Registry.view<TransformComponent, SpriteRendererComponent>();
             for (auto entity : view) {
-                auto [transform, sprite] = view.get<TransformComponent, SpriteRendererComponent>(entity);
+                auto& transform = view.get<TransformComponent>(entity);
+                auto& sprite = view.get<SpriteRendererComponent>(entity);
 
                 if (sprite.Texture) {
                     Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture,
@@ -176,10 +178,10 @@ namespace Cherry {
         {
             auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
             for (auto entity : view) {
-                auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
+                auto& transform = view.get<TransformComponent>(entity);
+                auto& circle = view.get<CircleRendererComponent>(entity);
 
-                // TODO: Implement circle rendering
-                // Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade);
+                Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade);
             }
         }
 
@@ -251,9 +253,9 @@ namespace Cherry {
 
     template<>
     void Scene::OnComponentAdded<AudioSourceComponent>(Entity entity, AudioSourceComponent& component) {
-        if (component.PlayOnAwake && !component.AudioPath.empty()) {
+        if (component.PlayOnAwake && !component.ClipPath.empty()) {
             // Start playing audio
-            component.Handle = AudioManager::Get().PlaySound(component.AudioPath,
+            component.Handle = AudioManager::Get().PlaySound(component.ClipPath,
                 component.Volume,
                 component.Pitch,
                 component.IsLooping);

@@ -268,20 +268,23 @@ namespace Cherry {
     };
 
     struct AudioSourceComponent {
-        std::string AudioPath;
-        bool IsPlaying = false;
-        bool IsLooping = false;
+        std::string ClipPath;
+        uint32_t Handle = 0; // INVALID_AUDIO_HANDLE
         float Volume = 1.0f;
         float Pitch = 1.0f;
-        bool Is3D = false;
+        bool IsLooping = false;
+        bool PlayOnAwake = false;
+        bool Is3D = true;
+        std::string MixerChannel = "SFX";
+
+        // 3D settings
         float MinDistance = 1.0f;
         float MaxDistance = 100.0f;
+        float RolloffFactor = 1.0f;
 
         AudioSourceComponent() = default;
         AudioSourceComponent(const AudioSourceComponent&) = default;
-        AudioSourceComponent(const std::string& path)
-            : AudioPath(path) {
-        }
+        AudioSourceComponent(const std::string& clipPath) : ClipPath(clipPath) {}
     };
 
     struct InventoryComponent {

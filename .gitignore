@@ -1,6 +1,8 @@
 # Build output
 bin/
 bin-int/
+MyShell/assets/
+Cherry/assets/
 MyShell/logs/
 *.obj
 *.o
@@ -8,7 +10,8 @@ MyShell/logs/
 *.dll
 *.exe
 *.json
-
+*.png
+*.dds
 # Visual Studio
 .vs/
 *.sdf
