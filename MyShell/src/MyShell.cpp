@@ -423,7 +423,7 @@ public:
     MyShell()
     {
         //PushLayer(new ShellLayer());
-        PushLayer(new Cherry::Sandbox2D());
+        PushLayer(new Sandbox2D());
     }
 
     ~MyShell()

@@ -1,30 +1,31 @@
 #pragma once
-#include "Cherry/Core/Layer.h"
-#include <Cherry/Renderer/VertexArray.h>
-#include <Cherry/Renderer/Shader.h>
-#include <Cherry/OrthographicCameraController.h>
+#include "Cherry.h"
 
-namespace Cherry {
+class Sandbox2D : public Cherry::Layer
+{
+public:
+	Sandbox2D();
+	virtual ~Sandbox2D() = default;
+	virtual void OnAttach() override;
+	virtual void OnDetach() override;
+	virtual void OnUpdate(Cherry::TimeStep timeStep) override;
+	virtual void OnImGuiRender() override;
+	virtual void OnEvent(Cherry::Event& event) override;
+private:
+	Cherry::OrthographicCameraController m_CameraController;
 
-	class Sandbox2D : public Layer
+	//TEMP
+	REF(Cherry::Shader) m_FlatColorShader;
+	REF(Cherry::VertexArray) m_FlatColorVertexArray;
+	REF(Cherry::Texture2D) m_CheckerboardTexture;
+
+	struct ProfileResult
 	{
-	public:
-		Sandbox2D();
-		virtual ~Sandbox2D() = default;
-		virtual void OnAttach() override;
-		virtual void OnDetach() override;
-		virtual void OnUpdate(TimeStep timeStep) override;
-		virtual void OnImGuiRender() override;
-		virtual void OnEvent(Event& event) override;
-	private:
-		Cherry::OrthographicCameraController m_CameraController;
-
-		//TEMP
-		REF(Shader) m_FlatColorShader;
-		REF(VertexArray) m_FlatColorVertexArray;
-		REF(Texture2D) m_CheckerboardTexture;
-
-
-		glm::vec4 m_SquareColor = { 0.3f,0.1f,0.8f,1.0f };
+		const char* Name;
+		float Time;
 	};
-}
+
+	std::vector<ProfileResult> m_ProfileResults;
+
+	glm::vec4 m_SquareColor = { 0.3f,0.1f,0.8f,1.0f };
+};

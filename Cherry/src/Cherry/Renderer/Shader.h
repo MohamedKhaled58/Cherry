@@ -69,16 +69,6 @@ namespace Cherry {
         // 4. OPTIONAL: Hot-reload configuration
         bool m_HotReloadEnabled = false;
 
-        // 5. OPTIONAL: Performance tracking
-        // Track load times and compilation statistics
-        struct ShaderMetrics {
-            std::chrono::milliseconds loadTime{ 0 };
-            std::chrono::milliseconds compileTime{ 0 };
-            size_t reloadCount = 0;
-            bool lastCompilationSuccess = false;
-        };
-        std::unordered_map<std::string, ShaderMetrics> m_ShaderMetrics;
-
         // 6. OPTIONAL: Error tracking
         // Store compilation errors for debugging
         std::unordered_map<std::string, std::string> m_LastErrors;
