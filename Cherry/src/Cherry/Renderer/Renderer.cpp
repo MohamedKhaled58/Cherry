@@ -11,6 +11,8 @@ namespace Cherry {
 
 	void Renderer::Init()
 	{
+		CH_PROFILE_FUNCTION();
+
 		RenderCommand::Init();
 		Renderer2D::Init();
 	}

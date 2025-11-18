@@ -8,7 +8,7 @@ namespace Cherry {
 
 	//EVENTS IN CHERRY ENGINE IS BLOCKING, MEANING THAT WHEN AN EVENT
 	//OCCURS IT IMMEDIATLY DISPATCHED AND MUST DEALT WAITH RIGHT THEN AND THERE
-	//FOR FUTURE WE MIGHT USE BUFFER EVENTS
+	//TODO : FOR FUTURE WE MIGHT USE BUFFER EVENTS
 
 	enum class EventType
 	{
@@ -61,9 +61,7 @@ namespace Cherry {
 	{
 	public:
 		EventDispatcher(Event& event)
-			: m_Event(event) 
-		{
-		}
+			: m_Event(event) {}
 
 		// F will be deduced by the compiler
 		template<typename T, typename F>

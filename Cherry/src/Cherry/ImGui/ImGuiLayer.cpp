@@ -9,7 +9,6 @@
 
 //Temporary include for GLFW and glad
 #include <GLFW/glfw3.h>
-#include <glad/glad.h>
 
 namespace Cherry {
     ImGuiLayer::ImGuiLayer() :Layer("ImGuiLayer")
@@ -24,6 +23,8 @@ namespace Cherry {
     // Attach the ImGui layer, called when the application starts
     void ImGuiLayer::OnAttach()
     {
+        CH_PROFILE_FUNCTION();
+
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -55,6 +56,8 @@ namespace Cherry {
     // Detach the ImGui layer and clean up resources
     void ImGuiLayer::OnDetach()
     {
+        CH_PROFILE_FUNCTION();
+
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
@@ -64,6 +67,8 @@ namespace Cherry {
     // Begin a new ImGui frame, setting up the necessary state for rendering
     void ImGuiLayer::Begin()
     {
+        CH_PROFILE_FUNCTION();
+
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -72,6 +77,8 @@ namespace Cherry {
     // End the ImGui frame, render the ImGui draw data, and handle viewports if enabled
     void ImGuiLayer::End()
     {
+        CH_PROFILE_FUNCTION();
+
         ImGuiIO& io = ImGui::GetIO();
         Application& app = Application::Get();
         io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());

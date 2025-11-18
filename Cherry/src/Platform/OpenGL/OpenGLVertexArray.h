@@ -16,9 +16,7 @@ namespace Cherry {
 		virtual void AddVertexBuffer(const REF(VertexBuffer)& vertexBuffer) override;
 		virtual void SetIndexBuffer(const REF(IndexBuffer)& indexBuffer) override;
 
-		virtual const std::vector<REF(VertexBuffer)>& GetVertexBuffers() const override{
-			return m_VertexBuffers;
-		};
+		virtual const std::vector<REF(VertexBuffer)>& GetVertexBuffers() const override{ return m_VertexBuffers; }
 		virtual const REF(IndexBuffer)& GetIndexBuffers() const override { return m_IndexBuffer; }
 
 

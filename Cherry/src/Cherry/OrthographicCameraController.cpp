@@ -15,7 +15,10 @@ namespace Cherry {
     {
     }
 
-    void OrthographicCameraController::OnUpdate(TimeStep ts) {
+    void OrthographicCameraController::OnUpdate(TimeStep ts) 
+    {
+        CH_PROFILE_FUNCTION();
+
         if (m_KeyState.HasMovement()) {
             UpdateCameraPosition(ts);
         }
@@ -29,7 +32,10 @@ namespace Cherry {
         }
     }
 
-    void OrthographicCameraController::OnEvent(Event& e) {
+    void OrthographicCameraController::OnEvent(Event& e) 
+    {
+        CH_PROFILE_FUNCTION();
+
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<MouseScrolledEvent>(CH_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
         dispatcher.Dispatch<WindowResizeEvent>(CH_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
@@ -52,7 +58,8 @@ namespace Cherry {
         }
     }
 
-    void OrthographicCameraController::SetZoomLimits(float minZoom, float maxZoom) {
+    void OrthographicCameraController::SetZoomLimits(float minZoom, float maxZoom) 
+    {
         if (minZoom > MIN_ZOOM_LIMIT && maxZoom <= MAX_ZOOM_LIMIT && minZoom < maxZoom) {
             m_MinZoomLevel = minZoom;
             m_MaxZoomLevel = maxZoom;
@@ -141,7 +148,10 @@ namespace Cherry {
 
     // ===== Private Event Handlers =====
 
-    bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e) {
+    bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
+    {
+        CH_PROFILE_FUNCTION();
+
         float oldZoom = m_ZoomLevel;
         m_ZoomLevel -= e.GetYOffset() * m_ZoomSpeed;
         m_ZoomLevel = glm::clamp(m_ZoomLevel, m_MinZoomLevel, m_MaxZoomLevel);
@@ -153,7 +163,10 @@ namespace Cherry {
         return false;
     }
 
-    bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e) {
+    bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e) 
+    {
+        CH_PROFILE_FUNCTION();
+
         if (e.GetHeight() > 0) {
             float newAspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
             if (std::abs(newAspectRatio - m_AspectRatio) > 0.001f) {
@@ -165,7 +178,10 @@ namespace Cherry {
         return false;
     }
 
-    bool OrthographicCameraController::OnMouseButtonPressed(MouseButtonPressedEvent& e) {
+    bool OrthographicCameraController::OnMouseButtonPressed(MouseButtonPressedEvent& e) 
+    {
+        CH_PROFILE_FUNCTION();
+
         if (e.GetMouseButton() == CH_MOUSE_BUTTON_3) {
             m_MousePanning = true;
             auto [x, y] = Input::GetMousePosition();
@@ -175,7 +191,10 @@ namespace Cherry {
         return false;
     }
 
-    bool OrthographicCameraController::OnMouseButtonReleased(MouseButtonReleasedEvent& e) {
+    bool OrthographicCameraController::OnMouseButtonReleased(MouseButtonReleasedEvent& e) 
+    {
+        CH_PROFILE_FUNCTION();
+
         if (e.GetMouseButton() == CH_MOUSE_BUTTON_3) {
             m_MousePanning = false;
             return true;
@@ -183,7 +202,10 @@ namespace Cherry {
         return false;
     }
 
-    bool OrthographicCameraController::OnMouseMoved(MouseMovedEvent& e) {
+    bool OrthographicCameraController::OnMouseMoved(MouseMovedEvent& e) 
+    {
+        CH_PROFILE_FUNCTION();
+
         if (m_MousePanning) {
             glm::vec2 mousePos = { e.GetX(), e.GetY() };
             // Changed delta to mousePos - m_LastMousePosition for intuitive panning
@@ -211,7 +233,10 @@ namespace Cherry {
         return false;
     }
 
-    bool OrthographicCameraController::OnKeyPressed(KeyPressedEvent& e) {
+    bool OrthographicCameraController::OnKeyPressed(KeyPressedEvent& e)
+    {
+        CH_PROFILE_FUNCTION();
+
         if (e.GetRepeatCount() > 0)
             return false;
 
@@ -244,7 +269,10 @@ namespace Cherry {
         return true;
     }
 
-    bool OrthographicCameraController::OnKeyReleased(KeyReleasedEvent& e) {
+    bool OrthographicCameraController::OnKeyReleased(KeyReleasedEvent& e) 
+    {
+        CH_PROFILE_FUNCTION();
+
         switch (e.GetKeyCode()) {
         case CH_KEY_A:
         case CH_KEY_LEFT:
@@ -276,7 +304,8 @@ namespace Cherry {
 
     // ===== Private Helper Methods =====
 
-    void OrthographicCameraController::UpdateCameraPosition(TimeStep ts) {
+    void OrthographicCameraController::UpdateCameraPosition(TimeStep ts) 
+    {
         glm::vec3 position = m_Camera.GetPosition();
 
         float baseVelocity = m_CameraTranslationSpeed * ts;
@@ -309,7 +338,8 @@ namespace Cherry {
         m_Camera.SetPosition(position);
     }
 
-    void OrthographicCameraController::UpdateCameraRotation(TimeStep ts) {
+    void OrthographicCameraController::UpdateCameraRotation(TimeStep ts) 
+    {
         float rotation = m_Camera.GetRotation();
         float rotationSpeed = m_CameraRotationSpeed * ts;
 
@@ -325,7 +355,8 @@ namespace Cherry {
         m_Camera.SetRotation(rotation);
     }
 
-    void OrthographicCameraController::ApplyBounds() {
+    void OrthographicCameraController::ApplyBounds() 
+    {
         glm::vec3 position = m_Camera.GetPosition();
 
         float halfWidth = m_AspectRatio * m_ZoomLevel;
@@ -346,7 +377,10 @@ namespace Cherry {
         m_Camera.SetPosition(position);
     }
 
-    void OrthographicCameraController::RecalculateView() {
+    void OrthographicCameraController::RecalculateView() 
+    {
+        CH_PROFILE_FUNCTION();
+
         m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel,
             -m_ZoomLevel, m_ZoomLevel);
     }

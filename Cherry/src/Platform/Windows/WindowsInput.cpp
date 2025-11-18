@@ -1,3 +1,4 @@
+// ReSharper disable All
 #include "CHpch.h"
 #include "WindowsInput.h"
 

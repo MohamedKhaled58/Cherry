@@ -22,6 +22,8 @@ namespace Cherry {
 
 	void Renderer2D::Init()
 	{
+		CH_PROFILE_FUNCTION();
+
 		s_Data = new Renderer2DStorage();
 
 		float SquareVertices[5 * 4] = {
@@ -37,7 +39,7 @@ namespace Cherry {
 
 		// Creating Vertex Buffer
 		REF(VertexBuffer)SquareVB;
-		SquareVB = (VertexBuffer::Create(SquareVertices, sizeof(SquareVertices)));
+		SquareVB = VertexBuffer::Create(SquareVertices, sizeof(SquareVertices));
 		BufferLayout Squarelayout = {
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float2, "a_TexCoord" }
@@ -62,21 +64,29 @@ namespace Cherry {
 	}
 	void Renderer2D::Shutdown()
 	{
+		CH_PROFILE_FUNCTION();
+
 		delete s_Data;
 	}
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
+		CH_PROFILE_FUNCTION();
+
 	   s_Data->TextureShader->SetMat4("u_ViewProjection",camera.GetViewProjectionMatrix());
 	   s_Data->TextureShader->Bind();
 
 	}
 	void Renderer2D::EndScene()
 	{
+		CH_PROFILE_FUNCTION();
+
 		//Flush();
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, float rotation, const glm::vec2& size, const glm::vec4& color)
 	{
+		CH_PROFILE_FUNCTION();
+
 		s_Data->TextureShader->SetFloat4("u_Color", color);
 		s_Data->WhiteTexture->Bind();
 
@@ -91,6 +101,7 @@ namespace Cherry {
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, float rotation, const glm::vec2& size, const glm::vec4& color)
 	{
+
 		DrawQuad({ position.x,position.y,0.0f }, rotation, size, color);
 	}
 
@@ -99,6 +110,8 @@ namespace Cherry {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, float rotation, const glm::vec2& size, const REF(Texture2D)& texture)
 	{
+		CH_PROFILE_FUNCTION();
+
 		//We Can Have Tint here instead of vec4 white color
 		s_Data->TextureShader->SetFloat4("u_Color", glm::vec4(1.0f));
 		texture->Bind();
@@ -116,6 +129,7 @@ namespace Cherry {
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, float rotation, const glm::vec2& size, const REF(Texture2D)& texture)
 	{
+
 		DrawQuad({ position.x,position.y,0.0f }, rotation, size, texture);
 	}
 }

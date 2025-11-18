@@ -6,8 +6,7 @@
 #include <GL/gl.h>
 namespace Cherry
 {
-
-	inline const char* gl_to_cstr(const GLubyte* s)
+	static inline const char* gl_to_cstr(const GLubyte* s)
 	{
 		return reinterpret_cast<const char*>(s);
 	}
@@ -21,6 +20,8 @@ namespace Cherry
 	}
 	void OpenGLContext::Init()
 	{
+		CH_PROFILE_FUNCTION();
+
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		CH_CORE_ASSERT(status, "Failed to initialize OpenGLContext!");
@@ -32,6 +33,7 @@ namespace Cherry
 	}
 	void OpenGLContext::SwapBuffers()
 	{
+		CH_PROFILE_FUNCTION();
 		glfwSwapBuffers(m_WindowHandle);
 	}
 

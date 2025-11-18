@@ -18,14 +18,5 @@ private:
 	REF(Cherry::Shader) m_FlatColorShader;
 	REF(Cherry::VertexArray) m_FlatColorVertexArray;
 	REF(Cherry::Texture2D) m_CheckerboardTexture;
-
-	struct ProfileResult
-	{
-		const char* Name;
-		float Time;
-	};
-
-	std::vector<ProfileResult> m_ProfileResults;
-
 	glm::vec4 m_SquareColor = { 0.3f,0.1f,0.8f,1.0f };
 };

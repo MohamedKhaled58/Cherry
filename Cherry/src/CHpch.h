@@ -16,6 +16,7 @@
 
 
 #include "Cherry/Core/Log.h"
+#include "Cherry/Debug/Instrumentor.h"
 
 #ifdef CH_PLATFORM_WINDOWS
 #include <Windows.h>

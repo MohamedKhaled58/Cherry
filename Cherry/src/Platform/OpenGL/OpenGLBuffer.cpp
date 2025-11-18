@@ -10,6 +10,8 @@ namespace Cherry {
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
 	{
+		CH_PROFILE_FUNCTION();
+
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		//TODO: FIX Hard Coded STATIC DRAW
@@ -19,17 +21,23 @@ namespace Cherry {
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
+		CH_PROFILE_FUNCTION();
+
 		glDeleteBuffers(1, &m_RendererID);
 		m_RendererID = 0;
 	}
 
 	void OpenGLVertexBuffer::Bind() const
 	{
+		CH_PROFILE_FUNCTION();
+
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 	}
 
 	void OpenGLVertexBuffer::Unbind() const
 	{
+		CH_PROFILE_FUNCTION();
+
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
@@ -40,6 +48,8 @@ namespace Cherry {
 	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
 		:m_Count(count)
 	{
+		CH_PROFILE_FUNCTION();
+
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		//TODO: FIX Hard Coded STATIC DRAW
@@ -50,17 +60,23 @@ namespace Cherry {
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
+		CH_PROFILE_FUNCTION();
+
 		glDeleteBuffers(1, &m_RendererID);
 		m_RendererID = 0;
 	}
 
 	void OpenGLIndexBuffer::Bind() const
 	{
+		CH_PROFILE_FUNCTION();
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 	}
 
 	void OpenGLIndexBuffer::Unbind() const
 	{
+		CH_PROFILE_FUNCTION();
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 

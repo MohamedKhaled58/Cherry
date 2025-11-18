@@ -26,23 +26,33 @@ namespace Cherry {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
+		CH_PROFILE_FUNCTION();
+
 		glCreateVertexArrays(1, &m_RendererID);
 	}
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		CH_PROFILE_FUNCTION();
+
 		glDeleteVertexArrays(1, &m_RendererID);
 
 	}
 	void OpenGLVertexArray::Bind() const
 	{
+		CH_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_RendererID);
 	}
 	void OpenGLVertexArray::Unbind() const
 	{
+		CH_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 	void OpenGLVertexArray::AddVertexBuffer(const REF(VertexBuffer)& vertexBuffer)
 	{
+		CH_PROFILE_FUNCTION();
+
 		//Check Why Not Working
 		CH_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(),"Vertex Buffer Has No Layout!");
 		glBindVertexArray(m_RendererID);
@@ -68,10 +78,10 @@ namespace Cherry {
 	}
 	void OpenGLVertexArray::SetIndexBuffer(const REF(IndexBuffer)& indexBuffer)
 	{
+		CH_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_RendererID);
 		indexBuffer->Bind();
-
-
 		m_IndexBuffer = indexBuffer;
 	}
 }

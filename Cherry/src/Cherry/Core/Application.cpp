@@ -11,6 +11,8 @@ namespace Cherry {
 
     Application::Application()
     {
+        CH_PROFILE_FUNCTION();
+		CH_CORE_ASSERT(!s_Instance, "Application already exists!");
         s_Instance = this;
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->SetEventCallback(CH_BIND_EVENT_FN(Application::OnEvent));
@@ -24,6 +26,8 @@ namespace Cherry {
 
     Application::~Application()
     {
+        CH_PROFILE_FUNCTION();
+
         CH_CORE_TRACE("Application Destroyed!");
 
         s_Instance = nullptr;
@@ -31,6 +35,8 @@ namespace Cherry {
 
     void Application::PushLayer(Layer* layer)
     {
+        CH_PROFILE_FUNCTION();
+
         m_LayerStack.PushLayer(layer);
         layer->OnAttach();
         CH_CORE_TRACE("Pushed Layer: {0}", layer->GetName());
@@ -38,6 +44,8 @@ namespace Cherry {
 
     void Application::PushOverlay(Layer* layer)
     {
+        CH_PROFILE_FUNCTION();
+
         m_LayerStack.PushOverlay(layer);
         layer->OnAttach();
         CH_CORE_TRACE("Pushed Overlay: {0}", layer->GetName());
@@ -45,6 +53,8 @@ namespace Cherry {
 
     void Application::OnEvent(Event& e)
     {
+        CH_PROFILE_FUNCTION();
+
         EventDispatcher dispatcher(e);
         // Dispatch event to layers
         for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); ) {
@@ -58,10 +68,11 @@ namespace Cherry {
 
     void Application::Run()
     {
+        CH_PROFILE_FUNCTION();
 
         while (m_Running)
         {
-
+            CH_PROFILE_SCOPE("Run Loop");
 
             float time = (float)glfwGetTime();
             TimeStep timestep = time - m_LastFrameTime;
@@ -70,25 +81,22 @@ namespace Cherry {
             if (!m_Minimized)
             {
                 {
+                    CH_PROFILE_SCOPE("LayerStack OnUpdate");
+
                     for (Layer* layer : m_LayerStack)
                         layer->OnUpdate(timestep);
                 }
-            }
-
-            {
                 m_ImGuiLayer->Begin();
-
                 // Render profiler UI
+                {
+                    CH_PROFILE_SCOPE("LayerStack OnImGuiRender");
 
-                for (Layer* layer : m_LayerStack)
-                    layer->OnImGuiRender();
-
+                    for (Layer* layer : m_LayerStack)
+                        layer->OnImGuiRender();
+                }
                 m_ImGuiLayer->End();
             }
-
-            {
                 m_Window->OnUpdate();
-            }
         }
     }
 
@@ -100,6 +108,8 @@ namespace Cherry {
     }
     bool Application::OnWindowResize(WindowResizeEvent& e)
     {
+        CH_PROFILE_FUNCTION();
+
         // Get new window dimensions
         unsigned int width = e.GetWidth();
         unsigned int height = e.GetHeight();

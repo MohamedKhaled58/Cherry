@@ -5,7 +5,6 @@
 #include "Cherry/Events/MouseEvent.h"
 #include "Cherry/Events/ApplicationEvent.h"
 #include "Platform/OpenGL/OpenGLContext.h"
-#include <glad/glad.h>
 
 namespace Cherry {
 
@@ -23,16 +22,20 @@ namespace Cherry {
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		CH_PROFILE_FUNCTION();
 		Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
+		CH_PROFILE_FUNCTION();
+
 		Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
+		CH_PROFILE_FUNCTION();
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
@@ -45,7 +48,7 @@ namespace Cherry {
 		{
 			// TODO: glfwTerminate on system shutdown
 			int success = glfwInit();
-			CH_CORE_ASSERT(success, "Could not intialize GLFW!");
+			CH_CORE_ASSERT(success, "Could not initialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
@@ -53,14 +56,14 @@ namespace Cherry {
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 
 		m_Context = new OpenGLContext(m_Window);
-		
+
 		m_Context->Init();
 		
 		
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
-		//SETING GLFW CALLBACKS
+		//SITING GLFW CALLBACKS
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
@@ -162,17 +165,21 @@ namespace Cherry {
 
 	void WindowsWindow::Shutdown()
 	{
+		CH_PROFILE_FUNCTION();
 		glfwDestroyWindow(m_Window);
 	}
 
 	void WindowsWindow::OnUpdate()
 	{
+		CH_PROFILE_FUNCTION();
 		glfwPollEvents();
 		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)
 	{
+		CH_PROFILE_FUNCTION();
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else
@@ -185,8 +192,5 @@ namespace Cherry {
 	{
 		return m_Data.VSync;
 	}
-
-	
-
 }
 

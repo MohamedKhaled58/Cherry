@@ -25,7 +25,7 @@
 // =============================================================================
 #ifdef CH_DEBUG
 #define CH_ENABLE_ASSERTS
-#define CH_PROFILE          // Enable profiling in debug builds
+//#define CH_PROFILE          // Enable profiling in debug builds
 #endif
 
 // =============================================================================
@@ -44,7 +44,7 @@
 // =============================================================================
 #define BIT(X) (1 << X)
 #define CH_BIND_EVENT_FN(fn) (std::bind(&fn, this, std::placeholders::_1))
-
+/*
 // =============================================================================
 // Profiling macros - Conditional compilation for zero overhead in release
 // =============================================================================
@@ -77,7 +77,7 @@
 #define CH_PROFILE_FUNCTION()
 #define CH_PROFILE_FRAME_MARK()
 #endif
-
+*/
 namespace Cherry {
 
     // =============================================================================

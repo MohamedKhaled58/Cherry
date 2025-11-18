@@ -13,12 +13,16 @@ namespace Cherry {
         m_cBottom(bottom),
         m_cTop(top)
     {
+        CH_PROFILE_FUNCTION();
+
         CH_CORE_INFO("Orthographic Camera Initialized!");
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
     }
 
     void OrthographicCamera::ReCalculateViewMatrix()
     {
+        CH_PROFILE_FUNCTION();
+
         // Create transformation matrix (translation * rotation)
         glm::mat4 translation = glm::translate(glm::mat4(1.0f), m_CameraPosition);
         glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_CameraRotation), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -33,12 +37,16 @@ namespace Cherry {
 
     void OrthographicCamera::ReCalculateProjectionMatrix()
     {
+        CH_PROFILE_FUNCTION();
+
         m_ProjectionMatrix = glm::ortho(m_cLeft, m_cRight, m_cBottom, m_cTop, m_zNear, m_zFar);
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
     }
 
     void OrthographicCamera::SetProjection(float left, float right, float bottom, float top)
     {
+        CH_PROFILE_FUNCTION();
+
         m_cLeft = left;
         m_cRight = right;
         m_cBottom = bottom;
@@ -48,6 +56,8 @@ namespace Cherry {
 
     void OrthographicCamera::SetProjection(float left, float right, float bottom, float top, float znear, float zfar)
     {
+        CH_PROFILE_FUNCTION();
+
         m_cLeft = left;
         m_cRight = right;
         m_cBottom = bottom;

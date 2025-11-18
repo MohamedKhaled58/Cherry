@@ -20,7 +20,7 @@ namespace Cherry {
 		static std::shared_ptr < spdlog::logger> s_ClientLogger;
 	};
 }
-//CORE LOG MACROSA
+//CORE LOG MACROS
 #define CH_CORE_TRACE(...)	::Cherry::Log::GetCoreLogger()->trace(__VA_ARGS__)
 #define CH_CORE_INFO(...)	::Cherry::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define CH_CORE_DEBUG(...)	::Cherry::Log::GetCoreLogger()->debug(__VA_ARGS__)
@@ -29,7 +29,7 @@ namespace Cherry {
 #define CH_CORE_CRIT(...)	::Cherry::Log::GetCoreLogger()->critical(__VA_ARGS__)
 #define CH_CORE_OFF(...)	::Cherry::Log::GetCoreLogger()->off(__VA_ARGS__)
 
-//CLIENT LOG MACROSA
+//CLIENT LOG MACROS
 #define CH_CLIENT_TRACE(...)	::Cherry::Log::GetClientLogger()->trace(__VA_ARGS__)
 #define CH_CLIENT_INFO(...)		::Cherry::Log::GetClientLogger()->info(__VA_ARGS__)
 #define CH_CLIENT_DEBUG(...)	::Cherry::Log::GetClientLogger()->debug(__VA_ARGS__)
