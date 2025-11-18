@@ -30,6 +30,12 @@ namespace Cherry {
 
         CH_CORE_TRACE("Application Destroyed!");
 
+        // Note: m_ImGuiLayer is owned by LayerStack and will be deleted
+        // when LayerStack destructor runs (after this destructor completes)
+
+        // Shutdown renderer
+        Renderer::Shutdown();
+
         s_Instance = nullptr;
     }
 

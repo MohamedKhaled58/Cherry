@@ -62,9 +62,10 @@ namespace Cherry {
 		if (in)
 		{
 			in.seekg(0, std::ios::end);
-			size_t size = in.tellg();
-			if (size != -1)
+			std::streampos pos = in.tellg();
+			if (pos != std::streampos(-1) && in.good())
 			{
+				size_t size = static_cast<size_t>(pos);
 				result.resize(size);
 				in.seekg(0, std::ios::beg);
 				in.read(&result[0], size);
@@ -231,42 +232,77 @@ namespace Cherry {
 	void OpenGLShader::UploadUniformInt(const std::string& name, int value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location == -1)
+		{
+			CH_CORE_WARN("Uniform '{0}' not found in shader", name);
+			return;
+		}
 		glUniform1i(location, value);
 	}
 
 	void OpenGLShader::UploadUniformFloat(const std::string& name, float value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location == -1)
+		{
+			CH_CORE_WARN("Uniform '{0}' not found in shader", name);
+			return;
+		}
 		glUniform1f(location, value);
 	}
 
 	void OpenGLShader::UploadUniformFloat2(const std::string& name, const glm::vec2& value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location == -1)
+		{
+			CH_CORE_WARN("Uniform '{0}' not found in shader", name);
+			return;
+		}
 		glUniform2f(location, value.x, value.y);
 	}
 
 	void OpenGLShader::UploadUniformFloat3(const std::string& name, const glm::vec3& value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location == -1)
+		{
+			CH_CORE_WARN("Uniform '{0}' not found in shader", name);
+			return;
+		}
 		glUniform3f(location, value.x, value.y, value.z);
 	}
 
 	void OpenGLShader::UploadUniformFloat4(const std::string& name, const glm::vec4& value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location == -1)
+		{
+			CH_CORE_WARN("Uniform '{0}' not found in shader", name);
+			return;
+		}
 		glUniform4f(location, value.x, value.y, value.z, value.w);
 	}
 
 	void OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& matrix)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location == -1)
+		{
+			CH_CORE_WARN("Uniform '{0}' not found in shader", name);
+			return;
+		}
 		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		if (location == -1)
+		{
+			CH_CORE_WARN("Uniform '{0}' not found in shader", name);
+			return;
+		}
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 

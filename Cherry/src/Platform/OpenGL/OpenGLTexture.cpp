@@ -11,7 +11,8 @@ namespace Cherry {
         CH_PROFILE_FUNCTION();
 
 
-       m_InternalFormat = GL_RGBA8, m_DataFormat = GL_RGBA;
+       m_InternalFormat = GL_RGBA8;
+       m_DataFormat = GL_RGBA;
 
         glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
         glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
