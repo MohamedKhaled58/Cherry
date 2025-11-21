@@ -48,9 +48,10 @@ void Sandbox2D::OnUpdate(Cherry::TimeStep timeStep)
 
     {
         CH_PROFILE_SCOPE("Draw");
-        Cherry::Renderer2D::DrawQuad({ -1.0f, 0.0f }, glm::radians(0.0f), { 0.5f, 0.5f }, m_SquareColor);
-        Cherry::Renderer2D::DrawQuad({ 0.5f, -0.5f }, glm::radians(0.0f), { 1.0f, 1.0f }, { 0.2f, 0.8f, 0.0f, 1.5f });
-        Cherry::Renderer2D::DrawQuad({ 0.0f, 0.0f , -0.1 }, glm::radians(0.0f), { 10.0f, 10.0f }, m_CheckerboardTexture);
+        Cherry::Renderer2D::DrawQuad({ -1.5f,  0.8f }, { 0.5f, 0.5f }, m_CheckerboardTexture, 1.0f, glm::vec4{ 8.0f,0.2f,0.5f,1.0f });
+        Cherry::Renderer2D::DrawQuad({ 1.2f,  0.3f }, { 0.5f, 0.5f } ,{ 0.2f, 0.8f, 0.0f, 1.5f });
+        Cherry::Renderer2D::DrawRotatedQuad({ 1.2f, -0.8f },{ 1.0f, 1.0f },glm::radians(45.0f),{ 0.2f, 0.8f, 0.0f, 1.5f });
+        Cherry::Renderer2D::DrawRotatedQuad({ 0.5f, 0.5f },{ 10.0f, 10.0f },glm::radians(0.0f),m_CheckerboardTexture,10.0f,  glm::vec4{ 1.0f,0.9f,0.9f,1.0f });
         Cherry::Renderer2D::EndScene();
     }
 

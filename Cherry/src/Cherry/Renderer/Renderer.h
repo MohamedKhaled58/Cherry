@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Cherry/Core/Core.h"
 #include "Cherry/Renderer/RenderCommand.h"
 #include "Cherry/Renderer/Camera.h"
 #include "Cherry/Renderer/Shader.h"

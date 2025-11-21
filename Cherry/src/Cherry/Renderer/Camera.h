@@ -39,7 +39,6 @@ namespace Cherry {
         void Translate(const glm::vec3& delta);
         void Rotate(float deltaRotation);
         void Zoom(float factor); // Scales the projection bounds
-
     private:
         void ReCalculateViewMatrix();
         void ReCalculateProjectionMatrix();

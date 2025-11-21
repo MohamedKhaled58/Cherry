@@ -52,6 +52,9 @@ namespace Cherry {
 		RenderCommand::DrawIndexed(vertexArray);
 	}
 
+	void Renderer::Flush() {
+	}
+
 
 
 
